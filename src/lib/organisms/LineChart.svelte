@@ -66,7 +66,13 @@
   {#if points.length === 0}
     <p class="empty">No data yet.</p>
   {:else}
-    <svg viewBox="0 0 {chartW} {chartH}" class="chart" role="img" aria-label={title}>
+    <svg
+      viewBox="0 0 {chartW} {chartH}"
+      preserveAspectRatio="xMidYMid meet"
+      class="chart"
+      role="img"
+      aria-label={title}
+    >
       <line x1={padL} y1={padT} x2={padL} y2={padT + plotH} class="axis" />
       <line x1={padL} y1={padT + plotH} x2={padL + plotW} y2={padT + plotH} class="axis" />
 

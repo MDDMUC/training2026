@@ -63,12 +63,16 @@
     grid-area: main;
     padding: var(--space-6);
     overflow: auto;
+    /* Allow grid children to shrink below their content's intrinsic size —
+       essential for keeping wide content (charts, tables) from forcing
+       horizontal overflow on the whole document. */
+    min-width: 0;
   }
 
   /* Mobile: stack nav above content as a horizontal bar */
   @media (max-width: 768px) {
     .app-shell {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       grid-template-rows: auto auto 1fr;
       grid-template-areas:
         'nav'
@@ -77,6 +81,14 @@
     }
     main {
       padding: var(--space-4);
+    }
+  }
+
+  /* Phone: tighten padding so the 320–375 px iPhones don't waste 32 px
+     of horizontal real estate on margins. */
+  @media (max-width: 480px) {
+    main {
+      padding: var(--space-3);
     }
   }
 </style>
