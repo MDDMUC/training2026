@@ -86,10 +86,13 @@
     </g>
   </svg>
 {:else}
+  <!-- viewBox widened to 480 so the italic-skewed TRAINING fits without
+       clipping at its outer letters (T's overhang and G's tail are pushed
+       by skewX(-12) past the previous 360 bound). -->
   <svg
-    viewBox="0 0 360 200"
+    viewBox="0 0 480 200"
     width={size}
-    height={(size * 200) / 360}
+    height={(size * 200) / 480}
     class="logo wordmark {klass}"
     role="img"
     aria-label="Training 2026"
@@ -104,14 +107,14 @@
         <stop offset="100%" stop-color="white" stop-opacity="0.4" />
       </linearGradient>
       <mask id={maskId}>
-        <rect width="360" height="200" fill={`url(#${fadeId})`} />
+        <rect width="480" height="200" fill={`url(#${fadeId})`} />
       </mask>
     </defs>
 
     <!-- TRAINING (top, italic, halftone) -->
-    <g transform="translate(180 70) skewX(-12) translate(-180 -70)">
+    <g transform="translate(240 70) skewX(-12) translate(-240 -70)">
       <text
-        x="180"
+        x="240"
         y="92"
         text-anchor="middle"
         font-family="Russo One, Arial Black, sans-serif"
@@ -123,15 +126,15 @@
     </g>
 
     <!-- horizontal rule between the two lines -->
-    <line x1="40" y1="118" x2="320" y2="118" stroke="currentColor" stroke-width="2.5" />
+    <line x1="60" y1="118" x2="420" y2="118" stroke="currentColor" stroke-width="2.5" />
     {#if accent}
-      <circle cx="180" cy="118" r="4" fill="var(--color-fg-accent, #E85D04)" />
+      <circle cx="240" cy="118" r="4" fill="var(--color-fg-accent, #E85D04)" />
     {/if}
 
     <!-- 2026 (bottom, solid, wide-tracked) -->
-    <g transform="translate(180 158) skewX(-12) translate(-180 -158)">
+    <g transform="translate(240 158) skewX(-12) translate(-240 -158)">
       <text
-        x="180"
+        x="240"
         y="172"
         text-anchor="middle"
         font-family="Russo One, Arial Black, sans-serif"

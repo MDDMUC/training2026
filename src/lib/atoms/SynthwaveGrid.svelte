@@ -89,16 +89,6 @@
         stroke="var(--c-line)"
         stroke-width="2"
       />
-      <!-- Subtle inner glow ring -->
-      <circle
-        cx={sunCx}
-        cy={sunCy}
-        r={sunR - 6}
-        fill="none"
-        stroke="var(--c-line)"
-        stroke-width="0.5"
-        opacity="0.35"
-      />
       <!-- Horizontal slits (chords) — lower half only -->
       <g stroke="var(--c-line)" stroke-width="2.5" stroke-linecap="square">
         {#each slitYs as y (y)}

@@ -17,12 +17,7 @@
   <!-- Foreground content sits above the grid -->
   <div class="content">
     <header class="hero">
-      <Logo variant="wordmark" size={320} accent={true} />
-      <p class="tagline">
-        <span class="dash" aria-hidden="true"></span>
-        <span>Phase Plan · Track · Crush</span>
-        <span class="dash" aria-hidden="true"></span>
-      </p>
+      <Logo variant="wordmark" size={440} accent={true} />
     </header>
 
     <form
@@ -62,7 +57,7 @@
       {/if}
 
       <button type="submit" disabled={pending}>
-        {pending ? 'Authenticating…' : 'Enter the System'}
+        {pending ? 'Authenticating…' : 'Log in'}
         <span class="caret" aria-hidden="true">→</span>
       </button>
 
@@ -108,32 +103,15 @@
   /* Force the Logo color to white on this dark background */
   .hero :global(.logo) {
     color: #fff;
-    width: clamp(240px, 60vw, 360px);
+    width: clamp(280px, 80vw, 440px);
     height: auto;
     /* The text-shadow gives the wordmark a faint backlight halo —
        1980s arcade marquee energy. */
     filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.15));
   }
 
-  .tagline {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font: 400 11px/1 var(--font-mono, monospace);
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0;
-  }
-  .tagline .dash {
-    display: inline-block;
-    width: 28px;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.55);
-  }
-
-  /* The form card — minimal, sits centered, has a subtle hairline border
-     and a backdrop so the grid stays visible without hurting legibility. */
+  /* The form card — minimal, sits centered, single hairline border and a
+     glass backdrop so the grid stays visible without hurting legibility. */
   .card {
     grid-row: 3;
     align-self: start;
@@ -146,16 +124,6 @@
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     animation: cardIn 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
-    /* Corner accents — four small italic ticks at the corners, like an
-       80s flight-sim HUD. Done via background-image so they stay sharp. */
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.55) 0 14px, transparent 14px 100%),
-      linear-gradient(to left,  rgba(255, 255, 255, 0.55) 0 14px, transparent 14px 100%),
-      linear-gradient(to right, rgba(255, 255, 255, 0.55) 0 14px, transparent 14px 100%),
-      linear-gradient(to left,  rgba(255, 255, 255, 0.55) 0 14px, transparent 14px 100%);
-    background-size: 14px 1px, 14px 1px, 14px 1px, 14px 1px;
-    background-position: 0 0, 100% 0, 0 100%, 100% 100%;
-    background-repeat: no-repeat;
   }
 
   label {
