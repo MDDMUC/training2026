@@ -28,6 +28,64 @@
     const r = s % 60;
     return `${m}:${r.toString().padStart(2, '0')}`;
   }
+
+  // ─── Audio alert when the timer expires ───
+  // Plays a two-tone ascending chime via Web Audio API (no asset file
+  // needed). The browser autoplay rules require a prior user gesture to
+  // start an AudioContext — which we have, since the timer was launched
+  // by a tap. We synthesise the tones with oscillators + a gain envelope
+  // so they don't click on attack/release.
+  //
+  // alertedFor tracks the endTime we've already alerted on, so we only
+  // chime once per timer cycle (not every render after it overruns).
+  let alertedFor = $state<number | null>(null);
+
+  $effect(() => {
+    if (isOverrun && restTimer.endTime !== null && restTimer.endTime !== alertedFor) {
+      alertedFor = restTimer.endTime;
+      playAlert();
+    }
+  });
+
+  function playAlert(): void {
+    if (typeof window === 'undefined') return;
+    try {
+      const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AC) return;
+      const ctx = new AC();
+      if (ctx.state === 'suspended') ctx.resume();
+      const t0 = ctx.currentTime;
+
+      // Two-tone chime: A5 (880 Hz) → D6 (1175 Hz), 180ms apart
+      const tones: Array<{ freq: number; startOffset: number; durSec: number }> = [
+        { freq: 880,  startOffset: 0.0,  durSec: 0.18 },
+        { freq: 1175, startOffset: 0.18, durSec: 0.22 }
+      ];
+
+      for (const tone of tones) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = tone.freq;
+        osc.connect(gain).connect(ctx.destination);
+
+        const start = t0 + tone.startOffset;
+        const peak = start + 0.015;
+        const end = start + tone.durSec;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.linearRampToValueAtTime(0.28, peak);
+        gain.gain.exponentialRampToValueAtTime(0.0001, end);
+
+        osc.start(start);
+        osc.stop(end + 0.02);
+      }
+
+      // Release AudioContext after the tones have finished
+      window.setTimeout(() => ctx.close().catch(() => {}), 600);
+    } catch {
+      /* audio failure is non-fatal — timer still works visually */
+    }
+  }
 </script>
 
 {#if isActive || isOverrun}
