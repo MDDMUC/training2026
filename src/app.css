@@ -1,0 +1,211 @@
+/* ============================================================================
+ * Training 2026 — Global styles
+ * Imports the design tokens and sets up base typography, resets, accessibility.
+ * Source of truth for tokens: ../design-system/tokens/tokens.css
+ * ========================================================================== */
+
+@import "../design-system/tokens/tokens.css";
+
+/* ---------- Reset (minimal) ---------- */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font: var(--text-body-weight) var(--text-body-size)/var(--text-body-line) var(--font-sans);
+  color: var(--color-fg-default);
+  background: var(--color-bg-canvas);
+  min-height: 100vh;
+  font-feature-settings: "kern" 1, "calt" 1;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+#root, #__next {
+  isolation: isolate;
+}
+
+/* ---------- Headings inherit the type tokens ---------- */
+
+h1 { font: var(--text-h1-weight) var(--text-h1-size)/var(--text-h1-line) var(--font-sans); letter-spacing: var(--text-h1-tracking); }
+h2 { font: var(--text-h2-weight) var(--text-h2-size)/var(--text-h2-line) var(--font-sans); letter-spacing: var(--text-h2-tracking); }
+h3 { font: var(--text-h3-weight) var(--text-h3-size)/var(--text-h3-line) var(--font-sans); }
+
+/* ---------- Links ---------- */
+
+a {
+  color: var(--color-fg-default);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--color-border-default);
+  transition: text-decoration-color var(--motion-default) var(--ease-standard);
+}
+
+a:hover {
+  text-decoration-color: var(--color-fg-default);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- Buttons base reset ---------- */
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* ---------- Selection ---------- */
+
+::selection {
+  background: var(--color-fg-default);
+  color: var(--color-fg-inverse);
+}
+
+/* ---------- Scrollbar (subtle) ---------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-2);
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); }
+
+/* ============================================================================
+ * Print — generate a gym-friendly black-and-white session sheet.
+ * Hide chrome, expand prescription, keep ticks visible.
+ * ========================================================================== */
+
+@media print {
+  /* Force light, single-column layout */
+  :root {
+    --color-bg-canvas: #FFFFFF;
+    --color-bg-surface: #FFFFFF;
+    --color-bg-subtle: #FFFFFF;
+    --color-fg-default: #000000;
+    --color-fg-muted: #444444;
+    --color-fg-subtle: #777777;
+    --color-border-default: #999999;
+    --color-border-strong: #000000;
+    --color-bg-inverse: #000000;
+    --color-fg-inverse: #FFFFFF;
+    --color-bg-accent: #000000;
+    --color-fg-accent: #000000;
+    --color-bg-accent-tint: #EEEEEE;
+    --elevation-1: none;
+    --elevation-2: none;
+    --elevation-3: none;
+    --elevation-4: none;
+  }
+
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+
+  /* Hide app chrome */
+  aside,         /* AppNav, RestTimer */
+  header.topbar,
+  .controls,
+  .back-row,
+  .bulk-btn,
+  .add-form,
+  .add-notes,
+  .del,
+  .kbd-trigger,
+  .theme-toggle,
+  button.tick {
+    display: none !important;
+  }
+
+  /* Make tick boxes visible as outlined squares for paper */
+  .set-row .tick,
+  .set-row::before {
+    display: inline-block !important;
+  }
+  .set-row::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #000;
+    margin-right: var(--space-3);
+    flex-shrink: 0;
+  }
+  .set-row.done::before {
+    background: #000;
+  }
+
+  /* Expand main content to full page */
+  .app-shell {
+    display: block !important;
+  }
+  main {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Keep prescription readable */
+  .block {
+    page-break-inside: avoid;
+    border: 1px solid #000 !important;
+    margin-bottom: 12px;
+  }
+
+  /* Force serif feel for the printed copy */
+  body, h1, h2, h3, .session-title, .meta {
+    font-family: Georgia, "Newsreader", serif !important;
+  }
+
+  a { color: #000; text-decoration: none; }
+
+  /* Avoid page break inside an exercise block */
+  section { page-break-inside: avoid; }
+}
