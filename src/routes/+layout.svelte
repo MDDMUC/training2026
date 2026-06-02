@@ -5,7 +5,7 @@
   import RestTimer from '$lib/organisms/RestTimer.svelte';
   import CommandPalette from '$lib/organisms/CommandPalette.svelte';
   import HelpOverlay from '$lib/organisms/HelpOverlay.svelte';
-  import { page } from '$app/state';
+  import { page, navigating } from '$app/state';
 
   type Props = {
     children: import('svelte').Snippet;
@@ -32,6 +32,10 @@
   });
 </script>
 
+{#if navigating.to}
+  <div class="nav-progress" aria-hidden="true"></div>
+{/if}
+
 {#if data.user}
   <div class="app-shell">
     <AppNav />
@@ -49,6 +53,35 @@
 {/if}
 
 <style>
+  /* Top-of-page navigation progress bar. Fires immediately when the user
+     taps a link so they get instant confirmation that the click registered,
+     even when the server-side load takes time. The bar's animation is
+     intentionally a slow-then-fast curve so it stays visible the entire
+     time a load takes (typical 200-1200ms range). */
+  .nav-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-fg-accent) 50%,
+      transparent
+    );
+    background-size: 50% 100%;
+    background-repeat: no-repeat;
+    z-index: 9999;
+    pointer-events: none;
+    animation: nav-progress 1s linear infinite;
+    box-shadow: 0 0 8px color-mix(in oklab, var(--color-fg-accent) 60%, transparent);
+  }
+  @keyframes nav-progress {
+    0%   { background-position: -100% 0; }
+    100% { background-position:  200% 0; }
+  }
+
   .app-shell {
     display: grid;
     grid-template-columns: auto 1fr;

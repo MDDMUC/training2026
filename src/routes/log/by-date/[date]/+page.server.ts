@@ -43,7 +43,18 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
 
   const sql = getSql();
   const userId = locals.user!.id;
-  const sessionsForDate = await getSessionsForDate(sql, userId, dateISO);
+
+  // ─── Stage 1: queries with no dependencies — fire all 5 in parallel ───
+  // This collapses what used to be ~15 sequential round-trips down to 3
+  // RTT-bound stages. On the Supabase pooler at ~60ms/query, that's the
+  // difference between ~900ms and ~180ms before SvelteKit can render.
+  const [sessionsForDate, phase, weightHistory, prevDate, nextDate] = await Promise.all([
+    getSessionsForDate(sql, userId, dateISO),
+    getPhaseForDate(sql, userId, dateISO),
+    getBodyweightHistory(sql, userId),
+    getAdjacentSessionDate(sql, userId, dateISO, 'prev'),
+    getAdjacentSessionDate(sql, userId, dateISO, 'next')
+  ]);
 
   const sessionParam = url.searchParams.get('session');
   let session: typeof sessionsForDate[number] | null = null;
@@ -55,43 +66,44 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     session = sessionsForDate[0] ?? null;
   }
 
-  const phase = await getPhaseForDate(sql, userId, dateISO);
-  const prescription = session ? await getSessionPrescription(sql, userId, session.id) : [];
-
-  const exerciseContexts: Record<number, Awaited<ReturnType<typeof getExerciseContext>>> = {};
-  if (session) {
-    for (const ex of prescription) {
-      exerciseContexts[ex.id] = await getExerciseContext(
-        sql,
-        userId,
-        dateISO,
-        session.id,
-        ex.name
-      );
-    }
-  }
-
-  const weightHistory = await getBodyweightHistory(sql, userId);
-  const priorWeights = weightHistory.filter((w) => w.date < dateISO);
-  const previousWeight = priorWeights.length > 0 ? priorWeights[priorWeights.length - 1] : null;
-
   const isClimb = session?.type === 'climb-indoor' || session?.type === 'climb-outdoor';
-  const climbingAttempts =
-    isClimb && session ? await getClimbingAttempts(sql, userId, session.id) : [];
-
   const isRun =
     session?.type === 'run' ||
     session?.type === 'mobility' ||
     (session?.title?.toLowerCase().includes('run') ?? false);
-  const runs = isRun && session ? await getRunningLogsForSession(sql, userId, session.id) : [];
-
-  const prevDate = await getAdjacentSessionDate(sql, userId, dateISO, 'prev');
-  const nextDate = await getAdjacentSessionDate(sql, userId, dateISO, 'next');
-
   const isTest = session?.type === 'test';
-  const recentTindeqR = isTest ? await getRecentTindeqTests(sql, userId, 'R', 6) : [];
-  const recentTindeqL = isTest ? await getRecentTindeqTests(sql, userId, 'L', 6) : [];
-  const allTindeq = isTest ? await getAllTindeqTests(sql, userId) : [];
+
+  // ─── Stage 2: queries that need the resolved session — all parallel ───
+  const [prescription, climbingAttempts, runs, recentTindeqR, recentTindeqL, allTindeq] =
+    await Promise.all([
+      session ? getSessionPrescription(sql, userId, session.id) : Promise.resolve([]),
+      isClimb && session
+        ? getClimbingAttempts(sql, userId, session.id)
+        : Promise.resolve([] as Awaited<ReturnType<typeof getClimbingAttempts>>),
+      isRun && session
+        ? getRunningLogsForSession(sql, userId, session.id)
+        : Promise.resolve([] as Awaited<ReturnType<typeof getRunningLogsForSession>>),
+      isTest ? getRecentTindeqTests(sql, userId, 'R', 6) : Promise.resolve([] as Awaited<ReturnType<typeof getRecentTindeqTests>>),
+      isTest ? getRecentTindeqTests(sql, userId, 'L', 6) : Promise.resolve([] as Awaited<ReturnType<typeof getRecentTindeqTests>>),
+      isTest ? getAllTindeqTests(sql, userId) : Promise.resolve([] as Awaited<ReturnType<typeof getAllTindeqTests>>)
+    ]);
+
+  // ─── Stage 3: per-exercise context — also parallel (was the worst
+  // offender; previously a serial for-loop that did N round-trips). ───
+  const exerciseContexts: Record<number, Awaited<ReturnType<typeof getExerciseContext>>> = {};
+  if (session && prescription.length > 0) {
+    const contexts = await Promise.all(
+      prescription.map((ex) =>
+        getExerciseContext(sql, userId, dateISO, session!.id, ex.name).then(
+          (ctx) => [ex.id, ctx] as const
+        )
+      )
+    );
+    for (const [exId, ctx] of contexts) exerciseContexts[exId] = ctx;
+  }
+
+  const priorWeights = weightHistory.filter((w) => w.date < dateISO);
+  const previousWeight = priorWeights.length > 0 ? priorWeights[priorWeights.length - 1] : null;
 
   return {
     dateISO,
