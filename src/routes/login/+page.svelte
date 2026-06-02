@@ -128,40 +128,45 @@
     gap: clamp(1.5rem, 4vh, 3rem);
   }
 
-  /* Phone: literally divide the viewport into thirds and place the
-     wordmark in the top third, the form in the bottom third. A true
-     3-row grid (1fr 1fr 1fr) holds the layout regardless of content
-     height, leaving an empty middle for breathing room. The form is
-     anchored to the bottom of its row and clears the iOS home
-     indicator via safe-area padding. */
+  /* Phone — bulletproof "wordmark top third, form bottom third" layout.
+     The previous 3-row grid (1fr 1fr 1fr) clipped the form whenever the
+     form's natural height exceeded the row's allotted 33vh (which it
+     does on most phones — a login form is ~280px, 33vh on iPhone SE is
+     ~190px).
+
+     Flex column with margin-bottom:auto on the hero pushes the form to
+     the bottom of available space regardless of content height. The
+     form ANCHORS to the bottom and the hero sits at top — automatic
+     overflow protection because flex children honour their own size. */
   @media (max-width: 768px) {
     .content {
-      display: grid;
-      grid-template-rows: 1fr 1fr 1fr;
-      justify-items: center;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      padding: 0 1rem;
-      padding-bottom: max(1rem, env(safe-area-inset-bottom, 0));
+      padding: 7vh 1rem max(2.5rem, calc(env(safe-area-inset-bottom, 0) + 2rem));
       gap: 0;
+      /* Switch to small viewport unit so the layout matches the
+         worst-case browser-chrome state — never overflows when toolbars
+         appear. */
+      min-height: 100svh;
     }
     .hero {
-      grid-row: 1;
-      align-self: center;
+      flex: 0 0 auto;
       width: 100%;
+      /* Eats all remaining space → pushes form to bottom */
+      margin-bottom: auto;
     }
-    /* Smaller wordmark on phone so it sits comfortably in the top
-       third without crowding the brand glow at its edges. */
     .hero :global(.logo) {
       width: clamp(240px, 80vw, 380px);
     }
     .card {
-      grid-row: 3;
-      align-self: end;
+      flex: 0 0 auto;
       width: 100%;
       max-width: 360px;
-      padding: 1.25rem 1.25rem 1rem;
-      gap: 0.85rem;
-      margin-bottom: 1.25rem;
+      /* Tighter than desktop so the form occupies less of bottom
+         third — gives clearance from the safe-area edge */
+      padding: 1rem 1.1rem 0.85rem;
+      gap: 0.7rem;
     }
   }
 
