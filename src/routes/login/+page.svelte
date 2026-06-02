@@ -7,7 +7,7 @@
   let pending = $state(false);
 </script>
 
-<svelte:head><title>Sign in · Training 2026</title></svelte:head>
+<svelte:head><title>Sign in · Biceps 2026</title></svelte:head>
 
 <div class="stage">
   <!-- Full-bleed looping background video. Two encodes — 480p for phones,
@@ -128,28 +128,40 @@
     gap: clamp(1.5rem, 4vh, 3rem);
   }
 
-  /* Phone: anchor hero to top third, form to bottom third. Avoids the
-     centered-stack scroll/clip problem on shorter viewports (iPhone SE
-     etc.) and respects the iOS home-indicator safe area. */
+  /* Phone: literally divide the viewport into thirds and place the
+     wordmark in the top third, the form in the bottom third. A true
+     3-row grid (1fr 1fr 1fr) holds the layout regardless of content
+     height, leaving an empty middle for breathing room. The form is
+     anchored to the bottom of its row and clears the iOS home
+     indicator via safe-area padding. */
   @media (max-width: 768px) {
     .content {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding-top: max(2.5rem, 8vh);
-      padding-bottom: max(2rem, calc(env(safe-area-inset-bottom, 1rem) + 2rem));
-      gap: 1.25rem;
+      display: grid;
+      grid-template-rows: 1fr 1fr 1fr;
+      justify-items: center;
+      align-items: center;
+      padding: 0 1rem;
+      padding-bottom: max(1rem, env(safe-area-inset-bottom, 0));
+      gap: 0;
     }
     .hero {
-      flex: 0 0 auto;
-      align-self: stretch;
+      grid-row: 1;
+      align-self: center;
+      width: 100%;
+    }
+    /* Smaller wordmark on phone so it sits comfortably in the top
+       third without crowding the brand glow at its edges. */
+    .hero :global(.logo) {
+      width: clamp(240px, 80vw, 380px);
     }
     .card {
-      flex: 0 0 auto;
-      align-self: stretch;
+      grid-row: 3;
+      align-self: end;
       width: 100%;
       max-width: 360px;
-      margin: 0 auto;
+      padding: 1.25rem 1.25rem 1rem;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
     }
   }
 

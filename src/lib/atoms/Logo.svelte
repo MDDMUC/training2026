@@ -40,7 +40,7 @@
     height={(size * 64) / 120}
     class="logo {klass}"
     role="img"
-    aria-label="Training 2026"
+    aria-label="Biceps 2026"
   >
     <defs>
       <pattern id={dotsId} patternUnits="userSpaceOnUse" width="4" height="4">
@@ -58,7 +58,7 @@
 
     <!-- italic skew on a centered pivot -->
     <g transform="translate(60 32) skewX(-12) translate(-60 -32)">
-      <!-- T (halftone) -->
+      <!-- B (halftone) -->
       <text
         x="6"
         y="48"
@@ -67,7 +67,7 @@
         font-weight="400"
         fill={`url(#${dotsId})`}
         mask={`url(#${maskId})`}
-      >T</text>
+      >B</text>
       <!-- 26 (solid) -->
       <text
         x="44"
@@ -103,7 +103,7 @@
     height={(size * 240) / 540}
     class="logo wordmark {klass}"
     role="img"
-    aria-label="Training 2026"
+    aria-label="Biceps 2026"
   >
     <defs>
       <pattern id={dotsId} patternUnits="userSpaceOnUse" width="5" height="5">
@@ -119,7 +119,9 @@
       </mask>
     </defs>
 
-    <!-- ─── TRAINING ─── -->
+    <!-- ─── BICEPS ─── -->
+    <!-- Letter-spacing bumped 2→10 so the 6-letter word spreads to a
+         similar visual width as the previous 8-letter TRAINING. -->
     <g transform="translate(270 90) skewX(-12) translate(-270 -90)">
       <!-- Layer 1: magenta back shadow -->
       {#if accent}
@@ -128,10 +130,10 @@
           y="120"
           text-anchor="middle"
           font-family="Russo One, Arial Black, sans-serif"
-          font-size="86"
-          letter-spacing="2"
+          font-size="92"
+          letter-spacing="10"
           fill="var(--color-fg-accent, #FF00FF)"
-        >TRAINING</text>
+        >BICEPS</text>
       {/if}
       <!-- Layer 2: white outline ghost -->
       <text
@@ -139,24 +141,24 @@
         y="115"
         text-anchor="middle"
         font-family="Russo One, Arial Black, sans-serif"
-        font-size="86"
-        letter-spacing="2"
+        font-size="92"
+        letter-spacing="10"
         fill="none"
         stroke="currentColor"
         stroke-width="1.5"
         opacity="0.55"
-      >TRAINING</text>
+      >BICEPS</text>
       <!-- Layer 3: halftone hero face -->
       <text
         x="270"
         y="110"
         text-anchor="middle"
         font-family="Russo One, Arial Black, sans-serif"
-        font-size="86"
-        letter-spacing="2"
+        font-size="92"
+        letter-spacing="10"
         fill={`url(#${dotsId})`}
         mask={`url(#${maskId})`}
-      >TRAINING</text>
+      >BICEPS</text>
     </g>
 
     <!-- ─── 2026 — two layers (magenta shadow + solid front) ─── -->

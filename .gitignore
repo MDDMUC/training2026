@@ -19,3 +19,6 @@ db/*.db-shm
 
 # Claude Code project-local settings
 .claude/settings.local.json
+
+# Source videos in design-system/ that are too large for git
+design-system/retro.mp4

@@ -20,7 +20,7 @@
 </script>
 
 <aside class="app-nav" aria-label="Primary navigation">
-  <a href="/" class="brand" aria-label="Training 2026 — home">
+  <a href="/" class="brand" aria-label="Biceps 2026 — home">
     <Logo variant="mark" size={92} />
   </a>
 

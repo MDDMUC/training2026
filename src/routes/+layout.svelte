@@ -28,7 +28,7 @@
     if (path.startsWith('/pr')) return { title: 'Records', subtitle: 'Lifetime peaks' };
     if (path.startsWith('/analysis')) return { title: 'Analysis', subtitle: 'Progress and trends' };
     if (path.startsWith('/settings')) return { title: 'Settings', subtitle: 'Backup, export, about' };
-    return { title: 'Training 2026', subtitle: undefined };
+    return { title: 'Biceps 2026', subtitle: undefined };
   });
 </script>
 
