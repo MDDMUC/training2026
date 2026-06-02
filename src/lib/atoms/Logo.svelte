@@ -86,13 +86,21 @@
     </g>
   </svg>
 {:else}
-  <!-- viewBox widened to 480 so the italic-skewed TRAINING fits without
-       clipping at its outer letters (T's overhang and G's tail are pushed
-       by skewX(-12) past the previous 360 bound). -->
+  <!-- 80s action-title wordmark — three stacked text layers per word:
+         1) MAGENTA solid drop shadow, offset (+10, +10) — the deep back layer
+         2) WHITE outline-only echo,   offset (+5,  +5)  — intermediate ghost
+         3) HALFTONE-DOT face,         offset (0,   0)   — the hero front
+
+       This is the visual move every 80s action poster makes: a contrasting
+       colored drop shadow + a hard-offset white outline + the actual word in
+       a textured fill. Magenta is the brand's single chromatic role; it sells
+       the "TOP GUN / COBRA / LETHAL WEAPON" feeling without any extra colors.
+
+       viewBox is 540×240 to accommodate the bottom-right shadow overhang. -->
   <svg
-    viewBox="0 0 480 200"
+    viewBox="0 0 540 240"
     width={size}
-    height={(size * 200) / 480}
+    height={(size * 240) / 540}
     class="logo wordmark {klass}"
     role="img"
     aria-label="Training 2026"
@@ -103,36 +111,73 @@
       </pattern>
       <linearGradient id={fadeId} x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="white" stop-opacity="1" />
-        <stop offset="55%" stop-color="white" stop-opacity="0.95" />
+        <stop offset="60%" stop-color="white" stop-opacity="0.95" />
         <stop offset="100%" stop-color="white" stop-opacity="0.4" />
       </linearGradient>
       <mask id={maskId}>
-        <rect width="480" height="200" fill={`url(#${fadeId})`} />
+        <rect width="540" height="240" fill={`url(#${fadeId})`} />
       </mask>
     </defs>
 
-    <!-- TRAINING (top, italic, halftone) -->
-    <g transform="translate(240 70) skewX(-12) translate(-240 -70)">
+    <!-- ─── TRAINING ─── -->
+    <g transform="translate(270 90) skewX(-12) translate(-270 -90)">
+      <!-- Layer 1: magenta back shadow -->
+      {#if accent}
+        <text
+          x="280"
+          y="120"
+          text-anchor="middle"
+          font-family="Russo One, Arial Black, sans-serif"
+          font-size="86"
+          letter-spacing="2"
+          fill="var(--color-fg-accent, #FF00FF)"
+        >TRAINING</text>
+      {/if}
+      <!-- Layer 2: white outline ghost -->
       <text
-        x="240"
-        y="92"
+        x="275"
+        y="115"
         text-anchor="middle"
         font-family="Russo One, Arial Black, sans-serif"
-        font-size="78"
+        font-size="86"
+        letter-spacing="2"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        opacity="0.55"
+      >TRAINING</text>
+      <!-- Layer 3: halftone hero face -->
+      <text
+        x="270"
+        y="110"
+        text-anchor="middle"
+        font-family="Russo One, Arial Black, sans-serif"
+        font-size="86"
         letter-spacing="2"
         fill={`url(#${dotsId})`}
         mask={`url(#${maskId})`}
       >TRAINING</text>
     </g>
 
-    <!-- 2026 (bottom, solid, wide-tracked) -->
-    <g transform="translate(240 158) skewX(-12) translate(-240 -158)">
+    <!-- ─── 2026 — two layers (magenta shadow + solid front) ─── -->
+    <g transform="translate(270 200) skewX(-12) translate(-270 -200)">
+      {#if accent}
+        <text
+          x="276"
+          y="210"
+          text-anchor="middle"
+          font-family="Russo One, Arial Black, sans-serif"
+          font-size="46"
+          letter-spacing="16"
+          fill="var(--color-fg-accent, #FF00FF)"
+        >2026</text>
+      {/if}
       <text
-        x="240"
-        y="172"
+        x="270"
+        y="205"
         text-anchor="middle"
         font-family="Russo One, Arial Black, sans-serif"
-        font-size="44"
+        font-size="46"
         letter-spacing="16"
         fill="currentColor"
       >2026</text>

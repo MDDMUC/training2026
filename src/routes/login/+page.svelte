@@ -140,10 +140,10 @@
   /* Force the Logo color to white on this dark background */
   .hero :global(.logo) {
     color: #fff;
-    width: clamp(280px, 80vw, 440px);
+    width: clamp(300px, 84vw, 520px);
     height: auto;
-    /* The text-shadow gives the wordmark a faint backlight halo —
-       1980s arcade marquee energy. */
+    /* Faint backlight halo — 1980s arcade marquee energy. The magenta
+       drop-shadow layer inside the SVG carries the brand color separately. */
     filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.15));
   }
 
