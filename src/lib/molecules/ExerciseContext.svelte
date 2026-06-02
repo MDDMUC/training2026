@@ -144,4 +144,27 @@
     border-radius: var(--radius-1);
     white-space: nowrap;
   }
+
+  /* Phone: 3-column Prev → Next layout gets cramped under ~360 px. Stack
+     vertically — Prev row, then Next row. Arrow becomes a separator hairline. */
+  @media (max-width: 480px) {
+    .ctx {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+      padding: var(--space-2);
+    }
+    .col-next { justify-content: flex-start; }
+    .arrow { display: none; }
+    .pr-badge {
+      justify-self: start;
+      padding: 2px var(--space-2);
+      font-size: 10px;
+    }
+    .value {
+      /* Allow wrap on phone — readability beats single-line elegance. */
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+  }
 </style>

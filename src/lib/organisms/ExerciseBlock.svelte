@@ -113,6 +113,11 @@
     transition: opacity var(--motion-default) var(--ease-standard);
   }
 
+  /* Phone: tighten padding so the card stops dominating horizontal space. */
+  @media (max-width: 640px) {
+    .block { padding: var(--space-3); }
+  }
+
   .block.done { opacity: 0.7; }
 
   header {

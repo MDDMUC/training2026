@@ -403,4 +403,17 @@
     cursor: pointer;
   }
   .open-add:hover { color: var(--color-fg-default); }
+
+  /* Phone: the add-exercise form (input + Add + Cancel side-by-side) crushes
+     the input below readable width. Stack vertically. */
+  @media (max-width: 640px) {
+    .add-exercise form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .add-exercise .primary,
+    .add-exercise .ghost {
+      width: 100%;
+    }
+  }
 </style>

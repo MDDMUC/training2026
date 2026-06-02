@@ -86,4 +86,13 @@
     /* Cells handle their own borders to avoid double lines */
     gap: 0;
   }
+
+  /* Mobile: drop the 7-col grid in favor of an agenda list.
+     A 7-col grid on a 375 px phone gives ~50 px columns — useless for the
+     amount of info per day. Single-column list with horizontal day rows
+     is the canonical mobile pattern (Google Calendar Agenda, Notion). */
+  @media (max-width: 640px) {
+    .weekdays { display: none; }
+    .days { grid-template-columns: 1fr; }
+  }
 </style>

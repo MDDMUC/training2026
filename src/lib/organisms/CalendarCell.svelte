@@ -45,7 +45,7 @@
   aria-current={isToday ? 'date' : undefined}
   aria-label="{date.toDateString()}{sessions.length ? ', ' + sessions.length + ' session(s)' : ''}"
 >
-  <div class="head">
+  <div class="head" data-weekday={date.toLocaleDateString('en', { weekday: 'short' })}>
     <span class="num">{date.getDate()}</span>
     {#if isToday}<span class="today-pill">Today</span>{/if}
   </div>
@@ -219,5 +219,55 @@
     font: var(--weight-semibold) 10px/1 var(--font-sans);
     color: var(--color-fg-accent);
     margin-top: auto;
+  }
+
+  /* ─── Mobile agenda layout ─────────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    /* Hide previous/next-month padding days entirely; they're noise on a list. */
+    .cell.other-month { display: none; }
+
+    /* Each remaining cell becomes a horizontal row: date | sessions. */
+    .cell {
+      flex-direction: row;
+      align-items: stretch;
+      min-height: auto;
+      padding: var(--space-3);
+      gap: var(--space-3);
+    }
+
+    .head {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 0;
+      min-width: 44px;
+      flex-shrink: 0;
+    }
+
+    .num {
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Show abbreviated weekday under the date number for orientation. */
+    .head::after {
+      content: attr(data-weekday);
+      font: var(--text-micro-weight) 10px/1 var(--font-sans);
+      letter-spacing: var(--text-micro-tracking);
+      text-transform: uppercase;
+      color: var(--color-fg-subtle);
+      margin-top: 2px;
+    }
+
+    .body { gap: var(--space-1); }
+
+    /* Title can use full available row width since we're horizontal now. */
+    .title {
+      -webkit-line-clamp: 1;
+      font-size: 13px;
+    }
+
+    /* Empty (rest) days: collapse height. */
+    .cell.rest:not(.today) .body { display: none; }
+    .cell.rest:not(.today) { padding-block: var(--space-2); }
   }
 </style>
