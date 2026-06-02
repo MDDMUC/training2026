@@ -10,7 +10,12 @@
   let sleep = $state<number | null>(session.sleep_hours);
   let readiness = $state<number | null>(session.readiness);
   let notes = $state<string>(session.notes ?? '');
-  let completed = $state(session.completed === 1);
+
+  // Completion follows the server truth, with an optimistic override while an
+  // update is in flight. Don't keep an independent $state — that drifts from
+  // session.completed after revalidation and breaks the toggle on second click.
+  let pendingCompleted = $state<boolean | null>(null);
+  const completed = $derived(pendingCompleted ?? session.completed === 1);
 
   // Tracks which field most recently saved successfully — drives the ✓ Saved badge.
   let savedField = $state<string | null>(null);
@@ -119,15 +124,23 @@
 
     <label class="field complete-toggle">
       <span>Status</span>
-      <form method="POST" action="?/updateSession" use:enhance>
+      <form
+        method="POST"
+        action="?/updateSession"
+        use:enhance={() => {
+          // Optimistically flip the displayed state before the server responds;
+          // clear the override once the page data has caught up.
+          pendingCompleted = !completed;
+          return async ({ update, result }) => {
+            await update();
+            pendingCompleted = null;
+            if (result.type === 'success') flashSaved('completed');
+          };
+        }}
+      >
         <input type="hidden" name="sessionId" value={session.id} />
         <input type="hidden" name="completed" value={completed ? 'false' : 'true'} />
-        <button
-          type="submit"
-          class="status-btn"
-          class:on={completed}
-          onclick={() => (completed = !completed)}
-        >
+        <button type="submit" class="status-btn" class:on={completed}>
           {completed ? '✓ Completed' : 'Mark complete'}
         </button>
       </form>
