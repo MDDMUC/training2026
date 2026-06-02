@@ -82,8 +82,12 @@
   }
 
   .title-block h1 {
-    font: var(--weight-semibold) 18px/1.2 var(--font-sans);
-    letter-spacing: -0.01em;
+    font: 400 22px/1 var(--font-display, var(--font-sans));
+    letter-spacing: 0.02em;
+    font-style: italic;
+    text-transform: uppercase;
+    transform: skewX(-6deg);
+    transform-origin: left;
   }
 
   .subtitle {

@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Training 2026 mark — three ascending pillars representing the 3 mesocycles (BASE · MAX · PEAK).
-       Echoes the WeeklyVolumeChart visual language. Pure achromatic; uses currentColor where possible. -->
-  <rect width="32" height="32" rx="4" fill="#0A0A0A"/>
-  <rect x="6"  y="17" width="4" height="10" rx="0.5" fill="#FAFAFA"/>
-  <rect x="14" y="11" width="4" height="16" rx="0.5" fill="#FAFAFA"/>
-  <rect x="22" y="5"  width="4" height="22" rx="0.5" fill="#FAFAFA"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#000"/>
+  <g transform="translate(32 36) skewX(-12) translate(-32 -36)" fill="#fff" font-family="'Russo One', 'Arial Black', sans-serif" font-size="38" font-weight="400">
+    <text x="32" y="48" text-anchor="middle">T26</text>
+  </g>
+  <line x1="10" y1="54" x2="54" y2="54" stroke="#fff" stroke-width="2.5"/>
+  <circle cx="32" cy="54" r="2" fill="#E85D04"/>
 </svg>

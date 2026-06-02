@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import Logo from '$lib/atoms/Logo.svelte';
 
   type NavItem = { href: string; label: string };
 
@@ -20,14 +21,7 @@
 
 <aside class="app-nav" aria-label="Primary navigation">
   <a href="/" class="brand" aria-label="Training 2026 — home">
-    <span class="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 32 32" width="20" height="20">
-        <rect x="6"  y="17" width="4" height="10" rx="0.5" fill="currentColor"/>
-        <rect x="14" y="11" width="4" height="16" rx="0.5" fill="currentColor"/>
-        <rect x="22" y="5"  width="4" height="22" rx="0.5" fill="currentColor"/>
-      </svg>
-    </span>
-    <span class="brand-name">Training 2026</span>
+    <Logo variant="mark" size={92} />
   </a>
 
   <nav>
@@ -87,21 +81,8 @@
     outline-offset: 2px;
   }
 
-  .brand-mark {
-    width: 28px;
-    height: 28px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-bg-inverse);
-    color: var(--color-fg-inverse);
-    border-radius: var(--radius-1);
-    flex-shrink: 0;
-  }
-
-  .brand-name {
-    font: var(--weight-semibold) 15px/1 var(--font-sans);
-    letter-spacing: -0.01em;
+  .brand {
+    color: var(--color-fg-default);
   }
 
   nav ul {
@@ -169,7 +150,8 @@
       border-bottom: 1px solid var(--color-border-default);
     }
 
-    .brand-name { display: none; }
+    /* Mobile: shrink the logo so the nav fits comfortably */
+    .brand :global(.logo) { width: 72px; height: auto; }
 
     nav { flex: 1; overflow-x: auto; }
     nav ul {

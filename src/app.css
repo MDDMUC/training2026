@@ -6,6 +6,13 @@
 
 @import "../design-system/tokens/tokens.css";
 
+/* Display font for branding ("Training 2026" wordmark + headings on hero
+   surfaces like /login). Bold, italic-feeling geometric — the 90s action
+   title vibe. Loaded in app.html. */
+:root {
+  --font-display: 'Russo One', 'Arial Black', system-ui, sans-serif;
+}
+
 /* ---------- Reset (minimal) ---------- */
 
 *, *::before, *::after {
