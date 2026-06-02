@@ -130,6 +130,32 @@
         opacity="0.92"
       >2026</text>
     </g>
+
+    <!-- ─── 80s sparkle stars over BICEPS.
+         Each is a 4-point shimmer with a tiny central lens-flare dot for
+         that signature Disney/anime/MTV-bumper sparkle. Sizes span 5–13
+         so the eye finds a hierarchy; one is magenta (the brand) and
+         four are white. Asynchronous animation delays so the twinkles
+         read as organic and uncoordinated. -->
+    <g class="sparkle s1" transform="translate(470 50)">
+      <path d="M 0 -13 L 2.1 -2.1 L 13 0 L 2.1 2.1 L 0 13 L -2.1 2.1 L -13 0 L -2.1 -2.1 Z" fill="currentColor"/>
+      <circle cx="0" cy="0" r="2" fill="currentColor"/>
+    </g>
+    <g class="sparkle s2" transform="translate(105 38)">
+      <path d="M 0 -9 L 1.5 -1.5 L 9 0 L 1.5 1.5 L 0 9 L -1.5 1.5 L -9 0 L -1.5 -1.5 Z" fill="currentColor"/>
+      <circle cx="0" cy="0" r="1.4" fill="currentColor"/>
+    </g>
+    <g class="sparkle s3" transform="translate(280 22)">
+      <path d="M 0 -6.5 L 1.1 -1.1 L 6.5 0 L 1.1 1.1 L 0 6.5 L -1.1 1.1 L -6.5 0 L -1.1 -1.1 Z" fill="currentColor"/>
+    </g>
+    <g class="sparkle s4" transform="translate(495 122)">
+      <path d="M 0 -7 L 1.2 -1.2 L 7 0 L 1.2 1.2 L 0 7 L -1.2 1.2 L -7 0 L -1.2 -1.2 Z" fill="currentColor"/>
+    </g>
+    <!-- The brand-magenta sparkle — placed bottom-left of BICEPS, smallest
+         of the five so it reads as a punctuation rather than a peer. -->
+    <g class="sparkle s5" transform="translate(60 145)">
+      <path d="M 0 -5 L 0.9 -0.9 L 5 0 L 0.9 0.9 L 0 5 L -0.9 0.9 L -5 0 L -0.9 -0.9 Z" fill="var(--color-fg-accent, #FF00FF)"/>
+    </g>
   </svg>
 {/if}
 
@@ -140,4 +166,27 @@
     color: var(--logo-color, currentColor);
   }
 
+  /* Sparkle twinkles — each shimmer fades from invisible to full opacity
+     on its own offset clock. Five staggered delays read as five
+     independent sparkles rather than a synchronized strobe. */
+  .sparkle {
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: twinkle 2.4s ease-in-out infinite;
+  }
+  .s1 { animation-delay: 0s;    }
+  .s2 { animation-delay: 0.5s;  }
+  .s3 { animation-delay: 1.0s;  }
+  .s4 { animation-delay: 1.5s;  }
+  .s5 { animation-delay: 2.0s;  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.4); }
+    10%      { opacity: 1; transform: scale(1.05); }
+    30%      { opacity: 0; transform: scale(0.6); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sparkle { animation: none; opacity: 0.65; transform: scale(1); }
+  }
 </style>
