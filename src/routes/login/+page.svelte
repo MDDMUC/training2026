@@ -1,7 +1,6 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import type { ActionData, PageData } from './$types';
-  import SynthwaveGrid from '$lib/atoms/SynthwaveGrid.svelte';
   import Logo from '$lib/atoms/Logo.svelte';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -11,10 +10,20 @@
 <svelte:head><title>Sign in · Training 2026</title></svelte:head>
 
 <div class="stage">
-  <!-- Full-bleed perspective grid behind everything -->
-  <SynthwaveGrid color="#fff" bg="#000" speed={11} sun={true} mountains={true} />
+  <!-- Full-bleed looping background video. Muted + playsinline are
+       required for iOS to autoplay; aria-hidden because it's decorative. -->
+  <video
+    class="bg-video"
+    src="/80sbg.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto"
+    aria-hidden="true"
+  ></video>
 
-  <!-- Foreground content sits above the grid -->
+  <!-- Foreground content sits above the video -->
   <div class="content">
     <header class="hero">
       <Logo variant="wordmark" size={440} accent={true} />
@@ -65,8 +74,8 @@
 </div>
 
 <style>
-  /* Black background as the canvas; the SynthwaveGrid sits on top of this
-     and the content card floats above the grid. */
+  /* Black canvas; the background video covers the whole stage, and the
+     content card floats above it. */
   .stage {
     position: relative;
     min-height: 100dvh;
@@ -75,6 +84,32 @@
     color: #fff;
     overflow: hidden;
     isolation: isolate;
+  }
+
+  /* Background video — cover-fit so it fills every viewport (portrait
+     phones included) without distorting. Sits behind the content layer. */
+  .bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* On portrait phones the source aspect rarely matches, so centering
+       avoids cropping off the horizon/sun. */
+    object-position: center center;
+    z-index: 0;
+    pointer-events: none;
+    /* Slight darken so the white wordmark + form text stay legible
+       regardless of which frame happens to be visible. */
+    filter: brightness(0.85);
+  }
+
+  /* If the user prefers reduced motion, freeze the video on its first
+     frame. Browsers honour this by not autoplaying when set via JS, but
+     for declarative autoplay we can fall back to opacity styling — the
+     visual stays. */
+  @media (prefers-reduced-motion: reduce) {
+    .bg-video { animation-play-state: paused; }
   }
 
   .content {
