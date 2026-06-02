@@ -12,7 +12,7 @@
 
 <div class="stage">
   <!-- Full-bleed perspective grid behind everything -->
-  <SynthwaveGrid color="#fff" bg="#000" speed={22} sun={true} mountains={true} />
+  <SynthwaveGrid color="#fff" bg="#000" speed={11} sun={true} mountains={true} />
 
   <!-- Foreground content sits above the grid -->
   <div class="content">

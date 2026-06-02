@@ -27,8 +27,24 @@
     bg = '#000000',
     sun = true,
     mountains = true,
-    speed = 20
+    speed = 11
   }: Props = $props();
+
+  // Starfield: deterministic pseudo-random dots placed once at module level
+  // so they don't reshuffle on every render. Uses a small LCG.
+  const stars = (() => {
+    let seed = 1379;
+    const rand = () => {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    };
+    return Array.from({ length: 70 }, () => ({
+      cx: rand() * 100,
+      cy: rand() * 46, // upper portion only (above horizon area)
+      r: 0.15 + rand() * 0.55,
+      o: 0.3 + rand() * 0.6
+    }));
+  })();
 
   // Sun geometry — slits in the lower half, clipped to the circle's chord.
   const sunR = 100;
@@ -51,6 +67,24 @@
 >
   <!-- Sky gradient + atmosphere -->
   <div class="sky"></div>
+
+  <!-- Starfield above the horizon — sells the depth/space feel -->
+  <svg
+    class="stars"
+    viewBox="0 0 100 50"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    {#each stars as s, i (i)}
+      <circle
+        cx={s.cx}
+        cy={s.cy}
+        r={s.r}
+        fill="var(--c-line)"
+        opacity={s.o}
+      />
+    {/each}
+  </svg>
 
   <!-- Mountains (back layer) -->
   {#if mountains}
@@ -138,6 +172,23 @@
     );
   }
 
+  /* Starfield — fills the sky above the horizon */
+  .stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    width: 100%;
+    pointer-events: none;
+    opacity: 0.85;
+    animation: twinkle 4s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.7; }
+    50%      { opacity: 0.95; }
+  }
+
   /* Mountains sit just above the horizon line, between sky and horizon. */
   .mountains {
     position: absolute;
@@ -189,8 +240,10 @@
   }
 
   /* The grid plane — rotated back so its far edge lies at the horizon and
-     its near edge sits at the bottom of the viewport. Two repeating linear
-     gradients form the lattice. */
+     its near edge sits at the bottom of the viewport. Each lattice line
+     is rendered as TWO layers: a fat semi-transparent halo + a sharp
+     bright core. That's the neon-grid signature — the line is the *thing*,
+     not a thin stroke through a void. */
   .grid {
     position: absolute;
     left: -50%;
@@ -198,18 +251,28 @@
     top: 0;
     bottom: -200%;
     background-image:
-      linear-gradient(to right, var(--c-line) 1.5px, transparent 1.5px),
-      linear-gradient(to bottom, var(--c-line) 1.5px, transparent 1.5px);
-    background-size: 60px 60px;
+      /* Halo (vertical lines) */
+      linear-gradient(to right,
+        color-mix(in oklab, var(--c-line) 28%, transparent) 0 4px,
+        transparent 4px),
+      /* Halo (horizontal lines) */
+      linear-gradient(to bottom,
+        color-mix(in oklab, var(--c-line) 28%, transparent) 0 4px,
+        transparent 4px),
+      /* Core (vertical lines) */
+      linear-gradient(to right, var(--c-line) 0 1.5px, transparent 1.5px),
+      /* Core (horizontal lines) */
+      linear-gradient(to bottom, var(--c-line) 0 1.5px, transparent 1.5px);
+    background-size: 64px 64px;
     transform-origin: 50% 0%;
-    transform: rotateX(60deg);
+    transform: rotateX(64deg);
     animation: scroll var(--speed) linear infinite;
     will-change: background-position;
   }
 
   @keyframes scroll {
-    from { background-position: 0 0; }
-    to   { background-position: 0 60px; }
+    from { background-position: 0 0, 0 0, 0 0, 0 0; }
+    to   { background-position: 0 64px, 0 64px, 0 64px, 0 64px; }
   }
 
   /* Fade the lines as they approach the horizon — prevents a hard top edge
@@ -228,6 +291,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .grid { animation: none; }
+    .grid, .stars { animation: none; }
   }
 </style>
