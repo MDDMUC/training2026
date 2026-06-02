@@ -34,7 +34,7 @@
       <input type="hidden" name="next" value={data.next} />
 
       <label>
-        <span>Identifier</span>
+        <span>Name</span>
         <input
           name="identifier"
           type="text"
@@ -60,8 +60,6 @@
         {pending ? 'Authenticating…' : 'Log in'}
         <span class="caret" aria-hidden="true">→</span>
       </button>
-
-      <p class="fineprint">SECURE TRANSMISSION · COOKIE 30D · NO TRACKING</p>
     </form>
   </div>
 </div>
@@ -206,17 +204,6 @@
   }
   button:hover:not(:disabled) .caret {
     transform: translateX(3px);
-  }
-
-  .fineprint {
-    margin: 0;
-    font: 400 9px/1 var(--font-mono, monospace);
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.35);
-    text-align: center;
-    padding-top: 0.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
   }
 
   /* ── Entrance choreography ──────────────────────────────────────────── */
