@@ -31,6 +31,34 @@
   const dotsId = `tx-dots-${uid}`;
   const fadeId = `tx-fade-${uid}`;
   const maskId = `tx-mask-${uid}`;
+
+  // Sparkle field — many shimmers scattered across the wordmark area.
+  // Each has its own size, color, animation delay, and cycle length so
+  // the eye reads them as a random twinkle rather than a synced strobe.
+  // r = radius in viewBox units; the 4-point star inscribes a square of
+  // side 2r with thin tapering arms via a 0.16r inner-corner radius.
+  type Sp = { x: number; y: number; r: number; color: 'fg' | 'accent'; delay: number; dur: number; lens: boolean };
+  const sparkles: Sp[] = [
+    { x: 110, y: 32,  r: 8,   color: 'fg',     delay: 0.0, dur: 2.4, lens: true  },
+    { x: 60,  y: 92,  r: 5,   color: 'fg',     delay: 1.3, dur: 2.7, lens: false },
+    { x: 200, y: 18,  r: 4,   color: 'fg',     delay: 0.7, dur: 2.2, lens: false },
+    { x: 280, y: 38,  r: 6.5, color: 'accent', delay: 1.7, dur: 2.6, lens: false },
+    { x: 360, y: 14,  r: 5,   color: 'fg',     delay: 0.4, dur: 2.9, lens: false },
+    { x: 450, y: 28,  r: 9,   color: 'fg',     delay: 2.1, dur: 2.5, lens: true  },
+    { x: 505, y: 70,  r: 5.5, color: 'fg',     delay: 1.0, dur: 2.8, lens: false },
+    { x: 25,  y: 130, r: 4.5, color: 'fg',     delay: 0.9, dur: 2.3, lens: false },
+    { x: 175, y: 145, r: 5,   color: 'accent', delay: 2.4, dur: 2.6, lens: false },
+    { x: 320, y: 170, r: 4,   color: 'fg',     delay: 1.5, dur: 2.4, lens: false },
+    { x: 415, y: 155, r: 6.5, color: 'fg',     delay: 0.2, dur: 2.7, lens: false },
+    { x: 490, y: 140, r: 5,   color: 'fg',     delay: 1.9, dur: 2.5, lens: false },
+    { x: 75,  y: 50,  r: 3.5, color: 'fg',     delay: 2.7, dur: 2.3, lens: false },
+    { x: 245, y: 60,  r: 3,   color: 'fg',     delay: 0.6, dur: 2.8, lens: false },
+    { x: 390, y: 90,  r: 3.5, color: 'accent', delay: 1.2, dur: 2.6, lens: false }
+  ];
+  function starPath(r: number): string {
+    const i = r * 0.18;
+    return `M 0 ${-r} L ${i} ${-i} L ${r} 0 L ${i} ${i} L 0 ${r} L ${-i} ${i} L ${-r} 0 L ${-i} ${-i} Z`;
+  }
 </script>
 
 {#if variant === 'mark'}
@@ -131,31 +159,41 @@
       >2026</text>
     </g>
 
-    <!-- ─── 80s sparkle stars over BICEPS.
-         Each is a 4-point shimmer with a tiny central lens-flare dot for
-         that signature Disney/anime/MTV-bumper sparkle. Sizes span 5–13
-         so the eye finds a hierarchy; one is magenta (the brand) and
-         four are white. Asynchronous animation delays so the twinkles
-         read as organic and uncoordinated. -->
-    <g class="sparkle s1" transform="translate(470 50)">
-      <path d="M 0 -13 L 2.1 -2.1 L 13 0 L 2.1 2.1 L 0 13 L -2.1 2.1 L -13 0 L -2.1 -2.1 Z" fill="currentColor"/>
-      <circle cx="0" cy="0" r="2" fill="currentColor"/>
-    </g>
-    <g class="sparkle s2" transform="translate(105 38)">
-      <path d="M 0 -9 L 1.5 -1.5 L 9 0 L 1.5 1.5 L 0 9 L -1.5 1.5 L -9 0 L -1.5 -1.5 Z" fill="currentColor"/>
-      <circle cx="0" cy="0" r="1.4" fill="currentColor"/>
-    </g>
-    <g class="sparkle s3" transform="translate(280 22)">
-      <path d="M 0 -6.5 L 1.1 -1.1 L 6.5 0 L 1.1 1.1 L 0 6.5 L -1.1 1.1 L -6.5 0 L -1.1 -1.1 Z" fill="currentColor"/>
-    </g>
-    <g class="sparkle s4" transform="translate(495 122)">
-      <path d="M 0 -7 L 1.2 -1.2 L 7 0 L 1.2 1.2 L 0 7 L -1.2 1.2 L -7 0 L -1.2 -1.2 Z" fill="currentColor"/>
-    </g>
-    <!-- The brand-magenta sparkle — placed bottom-left of BICEPS, smallest
-         of the five so it reads as a punctuation rather than a peer. -->
-    <g class="sparkle s5" transform="translate(60 145)">
-      <path d="M 0 -5 L 0.9 -0.9 L 5 0 L 0.9 0.9 L 0 5 L -0.9 0.9 L -5 0 L -0.9 -0.9 Z" fill="var(--color-fg-accent, #FF00FF)"/>
-    </g>
+    <!-- ─── 80s sparkle field over BICEPS.
+         15 four-point shimmers scattered across the wordmark area, mixed
+         sizes (3–9 px), mixed timing (delays + durations both varied so
+         the cycle phases drift apart over time — reads as truly random
+         after a few seconds), mixed colors (mostly white, four magenta
+         to tie the brand color into the field). Two largest get a tiny
+         central lens-flare dot.
+
+         Critical: each sparkle is wrapped in TWO groups. The OUTER <g>
+         holds the SVG transform attribute (position). The INNER <g>
+         carries the CSS animation. This separation is required because
+         CSS `transform` overrides SVG `transform` attributes (it doesn't
+         compose with them) — without the wrapper, the position would
+         vanish the moment the keyframe scale applied. -->
+    {#each sparkles as s, i (i)}
+      <g transform="translate({s.x} {s.y})">
+        <g
+          class="sparkle"
+          style="animation-delay:{s.delay}s; animation-duration:{s.dur}s;"
+        >
+          <path
+            d={starPath(s.r)}
+            fill={s.color === 'accent' ? 'var(--color-fg-accent, #FF00FF)' : 'currentColor'}
+          />
+          {#if s.lens}
+            <circle
+              cx="0"
+              cy="0"
+              r={s.r * 0.18}
+              fill={s.color === 'accent' ? 'var(--color-fg-accent, #FF00FF)' : 'currentColor'}
+            />
+          {/if}
+        </g>
+      </g>
+    {/each}
   </svg>
 {/if}
 
