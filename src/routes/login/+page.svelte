@@ -10,18 +10,22 @@
 <svelte:head><title>Sign in · Training 2026</title></svelte:head>
 
 <div class="stage">
-  <!-- Full-bleed looping background video. Muted + playsinline are
-       required for iOS to autoplay; aria-hidden because it's decorative. -->
+  <!-- Full-bleed looping background video. Two encodes — 480p for phones,
+       720p for everything else. Browser picks the first matching <source>.
+       Muted + playsinline are required for iOS to autoplay; aria-hidden
+       because it's decorative. -->
   <video
     class="bg-video"
-    src="/80sbg.mp4"
     autoplay
     muted
     loop
     playsinline
     preload="auto"
     aria-hidden="true"
-  ></video>
+  >
+    <source src="/80sbg-mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
+    <source src="/80sbg-desktop.mp4" type="video/mp4" />
+  </video>
 
   <!-- Foreground content sits above the video -->
   <div class="content">
