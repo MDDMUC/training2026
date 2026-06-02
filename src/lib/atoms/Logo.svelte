@@ -182,6 +182,23 @@
         fill="currentColor"
       >2026</text>
     </g>
+
+    <!-- ─── Sparkle stars — 4 twinkling shimmers placed at the wordmark's
+         compositional anchor points. Asynchronous delays so they read as
+         organic, not synced. Path is centered on origin per sparkle, then
+         translated into position. ─── -->
+    <g class="sparkle s1" transform="translate(465 48)">
+      <path d="M 0 -10 L 1.6 -1.6 L 10 0 L 1.6 1.6 L 0 10 L -1.6 1.6 L -10 0 L -1.6 -1.6 Z" fill="currentColor"/>
+    </g>
+    <g class="sparkle s2" transform="translate(82 56)">
+      <path d="M 0 -7 L 1.2 -1.2 L 7 0 L 1.2 1.2 L 0 7 L -1.2 1.2 L -7 0 L -1.2 -1.2 Z" fill="currentColor"/>
+    </g>
+    <g class="sparkle s3" transform="translate(435 188)">
+      <path d="M 0 -5.5 L 1 -1 L 5.5 0 L 1 1 L 0 5.5 L -1 1 L -5.5 0 L -1 -1 Z" fill="currentColor"/>
+    </g>
+    <g class="sparkle s4" transform="translate(105 142)">
+      <path d="M 0 -8 L 1.4 -1.4 L 8 0 L 1.4 1.4 L 0 8 L -1.4 1.4 L -8 0 L -1.4 -1.4 Z" fill="var(--color-fg-accent, #FF00FF)"/>
+    </g>
   </svg>
 {/if}
 
@@ -190,5 +207,28 @@
     display: block;
     height: auto;
     color: var(--logo-color, currentColor);
+  }
+
+  /* Sparkle twinkles — each star fades from invisible to full opacity on
+     its own offset clock so the four reads as four independent shimmers
+     rather than a synchronized strobe. */
+  .sparkle {
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: twinkle 2.6s ease-in-out infinite;
+  }
+  .s1 { animation-delay: 0s;    }
+  .s2 { animation-delay: 0.7s;  }
+  .s3 { animation-delay: 1.3s;  }
+  .s4 { animation-delay: 1.9s;  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    8%       { opacity: 1; }
+    28%      { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sparkle { animation: none; opacity: 0.55; }
   }
 </style>

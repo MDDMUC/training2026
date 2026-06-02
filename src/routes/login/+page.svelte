@@ -128,6 +128,31 @@
     gap: clamp(1.5rem, 4vh, 3rem);
   }
 
+  /* Phone: anchor hero to top third, form to bottom third. Avoids the
+     centered-stack scroll/clip problem on shorter viewports (iPhone SE
+     etc.) and respects the iOS home-indicator safe area. */
+  @media (max-width: 768px) {
+    .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-top: max(2.5rem, 8vh);
+      padding-bottom: max(2rem, calc(env(safe-area-inset-bottom, 1rem) + 2rem));
+      gap: 1.25rem;
+    }
+    .hero {
+      flex: 0 0 auto;
+      align-self: stretch;
+    }
+    .card {
+      flex: 0 0 auto;
+      align-self: stretch;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+  }
+
   .hero {
     grid-row: 2;
     display: flex;
@@ -142,9 +167,15 @@
     color: #fff;
     width: clamp(300px, 84vw, 520px);
     height: auto;
-    /* Faint backlight halo — 1980s arcade marquee energy. The magenta
-       drop-shadow layer inside the SVG carries the brand color separately. */
-    filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.15));
+    /* Stacked glow effects — three drop-shadow filters compose into a
+       single rendered halo:
+         1. Tight magenta inner bloom — boosts the brand-color back layer
+         2. Wide white outer halo — 1980s arcade marquee energy
+         3. Soft black ground shadow — depth / separation from the video */
+    filter:
+      drop-shadow(0 0 6px rgba(255, 0, 255, 0.55))
+      drop-shadow(0 0 18px rgba(255, 255, 255, 0.22))
+      drop-shadow(0 8px 22px rgba(0, 0, 0, 0.55));
   }
 
   /* The form card — minimal, sits centered, single hairline border and a
