@@ -36,9 +36,10 @@
   --color-night-1000: #FFFFFF;
 
   /* ---------- COLOR — Primitive: Accent (single chromatic role) ---------- */
-  --color-accent-100: #FFE7D6;
-  --color-accent-500: #E85D04;
-  --color-accent-600: #C24A00;
+  /* Magenta — the brand's single chromatic role. Swap the 500 value to retheme. */
+  --color-accent-100: #FFD6F5;
+  --color-accent-500: #FF00FF;
+  --color-accent-600: #CC00CC;
 
   /* ---------- COLOR — Semantic (light theme defaults) ---------- */
   --color-bg-canvas:       var(--color-gray-50);

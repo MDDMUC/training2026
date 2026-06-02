@@ -4,5 +4,5 @@
     <text x="32" y="48" text-anchor="middle">T26</text>
   </g>
   <line x1="10" y1="54" x2="54" y2="54" stroke="#fff" stroke-width="2.5"/>
-  <circle cx="32" cy="54" r="2" fill="#E85D04"/>
+  <circle cx="32" cy="54" r="2" fill="#FF00FF"/>
 </svg>

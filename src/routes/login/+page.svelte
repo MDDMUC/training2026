@@ -23,8 +23,8 @@
     preload="auto"
     aria-hidden="true"
   >
-    <source src="/80sbg-mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
-    <source src="/80sbg-desktop.mp4" type="video/mp4" />
+    <source src="/bg-mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
+    <source src="/bg-desktop.mp4" type="video/mp4" />
   </video>
 
   <!-- Foreground content sits above the video -->

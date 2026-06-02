@@ -80,8 +80,8 @@
       <!-- Underline rule (the action-title flourish) -->
       <line x1="6" y1="56" x2="114" y2="56" stroke="currentColor" stroke-width="2.5" />
       {#if accent}
-        <!-- Accent dot — single signal-orange punctuation -->
-        <circle cx="40" cy="48" r="3" fill="var(--color-fg-accent, #E85D04)" />
+        <!-- Accent dot — single magenta punctuation -->
+        <circle cx="40" cy="48" r="3" fill="var(--color-fg-accent, #FF00FF)" />
       {/if}
     </g>
   </svg>
@@ -124,12 +124,6 @@
         mask={`url(#${maskId})`}
       >TRAINING</text>
     </g>
-
-    <!-- horizontal rule between the two lines -->
-    <line x1="60" y1="118" x2="420" y2="118" stroke="currentColor" stroke-width="2.5" />
-    {#if accent}
-      <circle cx="240" cy="118" r="4" fill="var(--color-fg-accent, #E85D04)" />
-    {/if}
 
     <!-- 2026 (bottom, solid, wide-tracked) -->
     <g transform="translate(240 158) skewX(-12) translate(-240 -158)">
