@@ -1,6 +1,10 @@
 # Training 2026
 
-A **local-only web app** to help Martin plan, structure, analyze, and document his **climbing training for the second half of 2026**.
+A **cloud-hosted, multi-user web app** to help Martin (and Antonia) plan, structure, analyze, and document **climbing training**. Originally local-only single-user; re-platformed on 2026-06-02 to Vercel + Supabase for phone access and a second user.
+
+- **Production:** https://training2026-xi.vercel.app (auto-deploys on push to `main`)
+- **GitHub:** https://github.com/MDDMUC/training2026
+- **Local dev:** `npm run dev` talks to production Supabase. The legacy `db/training.db` SQLite file is no longer used by the app.
 
 For a full feature catalog and route map, see `README.md`. For research notes, see `context/synthesis.md` and the four research files alongside it. For the training plan, start at `plan/00-overview.md`.
 
@@ -22,21 +26,29 @@ Global: rest timer (sessionStorage-persistent), ⌘K command palette, ? help ove
 
 ## Operating principles for this project
 
-- **Local-first.** Storage stays on disk. No external services unless explicitly requested.
+- **Cloud-hosted, multi-tenant.** Every data row is scoped by `user_id`. Every query in `src/lib/db/queries.ts` filters by it. There is no Postgres RLS — filtering is enforced in the query layer. Auth is a custom HMAC-signed cookie (no Auth.js, no Supabase Auth).
 - **Calendar and analysis are not separate apps.** They share one data model — every analysis view derives from logged calendar entries.
 - **Climbing-specific, not generic fitness.** Vocabulary, metrics, and structures reflect climbing training (grades, projects, fingerboard, RPE, density hangs, etc.) — not weightlifting or running paradigms.
-- **Martin is the only user and the domain expert.** Defer to him on training methodology. Don't invent a training philosophy — implement his.
-- **H2 2026 horizon.** Data model comfortably covers ~6 months of daily logging. Don't over-engineer for multi-year history yet.
+- **Martin is the domain expert on training methodology.** Defer to him. Antonia's plan will be crafted with her separately.
+- **H2 2026 horizon for Martin.** Data model comfortably covers ~6 months of daily logging per user.
 - **Autonomy mode.** "Keep going" means pick the next-best item from the open list and ship it. Don't gate further work on his answer unless it's a genuine decision point.
 
 ## Tech stack
 
 - **SvelteKit 2** + **Svelte 5 (runes)** — see `feedback_training2026_autonomy` in memory for collaboration style
 - **TypeScript** strict
-- **better-sqlite3** — single-file local DB at `db/training.db`, synchronous API
+- **Postgres on Supabase** via **postgres.js** (async). The connection always uses the **Transaction pooler** URL (port 6543); the Direct connection on 5432 is IPv6-only and unreachable from most ISPs.
+- **bcryptjs** for password hashing
+- **adapter-vercel** for serverless deploy
 - **date-fns** — date math
 - **Custom SVG charts** — full token control
 - **No Tailwind, no UI kit** — Svelte scoped `<style>` + `design-system/tokens/tokens.css`
+
+### DB layer gotchas
+
+- Postgres DATE/TIMESTAMP/TIMESTAMPTZ deserialize to JS Date by default; the whole codebase expects ISO strings. `src/lib/db/index.ts` overrides OID 1082/1114/1184 parsers to return strings.
+- The schema lives at `src/lib/db/schema.postgres.sql`. Apply with `npx tsx -r dotenv/config scripts/apply-pg-schema.ts` (idempotent).
+- Adding a new column? Add it to `schema.postgres.sql`, write an idempotent ALTER in a one-shot script under `scripts/`, run it.
 
 ## Project layout
 
@@ -61,11 +73,11 @@ training2026/
 
 ## Data model
 
-`phases` (3) → `sessions` (84 seeded) → `exercises` (per-session) → `exercise_sets` (atomic unit, `kind` ∈ warmup/work/backoff/checklist, `completed`, load, reps, hold, rest, RPE).
+`users` (martin, antonia) → `phases` (per-user) → `sessions` (per-user) → `exercises` (per-session) → `exercise_sets` (atomic unit, `kind` ∈ warmup/work/backoff/checklist, `completed`, load, reps, hold, rest, RPE).
 
-Parallel tables for benchmark records: `tindeq_tests`, `pullup_tests`. Parallel tables for type-specific logs: `climbing_attempts`, `running_logs`.
+Parallel tables for benchmark records: `tindeq_tests`, `pullup_tests` (each carries `user_id`). Parallel tables for type-specific logs: `climbing_attempts`, `running_logs`.
 
-Migration pattern: `scripts/init-db.ts` runs schema, then explicit `ensureColumn()` checks for added columns (because `CREATE TABLE IF NOT EXISTS` doesn't alter existing tables). Adding a new column? Add to `schema.sql` for fresh installs AND add an `ensureColumn(...)` line in `init-db.ts`.
+Every table carries `user_id` directly *or* inherits it through a chain to `sessions.user_id`. Mutations on inherited tables (exercises, exercise_sets, climbing_attempts) gate via JOIN through `sessions.user_id`.
 
 ## Style and design
 
@@ -79,6 +91,7 @@ Migration pattern: `scripts/init-db.ts` runs schema, then explicit `ensureColumn
 
 - Martin pastes context from other chatbots when it's faster than re-discussion. Treat those as authoritative — read and incorporate.
 - **Confirm before installing dependencies or making destructive changes.** Routine writes/edits don't need confirmation (autonomy memory).
+- **Pushing to `main` triggers an auto-deploy on Vercel.** Be intentional with commits.
 - He pushes back directly when output is bad. Respond with root-cause analysis, not hedging.
 - See `feedback_training2026_autonomy` memory for the autonomous-continuation pattern.
 
