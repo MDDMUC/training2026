@@ -86,20 +86,12 @@
     </g>
   </svg>
 {:else}
-  <!-- Stranger Things-style wordmark.
-       ITC Benguiat (1977, Ed Benguiat) is the original. Free Google Fonts
-       equivalent: DM Serif Display — high-contrast sharp serifs with the
-       Art Nouveau-derived feel.
-
-       Style commitments matching the Stranger Things title:
-         · Heavy serif font (DM Serif Display ≈ ITC Benguiat)
-         · Tight letter-spacing — letters nearly touch
-         · Upright, no italic skew
-         · Letters are the brand color (magenta) directly — no halftone fill
-         · Bloom glow is rendered via stacked CSS drop-shadow on the SVG
-           container (see /login styles)
-       The 'accent' prop still gates the magenta — if false, letters fall
-       back to currentColor for monochrome surfaces. -->
+  <!-- Wordmark — same italic-uppercase Russo One treatment used by the
+       in-app page titles (TopBar h1: "Today"). font-style:italic +
+       skewX(-6deg) compound for the action-title lean; magenta fill
+       and the stacked bloom glow (in /login CSS) preserve the prior
+       Stranger Things treatment. Falls back to currentColor when
+       accent is disabled. -->
   <svg
     viewBox="0 0 540 230"
     width={size}
@@ -108,29 +100,36 @@
     role="img"
     aria-label="Biceps 2026"
   >
-    <!-- ─── BICEPS — solid, heavy serif, magenta -->
-    <text
-      x="270"
-      y="140"
-      text-anchor="middle"
-      font-family="DM Serif Display, Times New Roman, Georgia, serif"
-      font-size="138"
-      font-weight="400"
-      letter-spacing="-2"
-      fill={accent ? 'var(--color-fg-accent, #FF00FF)' : 'currentColor'}
-    >BICEPS</text>
+    <!-- ─── BICEPS — italic uppercase Russo One, magenta -->
+    <g transform="translate(270 140) skewX(-6) translate(-270 -140)">
+      <text
+        x="270"
+        y="140"
+        text-anchor="middle"
+        font-family="Russo One, Arial Black, sans-serif"
+        font-size="118"
+        font-weight="400"
+        font-style="italic"
+        letter-spacing="2"
+        fill={accent ? 'var(--color-fg-accent, #FF00FF)' : 'currentColor'}
+      >BICEPS</text>
+    </g>
 
-    <!-- ─── 2026 — quieter, tracked-out, white -->
-    <text
-      x="270"
-      y="200"
-      text-anchor="middle"
-      font-family="DM Serif Display, Times New Roman, Georgia, serif"
-      font-size="32"
-      letter-spacing="14"
-      fill="currentColor"
-      opacity="0.92"
-    >2026</text>
+    <!-- ─── 2026 — same family, smaller, tracked-out, white -->
+    <g transform="translate(270 200) skewX(-6) translate(-270 -200)">
+      <text
+        x="270"
+        y="200"
+        text-anchor="middle"
+        font-family="Russo One, Arial Black, sans-serif"
+        font-size="32"
+        font-weight="400"
+        font-style="italic"
+        letter-spacing="14"
+        fill="currentColor"
+        opacity="0.92"
+      >2026</text>
+    </g>
   </svg>
 {/if}
 
