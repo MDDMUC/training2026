@@ -174,20 +174,21 @@
     animation: heroIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  /* Force the Logo color to white on this dark background */
+  /* Force the Logo color to white on this dark background.
+     Stacked magenta bloom glow — the Stranger Things signature. Five
+     layers compose into a single halo: a hard inner edge, three magenta
+     blurs at increasing radius, and a black ground shadow for separation
+     from the video. */
   .hero :global(.logo) {
     color: #fff;
     width: clamp(300px, 84vw, 520px);
     height: auto;
-    /* Stacked glow effects — three drop-shadow filters compose into a
-       single rendered halo:
-         1. Tight magenta inner bloom — boosts the brand-color back layer
-         2. Wide white outer halo — 1980s arcade marquee energy
-         3. Soft black ground shadow — depth / separation from the video */
     filter:
-      drop-shadow(0 0 6px rgba(255, 0, 255, 0.55))
-      drop-shadow(0 0 18px rgba(255, 255, 255, 0.22))
-      drop-shadow(0 8px 22px rgba(0, 0, 0, 0.55));
+      drop-shadow(0 0 2px rgba(255, 0, 255, 0.9))
+      drop-shadow(0 0 8px rgba(255, 0, 255, 0.75))
+      drop-shadow(0 0 22px rgba(255, 0, 255, 0.55))
+      drop-shadow(0 0 50px rgba(255, 0, 255, 0.35))
+      drop-shadow(0 6px 18px rgba(0, 0, 0, 0.65));
   }
 
   /* The form card — minimal, sits centered, single hairline border and a

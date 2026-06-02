@@ -6,11 +6,16 @@
 
 @import "../design-system/tokens/tokens.css";
 
-/* Display font for branding ("Training 2026" wordmark + headings on hero
-   surfaces like /login). Bold, italic-feeling geometric — the 90s action
-   title vibe. Loaded in app.html. */
+/* Display fonts for branding. Both loaded in app.html.
+   --font-display   Russo One             italic geometric — used by TopBar h1
+   --font-serif     DM Serif Display      sharp high-contrast serif, the
+                                          closest free Google Fonts match for
+                                          ITC Benguiat — used by the hero
+                                          BICEPS wordmark for the Stranger
+                                          Things title aesthetic. */
 :root {
   --font-display: 'Russo One', 'Arial Black', system-ui, sans-serif;
+  --font-serif: 'DM Serif Display', 'Times New Roman', Georgia, serif;
 }
 
 /* ---------- Reset (minimal) ---------- */

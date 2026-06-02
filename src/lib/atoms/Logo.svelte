@@ -86,121 +86,51 @@
     </g>
   </svg>
 {:else}
-  <!-- 80s action-title wordmark — three stacked text layers per word:
-         1) MAGENTA solid drop shadow, offset (+10, +10) — the deep back layer
-         2) WHITE outline-only echo,   offset (+5,  +5)  — intermediate ghost
-         3) HALFTONE-DOT face,         offset (0,   0)   — the hero front
+  <!-- Stranger Things-style wordmark.
+       ITC Benguiat (1977, Ed Benguiat) is the original. Free Google Fonts
+       equivalent: DM Serif Display — high-contrast sharp serifs with the
+       Art Nouveau-derived feel.
 
-       This is the visual move every 80s action poster makes: a contrasting
-       colored drop shadow + a hard-offset white outline + the actual word in
-       a textured fill. Magenta is the brand's single chromatic role; it sells
-       the "TOP GUN / COBRA / LETHAL WEAPON" feeling without any extra colors.
-
-       viewBox is 540×240 to accommodate the bottom-right shadow overhang. -->
+       Style commitments matching the Stranger Things title:
+         · Heavy serif font (DM Serif Display ≈ ITC Benguiat)
+         · Tight letter-spacing — letters nearly touch
+         · Upright, no italic skew
+         · Letters are the brand color (magenta) directly — no halftone fill
+         · Bloom glow is rendered via stacked CSS drop-shadow on the SVG
+           container (see /login styles)
+       The 'accent' prop still gates the magenta — if false, letters fall
+       back to currentColor for monochrome surfaces. -->
   <svg
-    viewBox="0 0 540 240"
+    viewBox="0 0 540 230"
     width={size}
-    height={(size * 240) / 540}
+    height={(size * 230) / 540}
     class="logo wordmark {klass}"
     role="img"
     aria-label="Biceps 2026"
   >
-    <defs>
-      <pattern id={dotsId} patternUnits="userSpaceOnUse" width="5" height="5">
-        <circle cx="2.5" cy="2.5" r="1.35" fill="currentColor" />
-      </pattern>
-      <linearGradient id={fadeId} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="white" stop-opacity="1" />
-        <stop offset="60%" stop-color="white" stop-opacity="0.95" />
-        <stop offset="100%" stop-color="white" stop-opacity="0.4" />
-      </linearGradient>
-      <mask id={maskId}>
-        <rect width="540" height="240" fill={`url(#${fadeId})`} />
-      </mask>
-    </defs>
+    <!-- ─── BICEPS — solid, heavy serif, magenta -->
+    <text
+      x="270"
+      y="140"
+      text-anchor="middle"
+      font-family="DM Serif Display, Times New Roman, Georgia, serif"
+      font-size="138"
+      font-weight="400"
+      letter-spacing="-2"
+      fill={accent ? 'var(--color-fg-accent, #FF00FF)' : 'currentColor'}
+    >BICEPS</text>
 
-    <!-- ─── BICEPS ─── -->
-    <!-- Letter-spacing bumped 2→10 so the 6-letter word spreads to a
-         similar visual width as the previous 8-letter TRAINING. -->
-    <g transform="translate(270 90) skewX(-12) translate(-270 -90)">
-      <!-- Layer 1: magenta back shadow -->
-      {#if accent}
-        <text
-          x="280"
-          y="120"
-          text-anchor="middle"
-          font-family="Russo One, Arial Black, sans-serif"
-          font-size="92"
-          letter-spacing="10"
-          fill="var(--color-fg-accent, #FF00FF)"
-        >BICEPS</text>
-      {/if}
-      <!-- Layer 2: white outline ghost -->
-      <text
-        x="275"
-        y="115"
-        text-anchor="middle"
-        font-family="Russo One, Arial Black, sans-serif"
-        font-size="92"
-        letter-spacing="10"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        opacity="0.55"
-      >BICEPS</text>
-      <!-- Layer 3: halftone hero face -->
-      <text
-        x="270"
-        y="110"
-        text-anchor="middle"
-        font-family="Russo One, Arial Black, sans-serif"
-        font-size="92"
-        letter-spacing="10"
-        fill={`url(#${dotsId})`}
-        mask={`url(#${maskId})`}
-      >BICEPS</text>
-    </g>
-
-    <!-- ─── 2026 — two layers (magenta shadow + solid front) ─── -->
-    <g transform="translate(270 200) skewX(-12) translate(-270 -200)">
-      {#if accent}
-        <text
-          x="276"
-          y="210"
-          text-anchor="middle"
-          font-family="Russo One, Arial Black, sans-serif"
-          font-size="46"
-          letter-spacing="16"
-          fill="var(--color-fg-accent, #FF00FF)"
-        >2026</text>
-      {/if}
-      <text
-        x="270"
-        y="205"
-        text-anchor="middle"
-        font-family="Russo One, Arial Black, sans-serif"
-        font-size="46"
-        letter-spacing="16"
-        fill="currentColor"
-      >2026</text>
-    </g>
-
-    <!-- ─── Sparkle stars — 4 twinkling shimmers placed at the wordmark's
-         compositional anchor points. Asynchronous delays so they read as
-         organic, not synced. Path is centered on origin per sparkle, then
-         translated into position. ─── -->
-    <g class="sparkle s1" transform="translate(465 48)">
-      <path d="M 0 -10 L 1.6 -1.6 L 10 0 L 1.6 1.6 L 0 10 L -1.6 1.6 L -10 0 L -1.6 -1.6 Z" fill="currentColor"/>
-    </g>
-    <g class="sparkle s2" transform="translate(82 56)">
-      <path d="M 0 -7 L 1.2 -1.2 L 7 0 L 1.2 1.2 L 0 7 L -1.2 1.2 L -7 0 L -1.2 -1.2 Z" fill="currentColor"/>
-    </g>
-    <g class="sparkle s3" transform="translate(435 188)">
-      <path d="M 0 -5.5 L 1 -1 L 5.5 0 L 1 1 L 0 5.5 L -1 1 L -5.5 0 L -1 -1 Z" fill="currentColor"/>
-    </g>
-    <g class="sparkle s4" transform="translate(105 142)">
-      <path d="M 0 -8 L 1.4 -1.4 L 8 0 L 1.4 1.4 L 0 8 L -1.4 1.4 L -8 0 L -1.4 -1.4 Z" fill="var(--color-fg-accent, #FF00FF)"/>
-    </g>
+    <!-- ─── 2026 — quieter, tracked-out, white -->
+    <text
+      x="270"
+      y="200"
+      text-anchor="middle"
+      font-family="DM Serif Display, Times New Roman, Georgia, serif"
+      font-size="32"
+      letter-spacing="14"
+      fill="currentColor"
+      opacity="0.92"
+    >2026</text>
   </svg>
 {/if}
 
@@ -211,26 +141,4 @@
     color: var(--logo-color, currentColor);
   }
 
-  /* Sparkle twinkles — each star fades from invisible to full opacity on
-     its own offset clock so the four reads as four independent shimmers
-     rather than a synchronized strobe. */
-  .sparkle {
-    transform-origin: center;
-    transform-box: fill-box;
-    animation: twinkle 2.6s ease-in-out infinite;
-  }
-  .s1 { animation-delay: 0s;    }
-  .s2 { animation-delay: 0.7s;  }
-  .s3 { animation-delay: 1.3s;  }
-  .s4 { animation-delay: 1.9s;  }
-
-  @keyframes twinkle {
-    0%, 100% { opacity: 0; }
-    8%       { opacity: 1; }
-    28%      { opacity: 0; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .sparkle { animation: none; opacity: 0.55; }
-  }
 </style>
