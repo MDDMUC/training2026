@@ -1,6 +1,6 @@
 # Training 2026 — 12-Week Plan Overview
 
-**Macrocycle:** Mon Jun 8 → Sun Aug 30, 2026 (12 weeks, 3 × 4-week mesocycles).
+**Macrocycle:** Wed Jun 10 → Tue Sep 1, 2026 (12 weeks, 3 × 4-week mesocycles).
 **Athlete:** Martin, 43, 82 kg, ~8a sport.
 **Baseline metrics (set 2026-05-28):**
 - Tindeq peak force, 20 mm half-crimp, one-arm: **R 55 kg / L 52 kg** (asymmetry ~5.5%).
@@ -19,9 +19,9 @@
 
 | Phase | Weeks | Dates | Dominant adaptation | Finger protocol | Pull protocol |
 |---|---|---|---|---|---|
-| **1 — Base + Tendon Prep** | 1–4 | Jun 8 – Jul 5 | Tissue capacity, volume, asymmetry start | Density Hangs @ 75% MVC | 3–4 × 5–8 reps @ ~70% 1RM |
-| **2 — Max Strength** | 5–8 | Jul 6 – Aug 2 | Peak finger + pull strength | Max Hangs 6 × 7s @ 85–90% MVC | 3–4 × 3–5 reps @ 85% 1RM |
-| **3 — Power & Peak** | 9–12 | Aug 3 – Aug 30 | Climbing-specific output, performance | 1 maintenance max-hang/week + climbing as stimulus | 3 × 2–3 reps @ 90% 1RM, low volume |
+| **1 — Base + Tendon Prep** | 1–4 | Jun 10 – Jul 7 | Tissue capacity, volume, asymmetry start | Density Hangs @ 75% MVC | 3–4 × 5–8 reps @ ~70% 1RM |
+| **2 — Max Strength** | 5–8 | Jul 8 – Aug 4 | Peak finger + pull strength | Max Hangs 6 × 7s @ 85–90% MVC | 3–4 × 3–5 reps @ 85% 1RM |
+| **3 — Power & Peak** | 9–12 | Aug 5 – Sep 1 | Climbing-specific output, performance | 1 maintenance max-hang/week + climbing as stimulus | 3 × 2–3 reps @ 90% 1RM, low volume |
 
 Each mesocycle ends with a **deload microcycle (Week 4 / 8 / 12)** and a **test session** that resets the absolute numbers for the next block.
 
@@ -31,44 +31,46 @@ Each mesocycle ends with a **deload microcycle (Week 4 / 8 / 12)** and a **test 
 
 ```
 Phase 1 — Base + Tendon Prep
-  Week 1  Jun 8–14    Onboarding. Establish patterns at conservative loads.
-  Week 2  Jun 15–21   Add volume. Same loads.
-  Week 3  Jun 22–28   Peak volume of Phase 1.
-  Week 4  Jun 29–Jul 5  Deload + retest end-of-week.
+  Week 1  Jun 10–16   Onboarding. Establish patterns at conservative loads.
+  Week 2  Jun 17–23   Add volume. Same loads.
+  Week 3  Jun 24–30   Peak volume of Phase 1.
+  Week 4  Jul 1–7     Deload + retest end-of-week.
 
 Phase 2 — Max Strength
-  Week 5  Jul 6–12    Introduce max-hang work. Drop volume, raise intensity.
-  Week 6  Jul 13–19   Heavy.
-  Week 7  Jul 20–26   Peak heavy.
-  Week 8  Jul 27–Aug 2  Deload + retest.
+  Week 5  Jul 8–14    Introduce max-hang work. Drop volume, raise intensity.
+  Week 6  Jul 15–21   Heavy.
+  Week 7  Jul 22–28   Peak heavy.
+  Week 8  Jul 29–Aug 4  Deload + retest.
 
 Phase 3 — Power & Peak
-  Week 9   Aug 3–9     Power-endurance intro. One max-hang touch/week only.
-  Week 10  Aug 10–16   Performance: route intervals, hard linkups.
-  Week 11  Aug 17–23   Peak performance. Reduce strength work.
-  Week 12  Aug 24–30   Taper, outdoor performance, final retest.
+  Week 9   Aug 5–11    Power-endurance intro. One max-hang touch/week only.
+  Week 10  Aug 12–18   Performance: route intervals, hard linkups.
+  Week 11  Aug 19–25   Peak performance. Reduce strength work.
+  Week 12  Aug 26–Sep 1 Taper, outdoor performance, final retest.
 ```
 
 ---
 
 ## Weekly rhythm (repeats every week, intensities vary by phase)
 
+> **Day-of-week shifted +2 from original plan** (start moved Mon Jun 8 → Wed Jun 10). The block sequence and 72 h spacing are preserved.
+
 | Day | Block | Climbing | Strength | Mob / Cardio |
 |---|---|---|---|---|
-| **Mon** | PULL — heavy | — | Hangboard (primary) + Weighted pulls | Short mobility (10 min) |
-| **Tue** | PUSH + Antagonist | — | Dips, Bench, Rows, Press, prehab | Hip + hamstring (15 min). Easy run optional. |
-| **Wed** | CLIMB — gym | Indoor lead or boulder, sub-limit | — | Pre-climb warm-up (Hooper 3-step) |
-| **Thu** | PULL — asymmetry | — | Hangboard (light, L-first) + Pulls (lighter) | Short mobility (10 min) |
-| **Fri** | REST + Mobility | — | — | Long mobility (30 min) + Easy run (30–40 min) |
-| **Sat** | CLIMB — outdoor | Outdoor sport, at level | — | Climbing warm-up |
-| **Sun** | REST or 2nd outdoor | Optional 2nd outdoor day, only if low intensity | — | Long mobility or full rest |
+| **Wed** | PULL — heavy | — | Hangboard (primary) + Weighted pulls | Short mobility (10 min) |
+| **Thu** | PUSH — heavy + Antagonist | — | Dips, Bench, Rows, Press, prehab | Hip + hamstring (15 min). Easy run optional. |
+| **Fri** | CLIMB — gym | Indoor lead or boulder, sub-limit | — | Pre-climb warm-up (Hooper 3-step) |
+| **Sat** | PULL — asymmetry | — | Hangboard (light, L-first) + Pulls (lighter) | Short mobility (10 min) |
+| **Sun** | PUSH — volume + Mobility + Run | — | Push-ups, SA DB Press, tempo dips, band work | Long mobility (30 min) + easy run (30–40 min) |
+| **Mon** | CLIMB — outdoor | Outdoor sport, at level | — | Climbing warm-up |
+| **Tue** | REST or 2nd outdoor | Optional 2nd outdoor day, only if low intensity | — | Long mobility or full rest |
 
 **Total weekly load:**
-- 2 dedicated finger sessions (Mon heavy, Thu light)
-- 1 push/antagonist session (Tue)
-- 1 indoor climbing session (Wed)
-- 1–2 outdoor climbing days (Sat ± Sun)
-- 2 easy runs (Tue evening + Fri)
+- 2 dedicated finger sessions (Wed heavy, Sat light)
+- **2 push sessions** (Thu heavy, Sun volume) — added to balance pull skew
+- 1 indoor climbing session (Fri)
+- 1–2 outdoor climbing days (Mon ± Tue)
+- 2 easy runs (Thu evening + Sun)
 - Daily mobility, 10–30 min
 
 This matches the over-40 envelope: **2 hard sessions per quality per week**, hard days separated by ≥48 h, climbing prioritised over training when they would conflict.

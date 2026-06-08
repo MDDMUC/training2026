@@ -6,6 +6,7 @@
   import MorningCheckIn from '$lib/molecules/MorningCheckIn.svelte';
   import SupplementBanner from '$lib/molecules/SupplementBanner.svelte';
   import InsightsCard from '$lib/organisms/InsightsCard.svelte';
+  import NutritionCard from '$lib/organisms/NutritionCard.svelte';
   import { SESSION_TYPE_LABELS } from '$lib/domain/types';
   import { parseISO, format } from 'date-fns';
 
@@ -46,7 +47,7 @@
         </div>
       {:else}
         <h1 class="hero-title">No session today</h1>
-        <p class="hero-subtitle">Today is unscheduled. The plan starts Mon Jun 8.</p>
+        <p class="hero-subtitle">Today is unscheduled. The plan starts Wed Jun 10.</p>
         <div class="hero-actions">
           <Button variant="primary" href="/log/free">Log a free session</Button>
           <Button variant="ghost" href="/calendar">Open calendar</Button>
@@ -155,6 +156,13 @@
 
     <div class="col">
       <InsightsCard insights={data.insights} />
+      <NutritionCard
+        entries={data.nutrition.entries}
+        totals={data.nutrition.totals}
+        targets={data.nutrition.targets}
+        activityCalories={data.nutrition.activityCalories}
+        bodyWeightKg={data.nutrition.bodyWeightKg}
+      />
     </div>
   </section>
 </div>

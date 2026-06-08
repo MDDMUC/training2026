@@ -11,6 +11,8 @@ import type {
   ClimbStyle,
   RunningLog
 } from '$lib/domain/types';
+import type { NutritionEntry, NutritionItem, NutritionProfile } from '$lib/domain/nutrition';
+import { PROFILE_DEFAULTS } from '$lib/domain/nutrition';
 
 // ---------- Boolean coercion helpers ----------
 // Postgres returns native booleans for boolean columns; the rest of the app
@@ -738,7 +740,7 @@ export interface WeeklyLoad {
   isometric_seconds: number;
 }
 
-const MACROCYCLE_START = '2026-06-08';
+const MACROCYCLE_START = '2026-06-10';
 
 export async function getWeeklyLoad(sql: Sql, userId: string): Promise<WeeklyLoad[]> {
   const rows = await sql<{
@@ -1391,4 +1393,260 @@ export async function getUserCounts(sql: Sql, userId: string): Promise<UserCount
     pullup: Number(row.pullup),
     climbs: Number(row.climbs)
   };
+}
+
+// ---------- Nutrition ----------
+
+function coerceNutritionEntry(row: Record<string, unknown>): NutritionEntry {
+  return {
+    id: Number(row.id),
+    user_id: String(row.user_id),
+    date: String(row.date),
+    description: String(row.description),
+    calories: Number(row.calories),
+    protein_g: Number(row.protein_g),
+    carbs_g: Number(row.carbs_g),
+    fat_g: Number(row.fat_g),
+    items_json: (row.items_json as NutritionItem[] | null) ?? null,
+    created_at: String(row.created_at)
+  };
+}
+
+export async function getNutritionProfile(
+  sql: Sql,
+  userId: string
+): Promise<NutritionProfile | null> {
+  const rows = await sql<NutritionProfile[]>`
+    SELECT user_id, age, height_cm, sex, default_weight_kg,
+           baseline_activity_factor, protein_g_per_kg, calorie_tolerance_pct,
+           updated_at
+    FROM user_nutrition_profile
+    WHERE user_id = ${userId}
+    LIMIT 1
+  `;
+  return rows[0] ?? null;
+}
+
+export async function upsertNutritionProfile(
+  sql: Sql,
+  userId: string,
+  fields: {
+    age: number;
+    height_cm: number;
+    sex?: 'male' | 'female';
+    default_weight_kg?: number | null;
+    baseline_activity_factor?: number;
+    protein_g_per_kg?: number;
+    calorie_tolerance_pct?: number;
+  }
+): Promise<void> {
+  await sql`
+    INSERT INTO user_nutrition_profile (
+      user_id, age, height_cm, sex, default_weight_kg,
+      baseline_activity_factor, protein_g_per_kg, calorie_tolerance_pct
+    )
+    VALUES (
+      ${userId}, ${fields.age}, ${fields.height_cm},
+      ${fields.sex ?? 'male'}, ${fields.default_weight_kg ?? null},
+      ${fields.baseline_activity_factor ?? PROFILE_DEFAULTS.baseline_activity_factor},
+      ${fields.protein_g_per_kg ?? PROFILE_DEFAULTS.protein_g_per_kg},
+      ${fields.calorie_tolerance_pct ?? PROFILE_DEFAULTS.calorie_tolerance_pct}
+    )
+    ON CONFLICT (user_id) DO UPDATE SET
+      age = EXCLUDED.age,
+      height_cm = EXCLUDED.height_cm,
+      sex = EXCLUDED.sex,
+      default_weight_kg = EXCLUDED.default_weight_kg,
+      baseline_activity_factor = EXCLUDED.baseline_activity_factor,
+      protein_g_per_kg = EXCLUDED.protein_g_per_kg,
+      calorie_tolerance_pct = EXCLUDED.calorie_tolerance_pct,
+      updated_at = NOW()
+  `;
+}
+
+export async function listNutritionEntriesForDate(
+  sql: Sql,
+  userId: string,
+  date: string
+): Promise<NutritionEntry[]> {
+  const rows = await sql<Record<string, unknown>[]>`
+    SELECT * FROM nutrition_entries
+    WHERE user_id = ${userId} AND date = ${date}
+    ORDER BY created_at ASC, id ASC
+  `;
+  return rows.map(coerceNutritionEntry);
+}
+
+export async function insertNutritionEntry(
+  sql: Sql,
+  userId: string,
+  fields: {
+    date: string;
+    description: string;
+    calories: number;
+    protein_g: number;
+    carbs_g: number;
+    fat_g: number;
+    items_json?: NutritionItem[] | null;
+  }
+): Promise<NutritionEntry> {
+  const itemsJson = fields.items_json ? JSON.stringify(fields.items_json) : null;
+  const rows = await sql<Record<string, unknown>[]>`
+    INSERT INTO nutrition_entries (
+      user_id, date, description, calories, protein_g, carbs_g, fat_g, items_json
+    )
+    VALUES (
+      ${userId}, ${fields.date}, ${fields.description},
+      ${fields.calories}, ${fields.protein_g}, ${fields.carbs_g}, ${fields.fat_g},
+      ${itemsJson}::jsonb
+    )
+    RETURNING *
+  `;
+  return coerceNutritionEntry(rows[0]);
+}
+
+export async function deleteNutritionEntry(
+  sql: Sql,
+  userId: string,
+  entryId: number
+): Promise<void> {
+  await sql`
+    DELETE FROM nutrition_entries
+    WHERE id = ${entryId} AND user_id = ${userId}
+  `;
+}
+
+// Latest body weight on or before a given date — used to compute today's
+// protein goal. Falls back to most recent overall if nothing on/before date.
+export async function getBodyWeightOnOrBefore(
+  sql: Sql,
+  userId: string,
+  date: string
+): Promise<number | null> {
+  const rows = await sql<{ body_weight_kg: number }[]>`
+    SELECT body_weight_kg FROM sessions
+    WHERE user_id = ${userId}
+      AND body_weight_kg IS NOT NULL
+      AND date <= ${date}
+    ORDER BY date DESC, id DESC
+    LIMIT 1
+  `;
+  if (rows[0]) return Number(rows[0].body_weight_kg);
+  const fallback = await sql<{ body_weight_kg: number }[]>`
+    SELECT body_weight_kg FROM sessions
+    WHERE user_id = ${userId} AND body_weight_kg IS NOT NULL
+    ORDER BY date DESC, id DESC
+    LIMIT 1
+  `;
+  return fallback[0] ? Number(fallback[0].body_weight_kg) : null;
+}
+
+export async function getActivityCaloriesForDate(
+  sql: Sql,
+  userId: string,
+  date: string
+): Promise<number> {
+  const rows = await sql<{ total: string | number | null }[]>`
+    SELECT COALESCE(SUM(activity_calories), 0) AS total
+    FROM sessions
+    WHERE user_id = ${userId} AND date = ${date}
+  `;
+  return Number(rows[0]?.total ?? 0);
+}
+
+export async function setActivityCaloriesForDate(
+  sql: Sql,
+  userId: string,
+  date: string,
+  kcal: number | null
+): Promise<void> {
+  // Apply to all sessions on this date (typically 0 or 1). If none exist,
+  // create a free-session row so we have somewhere to store the burn.
+  const rows = await sql<{ id: number }[]>`
+    SELECT id FROM sessions
+    WHERE user_id = ${userId} AND date = ${date}
+  `;
+  if (rows.length === 0) {
+    await sql`
+      INSERT INTO sessions (user_id, date, type, scheduled, activity_calories)
+      VALUES (${userId}, ${date}, 'mobility', FALSE, ${kcal})
+    `;
+    return;
+  }
+  await sql`
+    UPDATE sessions
+    SET activity_calories = ${kcal}, updated_at = NOW()
+    WHERE user_id = ${userId} AND date = ${date}
+  `;
+}
+
+// Per-day rollups across a date range. Returns one row per day that has
+// either a nutrition entry or an activity_calories burn on it; days without
+// either are simply absent from the result and treated as "not logged".
+export interface DailyNutritionRollup {
+  date: string;
+  calories: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+  activity_kcal: number;
+  body_weight_kg: number | null;
+}
+
+export async function getDailyNutritionRollups(
+  sql: Sql,
+  userId: string,
+  startDate: string,
+  endDate: string
+): Promise<DailyNutritionRollup[]> {
+  const rows = await sql<Record<string, unknown>[]>`
+    WITH dates AS (
+      SELECT DISTINCT d FROM (
+        SELECT date AS d FROM nutrition_entries
+          WHERE user_id = ${userId} AND date BETWEEN ${startDate} AND ${endDate}
+        UNION
+        SELECT date AS d FROM sessions
+          WHERE user_id = ${userId} AND date BETWEEN ${startDate} AND ${endDate}
+            AND activity_calories IS NOT NULL
+      ) u
+    ),
+    nut AS (
+      SELECT date,
+             COALESCE(SUM(calories), 0)  AS calories,
+             COALESCE(SUM(protein_g), 0) AS protein_g,
+             COALESCE(SUM(carbs_g), 0)   AS carbs_g,
+             COALESCE(SUM(fat_g), 0)     AS fat_g
+      FROM nutrition_entries
+      WHERE user_id = ${userId} AND date BETWEEN ${startDate} AND ${endDate}
+      GROUP BY date
+    ),
+    act AS (
+      SELECT date,
+             COALESCE(SUM(activity_calories), 0) AS activity_kcal,
+             MAX(body_weight_kg) AS body_weight_kg
+      FROM sessions
+      WHERE user_id = ${userId} AND date BETWEEN ${startDate} AND ${endDate}
+      GROUP BY date
+    )
+    SELECT d.d AS date,
+           COALESCE(nut.calories, 0)  AS calories,
+           COALESCE(nut.protein_g, 0) AS protein_g,
+           COALESCE(nut.carbs_g, 0)   AS carbs_g,
+           COALESCE(nut.fat_g, 0)     AS fat_g,
+           COALESCE(act.activity_kcal, 0) AS activity_kcal,
+           act.body_weight_kg
+    FROM dates d
+    LEFT JOIN nut ON nut.date = d.d
+    LEFT JOIN act ON act.date = d.d
+    ORDER BY d.d ASC
+  `;
+  return rows.map((r) => ({
+    date: String(r.date),
+    calories: Number(r.calories),
+    protein_g: Number(r.protein_g),
+    carbs_g: Number(r.carbs_g),
+    fat_g: Number(r.fat_g),
+    activity_kcal: Number(r.activity_kcal),
+    body_weight_kg: r.body_weight_kg !== null && r.body_weight_kg !== undefined ? Number(r.body_weight_kg) : null
+  }));
 }

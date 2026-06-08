@@ -155,6 +155,41 @@ CREATE TABLE IF NOT EXISTS running_logs (
 CREATE INDEX IF NOT EXISTS idx_running_user_date ON running_logs(user_id, date);
 
 -- ============================================================================
+-- NUTRITION — per-user profile + daily entries
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS user_nutrition_profile (
+  user_id                   TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  age                       INTEGER NOT NULL,
+  height_cm                 DOUBLE PRECISION NOT NULL,
+  sex                       TEXT NOT NULL DEFAULT 'male' CHECK (sex IN ('male', 'female')),
+  default_weight_kg         DOUBLE PRECISION,                       -- fallback when no logged sessions
+  baseline_activity_factor  DOUBLE PRECISION NOT NULL DEFAULT 1.4,  -- NEAT only; workout calories added on top
+  protein_g_per_kg          DOUBLE PRECISION NOT NULL DEFAULT 2.0,
+  calorie_tolerance_pct     DOUBLE PRECISION NOT NULL DEFAULT 0.10, -- ±10% counts as "hit"
+  updated_at                TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE user_nutrition_profile ADD COLUMN IF NOT EXISTS sex TEXT NOT NULL DEFAULT 'male' CHECK (sex IN ('male', 'female'));
+ALTER TABLE user_nutrition_profile ADD COLUMN IF NOT EXISTS default_weight_kg DOUBLE PRECISION;
+
+CREATE TABLE IF NOT EXISTS nutrition_entries (
+  id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id     TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  date        DATE NOT NULL,
+  description TEXT NOT NULL,
+  calories    DOUBLE PRECISION NOT NULL,
+  protein_g   DOUBLE PRECISION NOT NULL,
+  carbs_g     DOUBLE PRECISION NOT NULL,
+  fat_g       DOUBLE PRECISION NOT NULL,
+  items_json  JSONB,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_nutrition_user_date ON nutrition_entries(user_id, date);
+
+-- Per-day workout burn from the user's watch. Surfaced on Today and added
+-- on top of the baseline TDEE to derive the calorie goal.
+ALTER TABLE sessions ADD COLUMN IF NOT EXISTS activity_calories INTEGER;
+
+-- ============================================================================
 -- updated_at trigger for sessions
 -- ============================================================================
 CREATE OR REPLACE FUNCTION set_updated_at() RETURNS TRIGGER AS $$

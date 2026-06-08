@@ -134,8 +134,8 @@ export function generateInsights(i: InsightInputs): Insight[] {
       severity: 'info',
       title: `Plan starts in ${-i.daysSincePlanStart} day${i.daysSincePlanStart === -1 ? '' : 's'}`,
       detail:
-        'Use the runway to confirm the Tindeq baseline, sleep, and a body-weight check-in are recorded. Phase 1 starts Mon Jun 8.',
-      action: { href: '/log/by-date/2026-06-08', label: 'Preview Mon Jun 8' }
+        'Use the runway to confirm the Tindeq baseline, sleep, and a body-weight check-in are recorded. Phase 1 starts Wed Jun 10.',
+      action: { href: '/log/by-date/2026-06-10', label: 'Preview Wed Jun 10' }
     });
   }
 

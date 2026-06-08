@@ -15,8 +15,17 @@ import {
   getAllSetsForSession,
   getAllRunningLogs,
   getLatestRun,
-  getAllPhases
+  getAllPhases,
+  getNutritionProfile,
+  upsertNutritionProfile,
+  listNutritionEntriesForDate,
+  insertNutritionEntry,
+  deleteNutritionEntry,
+  getActivityCaloriesForDate,
+  setActivityCaloriesForDate,
+  getBodyWeightOnOrBefore
 } from '$lib/db/queries';
+import { computeDailyTargets, sumEntries, PROFILE_DEFAULTS, type NutritionItem } from '$lib/domain/nutrition';
 import { computeSessionLoad } from '$lib/domain/load';
 import { generateInsights } from '$lib/domain/insights';
 import {
@@ -115,7 +124,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     prevWeekTonnage += computeSessionLoad(setRows, s.body_weight_kg ?? null).tonnage_kg;
   }
 
-  const daysSincePlanStart = differenceInCalendarDays(today, new Date(2026, 5, 8));
+  const daysSincePlanStart = differenceInCalendarDays(today, new Date(2026, 5, 10));
 
   const allPhases = await getAllPhases(sql, userId);
   const daysUntilPhaseEnd = phase ? differenceInCalendarDays(new Date(phase.end_date), today) : null;
@@ -146,6 +155,27 @@ export const load: PageServerLoad = async ({ locals }) => {
     nextTestDate
   });
 
+  // ---------- Nutrition (today only) ----------
+  const profile = (await getNutritionProfile(sql, userId)) ?? {
+    user_id: userId,
+    age: 43,
+    height_cm: 196,
+    sex: 'male' as const,
+    default_weight_kg: 83,
+    baseline_activity_factor: PROFILE_DEFAULTS.baseline_activity_factor,
+    protein_g_per_kg: PROFILE_DEFAULTS.protein_g_per_kg,
+    calorie_tolerance_pct: PROFILE_DEFAULTS.calorie_tolerance_pct,
+    updated_at: new Date().toISOString()
+  };
+  const nutritionEntries = await listNutritionEntriesForDate(sql, userId, todayISO);
+  const activityCaloriesToday = await getActivityCaloriesForDate(sql, userId, todayISO);
+  const bodyWeightForGoal =
+    (await getBodyWeightOnOrBefore(sql, userId, todayISO)) ??
+    profile.default_weight_kg ??
+    83;
+  const nutritionTargets = computeDailyTargets(profile, bodyWeightForGoal, activityCaloriesToday);
+  const nutritionTotals = sumEntries(nutritionEntries);
+
   return {
     todayISO,
     todayLabel: format(new Date(), 'EEEE, MMMM d'),
@@ -159,7 +189,15 @@ export const load: PageServerLoad = async ({ locals }) => {
     week,
     nextSession,
     latestRun,
-    insights
+    insights,
+    nutrition: {
+      entries: nutritionEntries,
+      totals: nutritionTotals,
+      targets: nutritionTargets,
+      activityCalories: activityCaloriesToday,
+      bodyWeightKg: bodyWeightForGoal,
+      profile
+    }
   };
 };
 
@@ -187,6 +225,64 @@ export const actions: Actions = {
     }
 
     await updateSessionFields(sql, userId, sessionId, fields);
+    return { ok: true };
+  },
+
+  saveNutritionEntry: async ({ request, locals }) => {
+    const sql = getSql();
+    const userId = locals.user!.id;
+    const form = await request.formData();
+    const description = String(form.get('description') ?? '').trim();
+    const calories = Number(form.get('calories'));
+    const protein_g = Number(form.get('protein_g'));
+    const carbs_g = Number(form.get('carbs_g'));
+    const fat_g = Number(form.get('fat_g'));
+    if (!description || ![calories, protein_g, carbs_g, fat_g].every(Number.isFinite)) {
+      return fail(400, { error: 'invalid nutrition payload' });
+    }
+    let items_json: NutritionItem[] | null = null;
+    const itemsRaw = form.get('items_json');
+    if (typeof itemsRaw === 'string' && itemsRaw.length > 0) {
+      try {
+        items_json = JSON.parse(itemsRaw) as NutritionItem[];
+      } catch {
+        items_json = null;
+      }
+    }
+    const todayISO = format(new Date(), 'yyyy-MM-dd');
+    await insertNutritionEntry(sql, userId, {
+      date: todayISO,
+      description,
+      calories,
+      protein_g,
+      carbs_g,
+      fat_g,
+      items_json
+    });
+    return { ok: true };
+  },
+
+  deleteNutritionEntry: async ({ request, locals }) => {
+    const sql = getSql();
+    const userId = locals.user!.id;
+    const form = await request.formData();
+    const entryId = Number(form.get('entryId'));
+    if (!Number.isFinite(entryId)) return fail(400, { error: 'bad entryId' });
+    await deleteNutritionEntry(sql, userId, entryId);
+    return { ok: true };
+  },
+
+  updateActivityCalories: async ({ request, locals }) => {
+    const sql = getSql();
+    const userId = locals.user!.id;
+    const form = await request.formData();
+    const raw = form.get('activity_calories');
+    const todayISO = format(new Date(), 'yyyy-MM-dd');
+    const kcal = raw === '' || raw === null ? null : Number(raw);
+    if (kcal !== null && (!Number.isFinite(kcal) || kcal < 0 || kcal > 5000)) {
+      return fail(400, { error: 'bad activity_calories' });
+    }
+    await setActivityCaloriesForDate(sql, userId, todayISO, kcal);
     return { ok: true };
   }
 };

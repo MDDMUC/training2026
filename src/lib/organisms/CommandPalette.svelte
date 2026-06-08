@@ -28,11 +28,11 @@
     { label: 'Settings', href: '/settings', section: 'Pages' },
     { label: 'Log today\'s session', href: `/log/by-date/${todayISO}`, section: 'Quick', hint: format(new Date(), 'EEE MMM d') },
     { label: 'Log a free / improvised session', href: '/log/free', section: 'Quick', hint: 'New ad-hoc' },
-    { label: 'Jump to Jun 8 (Plan start)', href: '/log/by-date/2026-06-08', section: 'Quick' },
-    { label: 'Phase 1 retest (Jul 4)', href: '/log/by-date/2026-07-04', section: 'Quick' },
-    { label: 'Phase 2 retest (Aug 1)', href: '/log/by-date/2026-08-01', section: 'Quick' },
-    { label: 'Final test (Aug 26)', href: '/log/by-date/2026-08-26', section: 'Quick' },
-    { label: 'Performance day (Aug 29)', href: '/log/by-date/2026-08-29', section: 'Quick' }
+    { label: 'Jump to Jun 10 (Plan start)', href: '/log/by-date/2026-06-10', section: 'Quick' },
+    { label: 'Phase 1 retest (Jul 6)', href: '/log/by-date/2026-07-06', section: 'Quick' },
+    { label: 'Phase 2 retest (Aug 3)', href: '/log/by-date/2026-08-03', section: 'Quick' },
+    { label: 'Final test (Aug 28)', href: '/log/by-date/2026-08-28', section: 'Quick' },
+    { label: 'Performance day (Aug 31)', href: '/log/by-date/2026-08-31', section: 'Quick' }
   ];
 
   const recentCommands = $derived<Command[]>(

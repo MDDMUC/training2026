@@ -1,6 +1,12 @@
-// The canonical 12-week schedule (Mon Jun 8 → Sun Aug 30, 2026).
+// The canonical 12-week schedule (Wed Jun 10 → Tue Sep 1, 2026).
 // Source: training2026/plan/01-weekly-template.md and 02-phase1-base-tendon-prep.md.
 // Used to seed the database so the calendar is immediately populated.
+//
+// NOTE: post-seed migrations applied on top of this seed:
+//   - scripts/shift-plan-by-2-days.ts   (already reflected in the dates below)
+//   - scripts/add-sunday-push-volume.ts (converts the weekly mobility day to
+//     a push-volume session with prepended push exercises)
+// If you ever re-seed from scratch, re-run add-sunday-push-volume.ts after.
 
 import type { SessionType } from './types';
 
@@ -25,8 +31,8 @@ export const PHASES: PhaseSeed[] = [
     mesocycle_num: 1,
     name: 'Base + Tendon Prep',
     short_name: 'BASE',
-    start_date: '2026-06-08',
-    end_date: '2026-07-05',
+    start_date: '2026-06-10',
+    end_date: '2026-07-07',
     description:
       'Re-introduce structured training. Density Hangs at 75% MVC. Build pull-up volume. Begin closing L-hand asymmetry. Establish mobility and gentle running re-entry.'
   },
@@ -34,8 +40,8 @@ export const PHASES: PhaseSeed[] = [
     mesocycle_num: 2,
     name: 'Max Strength',
     short_name: 'MAX',
-    start_date: '2026-07-06',
-    end_date: '2026-08-02',
+    start_date: '2026-07-08',
+    end_date: '2026-08-04',
     description:
       'Lattice-style max hangs at 85–90% MVC. Heavy weighted pull-up triples at 85% 1RM. Limit bouldering replaces volume climbing.'
   },
@@ -43,8 +49,8 @@ export const PHASES: PhaseSeed[] = [
     mesocycle_num: 3,
     name: 'Power & Peak',
     short_name: 'PEAK',
-    start_date: '2026-08-03',
-    end_date: '2026-08-30',
+    start_date: '2026-08-05',
+    end_date: '2026-09-01',
     description:
       'Convert strength to climbing output. Route intervals and 4×4 bouldering. Maintenance hangboard once per week. Outdoor performance peak in final week.'
   }
@@ -156,25 +162,25 @@ function buildWeek(
 export function buildFullSchedule(): SessionSeed[] {
   const all: SessionSeed[] = [];
 
-  // Phase 1: Jun 8 (Mon) → Jul 5 (Sun) — 4 weeks
+  // Phase 1: Jun 10 (Wed) → Jul 7 (Tue) — 4 weeks
   for (let w = 0; w < 4; w++) {
-    const weekStart = dateAddDays('2026-06-08', w * 7);
+    const weekStart = dateAddDays('2026-06-10', w * 7);
     const isLast = w === 3;
     const overrides = isLast ? DELOAD_TEMPLATE : null;
     all.push(...buildWeek(weekStart, PHASE1_TEMPLATE, overrides, 1, w + 1, isLast));
   }
 
-  // Phase 2: Jul 6 → Aug 2 — 4 weeks
+  // Phase 2: Jul 8 → Aug 4 — 4 weeks
   for (let w = 0; w < 4; w++) {
-    const weekStart = dateAddDays('2026-07-06', w * 7);
+    const weekStart = dateAddDays('2026-07-08', w * 7);
     const isLast = w === 3;
     const overrides = isLast ? DELOAD_TEMPLATE : null;
     all.push(...buildWeek(weekStart, PHASE2_TEMPLATE, overrides, 2, w + 1, isLast));
   }
 
-  // Phase 3: Aug 3 → Aug 30 — 4 weeks
+  // Phase 3: Aug 5 → Sep 1 — 4 weeks
   for (let w = 0; w < 4; w++) {
-    const weekStart = dateAddDays('2026-08-03', w * 7);
+    const weekStart = dateAddDays('2026-08-05', w * 7);
     const isLast = w === 3;
     // Phase 3 final week is a taper — special schedule
     const overrides = isLast

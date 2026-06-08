@@ -12,7 +12,7 @@
   const earliest = $derived(
     phases.reduce(
       (acc, p) => (parseISO(p.start_date) < acc ? parseISO(p.start_date) : acc),
-      parseISO(phases[0]?.start_date ?? '2026-06-08')
+      parseISO(phases[0]?.start_date ?? '2026-06-10')
     )
   );
   const latest = $derived(

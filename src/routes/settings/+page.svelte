@@ -141,7 +141,7 @@
         <dt>Design</dt>
         <dd>Atomic design system, achromatic + signal-orange accent. Tokens in <code>design-system/tokens/</code>.</dd>
         <dt>Plan</dt>
-        <dd>Mon Jun 8 → Sun Aug 30 2026. Three 4-week mesocycles. See <code>plan/00-overview.md</code>.</dd>
+        <dd>Wed Jun 10 → Tue Sep 1 2026. Three 4-week mesocycles. See <code>plan/00-overview.md</code>.</dd>
       </dl>
     </article>
   </section>

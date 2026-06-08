@@ -2,6 +2,7 @@
   import WeeklyLoadChart from '$lib/organisms/WeeklyLoadChart.svelte';
   import WeeklyVolumeChart from '$lib/organisms/WeeklyVolumeChart.svelte';
   import PriorityChart from '$lib/organisms/PriorityChart.svelte';
+  import NutritionConsistencyCard from '$lib/organisms/NutritionConsistencyCard.svelte';
   import type { Point } from '$lib/organisms/PriorityChart.svelte';
   import { parseISO, format, differenceInCalendarDays } from 'date-fns';
 
@@ -88,6 +89,20 @@
     <div class="card no-pad">
       <WeeklyVolumeChart weeks={data.weeklyLoad} todayISO={data.todayISO} />
     </div>
+  </section>
+
+  <!-- Row 3: nutrition consistency -->
+  <section class="nutrition-row">
+    <NutritionConsistencyCard
+      days={data.nutritionConsistency.days}
+      calorieStreak={data.nutritionConsistency.calorieStreak}
+      calorieLongest={data.nutritionConsistency.calorieLongest}
+      proteinStreak={data.nutritionConsistency.proteinStreak}
+      proteinLongest={data.nutritionConsistency.proteinLongest}
+      bothStreak={data.nutritionConsistency.bothStreak}
+      daysLogged={data.nutritionConsistency.daysLogged}
+      daysInRange={data.nutritionConsistency.daysInRange}
+    />
   </section>
 </div>
 

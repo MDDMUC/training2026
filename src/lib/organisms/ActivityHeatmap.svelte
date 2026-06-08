@@ -12,7 +12,7 @@
   const today = $derived(parseISO(todayISO));
 
   // Build a 7-row × 12-col grid (rows = day-of-week starting Mon, cols = week 1..12)
-  const MACRO_START = '2026-06-08';
+  const MACRO_START = '2026-06-10';
   const WEEKS = 12;
   const DAYS = 7;
 
