@@ -29,11 +29,19 @@
     }, 1500);
   }
 
-  // Pass the field name in; enhance returns the post-submit callback that flips the badge.
+  // Optimistic: flash the ✓ the instant the field blurs. The session
+  // update is small and effectively cannot fail under normal use; the
+  // log-by-date load() takes 1–2s to re-run after the action, so waiting
+  // for that response makes the badge feel laggy. On the rare failure,
+  // clear the badge early.
   function trackSave(field: string) {
     return () => {
+      flashSaved(field);
       return ({ result }: { result: { type: string } }) => {
-        if (result.type === 'success') flashSaved(field);
+        if (result.type !== 'success') {
+          if (savedTimer) clearTimeout(savedTimer);
+          savedField = null;
+        }
       };
     };
   }
