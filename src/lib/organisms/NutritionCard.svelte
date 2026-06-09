@@ -544,13 +544,6 @@
     font: var(--weight-bold) 18px/1 var(--font-mono);
     font-variant-numeric: tabular-nums;
     text-align: right;
-    -moz-appearance: textfield;
-    appearance: textfield;
-  }
-  .num-row input::-webkit-inner-spin-button,
-  .num-row input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
   }
   .num-row input:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
   .num-row .unit { color: var(--color-fg-muted); font: var(--weight-medium) 12px/1 var(--font-mono); }
@@ -675,13 +668,6 @@
     font: var(--weight-bold) 18px/1 var(--font-mono);
     font-variant-numeric: tabular-nums;
     text-align: right;
-    -moz-appearance: textfield;
-    appearance: textfield;
-  }
-  .num-input input::-webkit-inner-spin-button,
-  .num-input input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
   }
   .num-input input:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
   .num-input .unit { color: var(--color-fg-muted); font: var(--weight-medium) 12px/1 var(--font-mono); }

@@ -207,13 +207,6 @@
     font: var(--weight-bold) 24px/1 var(--font-mono);
     font-variant-numeric: tabular-nums;
     text-align: right;
-    -moz-appearance: textfield;
-    appearance: textfield;
-  }
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
   }
   input:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
 

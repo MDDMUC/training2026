@@ -66,6 +66,18 @@ input, button, textarea, select {
   color: inherit;
 }
 
+/* Strip native number-input spinners app-wide — every numeric field in this
+   app is touch / type-only; the up/down chrome adds noise and shifts layout. */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 p, h1, h2, h3, h4, h5, h6 {
   overflow-wrap: break-word;
 }
