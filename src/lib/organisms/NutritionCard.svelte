@@ -25,6 +25,16 @@
 
   let burnInput = $state<number | null>(activityCalories || null);
 
+  let mode = $state<'estimate' | 'manual'>('estimate');
+  let manualDescription = $state('');
+  let manualCalories = $state<number | null>(null);
+  let manualProtein = $state<number | null>(null);
+  let manualCarbs = $state<number | null>(null);
+  let manualFat = $state<number | null>(null);
+  const manualValid = $derived(
+    manualCalories !== null && manualCalories > 0 && manualDescription.trim().length > 0
+  );
+
   async function parse() {
     if (!description.trim()) return;
     parsing = true;
@@ -266,19 +276,140 @@
       </div>
     </form>
   {:else}
-    <div class="input-row">
-      <textarea
-        bind:value={description}
-        placeholder="e.g. 2 eggs scrambled, 2 slices sourdough toast with butter, large coffee with oat milk"
-        rows="2"
-        disabled={parsing}
-      ></textarea>
-      <button type="button" class="primary" onclick={parse} disabled={parsing || !description.trim()}>
-        {parsing ? 'Estimating…' : 'Estimate'}
+    <div class="mode-tabs" role="tablist" aria-label="Entry mode">
+      <button
+        type="button"
+        role="tab"
+        aria-selected={mode === 'estimate'}
+        class="mode-tab"
+        class:active={mode === 'estimate'}
+        onclick={() => (mode = 'estimate')}
+      >
+        Estimate from text
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={mode === 'manual'}
+        class="mode-tab"
+        class:active={mode === 'manual'}
+        onclick={() => (mode = 'manual')}
+      >
+        Enter values
       </button>
     </div>
-    {#if parseError}
-      <p class="error">{parseError}</p>
+    {#if mode === 'estimate'}
+      <div class="input-row">
+        <textarea
+          bind:value={description}
+          placeholder="e.g. 2 eggs scrambled, 2 slices sourdough toast with butter, large coffee with oat milk"
+          rows="2"
+          disabled={parsing}
+        ></textarea>
+        <button type="button" class="primary" onclick={parse} disabled={parsing || !description.trim()}>
+          {parsing ? 'Estimating…' : 'Estimate'}
+        </button>
+      </div>
+      {#if parseError}
+        <p class="error">{parseError}</p>
+      {/if}
+    {:else}
+      <form
+        method="POST"
+        action="?/saveNutritionEntry"
+        class="manual-form"
+        use:enhance={() => async ({ update }) => {
+          await update({ reset: false });
+          manualDescription = '';
+          manualCalories = null;
+          manualProtein = null;
+          manualCarbs = null;
+          manualFat = null;
+          await invalidateAll();
+        }}
+      >
+        <label class="manual-desc">
+          <span>Label</span>
+          <input
+            type="text"
+            name="description"
+            bind:value={manualDescription}
+            placeholder="e.g. day total, lunch, post-session shake"
+            maxlength="200"
+          />
+        </label>
+        <div class="manual-grid">
+          <label class="manual-field">
+            <span>Calories</span>
+            <div class="num-input">
+              <input
+                type="number"
+                name="calories"
+                step="1"
+                min="0"
+                max="10000"
+                inputmode="numeric"
+                bind:value={manualCalories}
+                placeholder="0"
+                required
+              />
+              <span class="unit">kcal</span>
+            </div>
+          </label>
+          <label class="manual-field">
+            <span>Protein</span>
+            <div class="num-input">
+              <input
+                type="number"
+                name="protein_g"
+                step="1"
+                min="0"
+                max="1000"
+                inputmode="numeric"
+                bind:value={manualProtein}
+                placeholder="0"
+              />
+              <span class="unit">g</span>
+            </div>
+          </label>
+          <label class="manual-field">
+            <span>Carbs</span>
+            <div class="num-input">
+              <input
+                type="number"
+                name="carbs_g"
+                step="1"
+                min="0"
+                max="2000"
+                inputmode="numeric"
+                bind:value={manualCarbs}
+                placeholder="0"
+              />
+              <span class="unit">g</span>
+            </div>
+          </label>
+          <label class="manual-field">
+            <span>Fat</span>
+            <div class="num-input">
+              <input
+                type="number"
+                name="fat_g"
+                step="1"
+                min="0"
+                max="500"
+                inputmode="numeric"
+                bind:value={manualFat}
+                placeholder="0"
+              />
+              <span class="unit">g</span>
+            </div>
+          </label>
+        </div>
+        <div class="manual-actions">
+          <span class="manual-hint">Adds an entry to today's totals.</span>
+          <button type="submit" class="primary" disabled={!manualValid}>Add entry</button>
+        </div>
+      </form>
     {/if}
   {/if}
 </section>
@@ -456,6 +587,89 @@
     margin: 0;
   }
 
+  /* ---------- Mode tabs ---------- */
+  .mode-tabs {
+    display: flex;
+    gap: var(--space-1);
+    border-bottom: 1px solid var(--color-border-default);
+  }
+  .mode-tab {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: var(--space-2) var(--space-3);
+    margin-bottom: -1px;
+    border-bottom: 2px solid transparent;
+    color: var(--color-fg-muted);
+    font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
+    letter-spacing: var(--text-micro-tracking);
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .mode-tab:hover { color: var(--color-fg-default); }
+  .mode-tab.active {
+    color: var(--color-fg-default);
+    border-bottom-color: var(--color-fg-default);
+  }
+
+  /* ---------- Manual entry ---------- */
+  .manual-form { display: flex; flex-direction: column; gap: var(--space-3); }
+  .manual-desc { display: flex; flex-direction: column; gap: 4px; }
+  .manual-desc > span {
+    font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
+    letter-spacing: var(--text-micro-tracking);
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+  .manual-desc input[type="text"] {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-2);
+    background: var(--color-bg-surface);
+    color: var(--color-fg-default);
+    font: var(--text-body-sm-weight) var(--text-body-sm-size)/1.4 var(--font-sans);
+  }
+  .manual-desc input[type="text"]:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
+
+  .manual-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+  }
+  .manual-field { display: flex; flex-direction: column; gap: 4px; }
+  .manual-field > span {
+    font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
+    letter-spacing: var(--text-micro-tracking);
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+  .num-input { display: inline-flex; align-items: baseline; gap: var(--space-2); }
+  .num-input input {
+    width: 100%;
+    min-width: 0;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-2);
+    background: var(--color-bg-surface);
+    color: var(--color-fg-default);
+    font: var(--weight-bold) 18px/1 var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .num-input input:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
+  .num-input .unit { color: var(--color-fg-muted); font: var(--weight-medium) 12px/1 var(--font-mono); }
+
+  .manual-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .manual-hint {
+    font: var(--text-body-sm-weight) 11px/1 var(--font-sans);
+    color: var(--color-fg-subtle);
+  }
+
   /* ---------- Input + confirm ---------- */
   .input-row { display: flex; gap: var(--space-2); align-items: stretch; }
   .input-row textarea {
@@ -538,5 +752,7 @@
     .dash { grid-template-columns: 1fr; justify-items: center; }
     .macros { width: 100%; }
     .input-row { flex-direction: column; }
+    .manual-grid { grid-template-columns: repeat(2, 1fr); }
+    .manual-actions { flex-direction: column; align-items: stretch; gap: var(--space-2); }
   }
 </style>

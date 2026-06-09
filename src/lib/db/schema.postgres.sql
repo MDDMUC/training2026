@@ -189,6 +189,23 @@ CREATE INDEX IF NOT EXISTS idx_nutrition_user_date ON nutrition_entries(user_id,
 -- on top of the baseline TDEE to derive the calorie goal.
 ALTER TABLE sessions ADD COLUMN IF NOT EXISTS activity_calories INTEGER;
 
+-- Sessionless daily check-in. Captures body weight, sleep, and "how I feel"
+-- (readiness, 1–10) every day — even on rest days where no session exists.
+-- One row per (user_id, date). Body weight + sleep history queries union
+-- this with the session-bound legacy data so charts see both sources.
+CREATE TABLE IF NOT EXISTS daily_check_ins (
+  user_id        TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  date           DATE NOT NULL,
+  body_weight_kg DOUBLE PRECISION,
+  sleep_hours    DOUBLE PRECISION,
+  readiness      INTEGER CHECK (readiness IS NULL OR (readiness >= 1 AND readiness <= 10)),
+  note           TEXT,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, date)
+);
+CREATE INDEX IF NOT EXISTS idx_daily_checkins_user_date ON daily_check_ins(user_id, date);
+
 -- ============================================================================
 -- updated_at trigger for sessions
 -- ============================================================================

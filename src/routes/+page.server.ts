@@ -23,7 +23,9 @@ import {
   deleteNutritionEntry,
   getActivityCaloriesForDate,
   setActivityCaloriesForDate,
-  getBodyWeightOnOrBefore
+  getBodyWeightOnOrBefore,
+  getDailyCheckIn,
+  upsertDailyCheckIn
 } from '$lib/db/queries';
 import { computeDailyTargets, sumEntries, PROFILE_DEFAULTS, type NutritionItem } from '$lib/domain/nutrition';
 import { computeSessionLoad } from '$lib/domain/load';
@@ -176,6 +178,19 @@ export const load: PageServerLoad = async ({ locals }) => {
   const nutritionTargets = computeDailyTargets(profile, bodyWeightForGoal, activityCaloriesToday);
   const nutritionTotals = sumEntries(nutritionEntries);
 
+  // ---------- Daily check-in (sessionless) ----------
+  const dailyCheckIn = await getDailyCheckIn(sql, userId, todayISO);
+  // Seed the form from today's session if a check-in row doesn't exist yet —
+  // avoids "lost data" feel when the user logged via MorningCheckIn earlier.
+  const checkInSeed = dailyCheckIn ?? {
+    user_id: userId,
+    date: todayISO,
+    body_weight_kg: todaySession?.body_weight_kg ?? null,
+    sleep_hours: todaySession?.sleep_hours ?? null,
+    readiness: todaySession?.readiness ?? null,
+    note: null
+  };
+
   return {
     todayISO,
     todayLabel: format(new Date(), 'EEEE, MMMM d'),
@@ -197,7 +212,8 @@ export const load: PageServerLoad = async ({ locals }) => {
       activityCalories: activityCaloriesToday,
       bodyWeightKg: bodyWeightForGoal,
       profile
-    }
+    },
+    dailyCheckIn: checkInSeed
   };
 };
 
@@ -269,6 +285,32 @@ export const actions: Actions = {
     const entryId = Number(form.get('entryId'));
     if (!Number.isFinite(entryId)) return fail(400, { error: 'bad entryId' });
     await deleteNutritionEntry(sql, userId, entryId);
+    return { ok: true };
+  },
+
+  updateDailyCheckIn: async ({ request, locals }) => {
+    const sql = getSql();
+    const userId = locals.user!.id;
+    const form = await request.formData();
+    const todayISO = format(new Date(), 'yyyy-MM-dd');
+    const fields: Parameters<typeof upsertDailyCheckIn>[3] = {};
+    for (const key of ['body_weight_kg', 'sleep_hours', 'readiness'] as const) {
+      const raw = form.get(key);
+      if (raw === null) continue;
+      if (raw === '') {
+        fields[key] = null;
+      } else {
+        const n = Number(raw);
+        if (!Number.isFinite(n)) return fail(400, { error: `bad ${key}` });
+        fields[key] = n;
+      }
+    }
+    const noteRaw = form.get('note');
+    if (noteRaw !== null) {
+      const s = String(noteRaw).trim();
+      fields.note = s.length === 0 ? null : s.slice(0, 1000);
+    }
+    await upsertDailyCheckIn(sql, userId, todayISO, fields);
     return { ok: true };
   },
 

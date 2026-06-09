@@ -3,7 +3,7 @@
   import Tag from '$lib/molecules/Tag.svelte';
   import Button from '$lib/atoms/Button.svelte';
   import ThisWeekCard from '$lib/organisms/ThisWeekCard.svelte';
-  import MorningCheckIn from '$lib/molecules/MorningCheckIn.svelte';
+  import DailyCheckIn from '$lib/molecules/DailyCheckIn.svelte';
   import SupplementBanner from '$lib/molecules/SupplementBanner.svelte';
   import InsightsCard from '$lib/organisms/InsightsCard.svelte';
   import NutritionCard from '$lib/organisms/NutritionCard.svelte';
@@ -25,144 +25,143 @@
 </script>
 
 <div class="today-page">
-  <!-- ============================== HERO ============================== -->
-  <section class="hero">
-    <!-- LEFT — current status -->
-    <div class="hero-status">
-      <p class="hero-eyebrow">{data.todayLabel}</p>
-
+  <!-- ============================== HEADER STRIP ============================== -->
+  <header class="page-head">
+    <div class="head-left">
+      <p class="eyebrow">{data.todayLabel}</p>
       {#if data.phase}
-        <div class="hero-phase">
+        <div class="phase-row">
           <Tag variant="filled">{data.phase.short_name}</Tag>
-          <span class="hero-phase-name">{data.phase.name}</span>
-        </div>
-      {/if}
-
-      {#if data.todaySession}
-        <h1 class="hero-title">{data.todaySession.title ?? SESSION_TYPE_LABELS[data.todaySession.type]}</h1>
-        <p class="hero-subtitle">{SESSION_TYPE_LABELS[data.todaySession.type]}</p>
-        <div class="hero-actions">
-          <Button variant="primary" href="/log/by-date/{data.todayISO}">Log this session</Button>
-          <Button variant="ghost" href="/log/free">Log free session</Button>
-        </div>
-      {:else}
-        <h1 class="hero-title">No session today</h1>
-        <p class="hero-subtitle">Today is unscheduled. The plan starts Wed Jun 10.</p>
-        <div class="hero-actions">
-          <Button variant="primary" href="/log/free">Log a free session</Button>
-          <Button variant="ghost" href="/calendar">Open calendar</Button>
+          <span class="phase-name">{data.phase.name}</span>
         </div>
       {/if}
     </div>
-
-    <!-- DIVIDER -->
-    <div class="hero-divider" aria-hidden="true"></div>
-
-    <!-- RIGHT — next session card (always shown when there's a next) -->
     {#if data.nextSession}
-      <a class="hero-next" href="/log/by-date/{data.nextSession.date}">
+      <a class="next-pill" href="/log/by-date/{data.nextSession.date}">
         <span class="next-eyebrow">Up next</span>
-        <span class="next-date">{format(parseISO(data.nextSession.date), 'EEEE, MMM d')}</span>
+        <span class="next-date">{format(parseISO(data.nextSession.date), 'EEE MMM d')}</span>
         <span class="next-type">{SESSION_TYPE_LABELS[data.nextSession.type]}</span>
-        <span class="next-title">{data.nextSession.title ?? SESSION_TYPE_LABELS[data.nextSession.type]}</span>
-        <span class="next-arrow">Open <span aria-hidden="true">→</span></span>
+        <span class="next-arrow" aria-hidden="true">→</span>
       </a>
     {/if}
-  </section>
+  </header>
 
-  <!-- ============================ SUPPLEMENT REMINDER ============================ -->
   <SupplementBanner />
 
-  <!-- ============================ BENCHMARKS ============================ -->
-  <section class="benchmarks">
-    {#if data.tindeq.R}
-      <div class="bm-cell">
-        <Stat label="Tindeq R · 20mm" value={data.tindeq.R.peak_force_kg.toFixed(1)} unit="kg" />
+  <!-- ============================== 1 · DAILY CHECK-IN (always present) ============================== -->
+  <DailyCheckIn
+    bodyWeight={data.dailyCheckIn.body_weight_kg}
+    sleepHours={data.dailyCheckIn.sleep_hours}
+    readiness={data.dailyCheckIn.readiness}
+    prevBodyWeight={data.bodyweight?.body_weight_kg ?? null}
+    dateLabel={data.todayLabel}
+  />
+
+  <!-- ============================== 2 · NUTRITION ============================== -->
+  <NutritionCard
+    entries={data.nutrition.entries}
+    totals={data.nutrition.totals}
+    targets={data.nutrition.targets}
+    activityCalories={data.nutrition.activityCalories}
+    bodyWeightKg={data.nutrition.bodyWeightKg}
+  />
+
+  <!-- ============================== 3 · TODAY'S SESSION STRIP ============================== -->
+  <section class="session-strip" class:has-session={!!data.todaySession}>
+    {#if data.todaySession}
+      <div class="session-info">
+        <span class="session-eyebrow">Today's session</span>
+        <h2 class="session-title">{data.todaySession.title ?? SESSION_TYPE_LABELS[data.todaySession.type]}</h2>
+        <span class="session-type">{SESSION_TYPE_LABELS[data.todaySession.type]}</span>
       </div>
-    {/if}
-    {#if data.tindeq.L}
-      <div class="bm-cell">
-        <Stat label="Tindeq L · 20mm" value={data.tindeq.L.peak_force_kg.toFixed(1)} unit="kg" />
+      <div class="session-actions">
+        <Button variant="primary" href="/log/by-date/{data.todayISO}">Log this session</Button>
+        <Button variant="ghost" href="/log/free">Log free session</Button>
       </div>
-    {/if}
-    {#if data.tindeqAsymmetry !== null}
-      <div class="bm-cell">
-        <Stat
-          label="Asymmetry"
-          value={data.tindeqAsymmetry.toFixed(1)}
-          unit="%"
-          delta={Math.abs(data.tindeqAsymmetry) < 3 ? 'within target' : 'L hand priority'}
-        />
+    {:else}
+      <div class="session-info">
+        <span class="session-eyebrow">Today's session</span>
+        <h2 class="session-title rest">Rest day</h2>
+        <span class="session-type">Nothing scheduled — check-in is enough.</span>
       </div>
-    {/if}
-    {#if data.pullup}
-      <div class="bm-cell">
-        <Stat
-          label="Pull-up est. 1RM"
-          value={`+${data.pullup.estimated_1rm_added_kg.toFixed(1)}`}
-          unit="kg"
-        />
-      </div>
-    {/if}
-    {#if data.bodyweight}
-      <div class="bm-cell">
-        <Stat label="Body weight" value={data.bodyweight.body_weight_kg.toFixed(1)} unit="kg" />
-      </div>
-    {/if}
-    {#if data.sleep}
-      <div class="bm-cell">
-        <Stat label="Sleep · last night" value={data.sleep.sleep_hours.toFixed(1)} unit="h" />
-      </div>
-    {/if}
-    {#if data.latestRun && paceMins !== null && paceSecs !== null}
-      <div class="bm-cell">
-        <Stat
-          label="Latest run pace"
-          value={`${paceMins}:${paceSecs.toString().padStart(2, '0')}`}
-          unit="/km"
-        />
+      <div class="session-actions">
+        <Button variant="ghost" href="/log/free">Log a free session</Button>
+        <Button variant="ghost" href="/calendar">Open calendar</Button>
       </div>
     {/if}
   </section>
 
-  <!-- ============================ DASHBOARD ============================ -->
-  <section class="dashboard">
-    <div class="col">
-      {#if data.todaySession}
-        <MorningCheckIn
-          sessionId={data.todaySession.id}
-          bodyWeight={data.todaySession.body_weight_kg}
-          sleepHours={data.todaySession.sleep_hours}
-          readiness={data.todaySession.readiness}
-          prevBodyWeight={data.bodyweight?.body_weight_kg ?? null}
-        />
+  <!-- ============================== 4 · INSIGHTS ============================== -->
+  <InsightsCard insights={data.insights} />
+
+  <!-- ============================== 5 · THIS WEEK ============================== -->
+  <ThisWeekCard
+    startISO={data.week.startISO}
+    endISO={data.week.endISO}
+    sessionsTotal={data.week.sessionsTotal}
+    sessionsCompleted={data.week.sessionsCompleted}
+    setsTotal={data.week.setsTotal}
+    setsCompleted={data.week.setsCompleted}
+    climbs={data.week.climbs}
+    sleepAvg={data.week.sleepAvg}
+    tonnageKg={data.week.tonnageKg}
+    isometricSeconds={data.week.isometricSeconds}
+    runsCount={data.week.runsCount}
+    runKm={data.week.runKm}
+  />
+
+  <!-- ============================== 6 · BENCHMARKS (reference) ============================== -->
+  <section class="benchmarks" aria-label="Latest benchmarks">
+    <h3 class="bm-title">Latest benchmarks</h3>
+    <div class="bm-grid">
+      {#if data.tindeq.R}
+        <div class="bm-cell">
+          <Stat label="Tindeq R · 20mm" value={data.tindeq.R.peak_force_kg.toFixed(1)} unit="kg" />
+        </div>
       {/if}
-
-      <ThisWeekCard
-        startISO={data.week.startISO}
-        endISO={data.week.endISO}
-        sessionsTotal={data.week.sessionsTotal}
-        sessionsCompleted={data.week.sessionsCompleted}
-        setsTotal={data.week.setsTotal}
-        setsCompleted={data.week.setsCompleted}
-        climbs={data.week.climbs}
-        sleepAvg={data.week.sleepAvg}
-        tonnageKg={data.week.tonnageKg}
-        isometricSeconds={data.week.isometricSeconds}
-        runsCount={data.week.runsCount}
-        runKm={data.week.runKm}
-      />
-    </div>
-
-    <div class="col">
-      <InsightsCard insights={data.insights} />
-      <NutritionCard
-        entries={data.nutrition.entries}
-        totals={data.nutrition.totals}
-        targets={data.nutrition.targets}
-        activityCalories={data.nutrition.activityCalories}
-        bodyWeightKg={data.nutrition.bodyWeightKg}
-      />
+      {#if data.tindeq.L}
+        <div class="bm-cell">
+          <Stat label="Tindeq L · 20mm" value={data.tindeq.L.peak_force_kg.toFixed(1)} unit="kg" />
+        </div>
+      {/if}
+      {#if data.tindeqAsymmetry !== null}
+        <div class="bm-cell">
+          <Stat
+            label="Asymmetry"
+            value={data.tindeqAsymmetry.toFixed(1)}
+            unit="%"
+            delta={Math.abs(data.tindeqAsymmetry) < 3 ? 'within target' : 'L hand priority'}
+          />
+        </div>
+      {/if}
+      {#if data.pullup}
+        <div class="bm-cell">
+          <Stat
+            label="Pull-up est. 1RM"
+            value={`+${data.pullup.estimated_1rm_added_kg.toFixed(1)}`}
+            unit="kg"
+          />
+        </div>
+      {/if}
+      {#if data.bodyweight}
+        <div class="bm-cell">
+          <Stat label="Body weight" value={data.bodyweight.body_weight_kg.toFixed(1)} unit="kg" />
+        </div>
+      {/if}
+      {#if data.sleep}
+        <div class="bm-cell">
+          <Stat label="Sleep · last night" value={data.sleep.sleep_hours.toFixed(1)} unit="h" />
+        </div>
+      {/if}
+      {#if data.latestRun && paceMins !== null && paceSecs !== null}
+        <div class="bm-cell">
+          <Stat
+            label="Latest run pace"
+            value={`${paceMins}:${paceSecs.toString().padStart(2, '0')}`}
+            unit="/km"
+          />
+        </div>
+      {/if}
     </div>
   </section>
 </div>
@@ -172,171 +171,125 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
-    /* No max-width — fill the full main-content width on any monitor */
     width: 100%;
   }
 
-  /* ============================== HERO ============================== */
-  .hero {
-    display: grid;
-    grid-template-columns: 1fr 1px minmax(340px, 1fr);
-    gap: var(--space-6);
-    padding: var(--space-6);
-    border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-2);
-    background: var(--color-bg-surface);
-    align-items: stretch;
-  }
-
-  .hero-status {
+  /* ============================== HEAD STRIP ============================== */
+  .page-head {
     display: flex;
-    flex-direction: column;
-    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-5);
+    border-bottom: 1px solid var(--color-border-default);
   }
-
-  .hero-eyebrow {
+  .head-left { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+  .eyebrow {
     font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
     letter-spacing: var(--text-micro-tracking);
     text-transform: uppercase;
     color: var(--color-fg-muted);
-    margin-bottom: var(--space-3);
+    margin: 0;
   }
-
-  .hero-phase {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    margin-bottom: var(--space-4);
-  }
-
-  .hero-phase-name {
+  .phase-row { display: flex; align-items: center; gap: var(--space-2); }
+  .phase-name {
     font: var(--text-body-sm-weight) var(--text-body-sm-size)/1 var(--font-sans);
     color: var(--color-fg-muted);
   }
 
-  .hero-title {
-    font: var(--text-h1-weight) var(--text-h1-size)/var(--text-h1-line) var(--font-sans);
-    letter-spacing: var(--text-h1-tracking);
-    color: var(--color-fg-default);
-    margin: 0 0 var(--space-2) 0;
-  }
-
-  .hero-subtitle {
-    font: var(--text-body-weight) var(--text-body-size)/1.4 var(--font-sans);
-    color: var(--color-fg-muted);
-    margin: 0 0 auto 0; /* push actions to bottom */
-    padding-bottom: var(--space-5);
-    max-width: 48ch;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: var(--space-2);
-  }
-
-  .hero-divider {
-    width: 1px;
-    background: var(--color-border-default);
-    align-self: stretch;
-  }
-
-  /* --- RIGHT side: next session as a clickable card --- */
-  .hero-next {
-    display: grid;
-    grid-template-rows: auto auto auto 1fr auto;
-    gap: var(--space-2);
-    color: var(--color-fg-default);
-    text-decoration: none;
-    padding: var(--space-4) var(--space-5);
-    margin: calc(var(--space-2) * -1);
+  .next-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border-default);
     border-radius: var(--radius-2);
-    transition: background var(--motion-default) var(--ease-standard);
-  }
-  .hero-next:hover {
-    background: var(--color-bg-subtle);
+    color: var(--color-fg-default);
     text-decoration: none;
+    transition: background var(--motion-default) var(--ease-standard);
+    white-space: nowrap;
   }
-
+  .next-pill:hover { background: var(--color-bg-subtle); text-decoration: none; }
   .next-eyebrow {
     font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
     letter-spacing: var(--text-micro-tracking);
     text-transform: uppercase;
     color: var(--color-fg-muted);
   }
-
   .next-date {
-    font: var(--weight-semibold) 22px/1.1 var(--font-mono);
+    font: var(--weight-semibold) 14px/1 var(--font-mono);
     font-variant-numeric: tabular-nums;
     color: var(--color-fg-default);
-    letter-spacing: -0.01em;
   }
-
   .next-type {
+    font: var(--text-body-sm-weight) 12px/1 var(--font-sans);
+    color: var(--color-fg-muted);
+  }
+  .next-arrow { color: var(--color-fg-accent); font: var(--weight-bold) 14px/1 var(--font-sans); }
+
+  /* ============================== SESSION STRIP ============================== */
+  .session-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding: var(--space-4) var(--space-6);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-2);
+    background: var(--color-bg-surface);
+  }
+  .session-strip:not(.has-session) { background: var(--color-bg-subtle); }
+  .session-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .session-eyebrow {
     font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
     letter-spacing: var(--text-micro-tracking);
     text-transform: uppercase;
     color: var(--color-fg-muted);
   }
-
-  .next-title {
-    font: var(--text-body-weight) var(--text-body-size)/1.4 var(--font-sans);
+  .session-title {
+    font: var(--weight-bold) 22px/1.15 var(--font-sans);
+    letter-spacing: -0.01em;
     color: var(--color-fg-default);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    margin: 0;
   }
-
-  .next-arrow {
-    font: var(--weight-semibold) var(--text-body-sm-size)/1 var(--font-sans);
-    color: var(--color-fg-accent);
-    margin-top: var(--space-2);
+  .session-title.rest { color: var(--color-fg-muted); }
+  .session-type {
+    font: var(--text-body-sm-weight) var(--text-body-sm-size)/1.4 var(--font-sans);
+    color: var(--color-fg-muted);
   }
-  .next-arrow span { margin-left: 4px; }
+  .session-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
 
-  /* ============================ BENCHMARKS ============================ */
+  /* ============================== BENCHMARKS ============================== */
   .benchmarks {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: var(--space-3);
     padding: var(--space-4) var(--space-5);
     border: 1px solid var(--color-border-default);
     border-radius: var(--radius-2);
     background: var(--color-bg-surface);
   }
-  .bm-cell { min-width: 0; }
-  .benchmarks :global(.stat-value) { font-size: 24px !important; }
-  .benchmarks :global(.stat-label) { font-size: 10px !important; }
-  .benchmarks :global(.stat-delta) { font-size: 11px; }
-
-  /* ============================ DASHBOARD ============================ */
-  .dashboard {
+  .bm-title {
+    font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
+    letter-spacing: var(--text-micro-tracking);
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+    margin: 0 0 var(--space-3) 0;
+  }
+  .bm-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
-    align-items: stretch;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--space-3);
   }
+  .bm-cell { min-width: 0; }
+  .bm-grid :global(.stat-value) { font-size: 22px !important; }
+  .bm-grid :global(.stat-label) { font-size: 10px !important; }
+  .bm-grid :global(.stat-delta) { font-size: 11px; }
 
-  .col {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    min-width: 0;
-  }
-
-  /* Stretch the single child in col-b so Insights matches col-a's height */
-  .col > :global(*:only-child) { height: 100%; }
-
-  /* ============================ RESPONSIVE ============================ */
+  /* ============================== RESPONSIVE ============================== */
   @media (max-width: 1280px) {
-    .benchmarks { grid-template-columns: repeat(4, 1fr); row-gap: var(--space-4); }
-    .hero { grid-template-columns: 1fr; }
-    .hero-divider { display: none; }
-    .hero-next { margin: 0; padding: var(--space-3) 0 0 0; border-top: 1px solid var(--color-border-default); }
+    .bm-grid { grid-template-columns: repeat(4, 1fr); row-gap: var(--space-4); }
   }
-
   @media (max-width: 768px) {
-    .benchmarks { grid-template-columns: repeat(2, 1fr); }
-    .dashboard { grid-template-columns: 1fr; }
+    .page-head { flex-direction: column; align-items: flex-start; }
+    .session-strip { flex-direction: column; align-items: flex-start; }
+    .bm-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>

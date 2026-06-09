@@ -684,10 +684,22 @@ export async function getBodyweightHistory(sql: Sql, userId: string): Promise<Bo
       AND body_weight_kg IS NOT NULL
   `;
 
+  // Sessionless daily check-ins. -1 sentinel session_id so chart code that
+  // links back to a session knows there isn't one.
+  const fromCheckIns = await sql<BodyweightPoint[]>`
+    SELECT date::text, body_weight_kg, -1 AS session_id
+    FROM daily_check_ins
+    WHERE user_id = ${userId}
+      AND body_weight_kg IS NOT NULL
+  `;
+
   const byDate = new Map<string, BodyweightPoint>();
-  // Apply in priority order: tindeq < pullup < session, so sessions win.
+  // Apply in priority order: tindeq < pullup < check-in < session, so sessions win
+  // when both exist for a day. Check-ins are the canonical daily surface so they
+  // take precedence over test-derived weights.
   for (const p of fromTindeq) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
   for (const p of fromPullup) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
+  for (const p of fromCheckIns) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
   for (const p of fromSessions) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
 
   return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
@@ -705,25 +717,29 @@ export interface SleepPoint {
 }
 
 export async function getSleepHistory(sql: Sql, userId: string): Promise<SleepPoint[]> {
-  const rows = await sql<SleepPoint[]>`
+  const fromSessions = await sql<SleepPoint[]>`
     SELECT date::text, sleep_hours, id AS session_id
     FROM sessions
     WHERE user_id = ${userId}
       AND sleep_hours IS NOT NULL
-    ORDER BY date ASC, id ASC
   `;
-  return rows.map((r) => ({ ...r, session_id: Number(r.session_id) }));
+  const fromCheckIns = await sql<SleepPoint[]>`
+    SELECT date::text, sleep_hours, -1 AS session_id
+    FROM daily_check_ins
+    WHERE user_id = ${userId}
+      AND sleep_hours IS NOT NULL
+  `;
+  // Sessions win on collision (training-day sleep is the authoritative number
+  // because it was logged in the same flow as the workout).
+  const byDate = new Map<string, SleepPoint>();
+  for (const p of fromCheckIns) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
+  for (const p of fromSessions) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
+  return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export async function getLatestSleep(sql: Sql, userId: string): Promise<SleepPoint | null> {
-  const rows = await sql<SleepPoint[]>`
-    SELECT date::text, sleep_hours, id AS session_id
-    FROM sessions
-    WHERE user_id = ${userId}
-      AND sleep_hours IS NOT NULL
-    ORDER BY date DESC, id DESC LIMIT 1
-  `;
-  return rows[0] ? { ...rows[0], session_id: Number(rows[0].session_id) } : null;
+  const history = await getSleepHistory(sql, userId);
+  return history.length ? history[history.length - 1] : null;
 }
 
 // ---------- Weekly training load ----------
@@ -1523,12 +1539,17 @@ export async function getBodyWeightOnOrBefore(
   userId: string,
   date: string
 ): Promise<number | null> {
+  // Union sessions + daily_check_ins so rest-day weights flow through to
+  // the nutrition goal calculation.
   const rows = await sql<{ body_weight_kg: number }[]>`
-    SELECT body_weight_kg FROM sessions
-    WHERE user_id = ${userId}
-      AND body_weight_kg IS NOT NULL
-      AND date <= ${date}
-    ORDER BY date DESC, id DESC
+    SELECT body_weight_kg, date FROM (
+      SELECT date, body_weight_kg, id::text AS ordkey FROM sessions
+      WHERE user_id = ${userId} AND body_weight_kg IS NOT NULL AND date <= ${date}
+      UNION ALL
+      SELECT date, body_weight_kg, 'c' AS ordkey FROM daily_check_ins
+      WHERE user_id = ${userId} AND body_weight_kg IS NOT NULL AND date <= ${date}
+    ) AS combined
+    ORDER BY date DESC, ordkey DESC
     LIMIT 1
   `;
   if (rows[0]) return Number(rows[0].body_weight_kg);
@@ -1539,6 +1560,72 @@ export async function getBodyWeightOnOrBefore(
     LIMIT 1
   `;
   return fallback[0] ? Number(fallback[0].body_weight_kg) : null;
+}
+
+// ============================================================================
+// Daily check-ins — sessionless per-day capture of weight, sleep, readiness.
+// ============================================================================
+
+export interface DailyCheckIn {
+  user_id: string;
+  date: string;
+  body_weight_kg: number | null;
+  sleep_hours: number | null;
+  readiness: number | null;
+  note: string | null;
+}
+
+export async function getDailyCheckIn(
+  sql: Sql,
+  userId: string,
+  date: string
+): Promise<DailyCheckIn | null> {
+  const rows = await sql<Record<string, unknown>[]>`
+    SELECT user_id, date::text, body_weight_kg, sleep_hours, readiness, note
+    FROM daily_check_ins
+    WHERE user_id = ${userId} AND date = ${date}
+    LIMIT 1
+  `;
+  if (!rows[0]) return null;
+  const r = rows[0];
+  return {
+    user_id: String(r.user_id),
+    date: String(r.date),
+    body_weight_kg: r.body_weight_kg === null ? null : Number(r.body_weight_kg),
+    sleep_hours: r.sleep_hours === null ? null : Number(r.sleep_hours),
+    readiness: r.readiness === null ? null : Number(r.readiness),
+    note: r.note === null ? null : String(r.note)
+  };
+}
+
+export async function upsertDailyCheckIn(
+  sql: Sql,
+  userId: string,
+  date: string,
+  fields: Partial<Pick<DailyCheckIn, 'body_weight_kg' | 'sleep_hours' | 'readiness' | 'note'>>
+): Promise<void> {
+  // Only update keys the caller actually provided — undefined keeps the
+  // existing value, null clears it.
+  const next = {
+    body_weight_kg: fields.body_weight_kg === undefined ? null : fields.body_weight_kg,
+    sleep_hours: fields.sleep_hours === undefined ? null : fields.sleep_hours,
+    readiness: fields.readiness === undefined ? null : fields.readiness,
+    note: fields.note === undefined ? null : fields.note
+  };
+  const setBw = 'body_weight_kg' in fields;
+  const setSleep = 'sleep_hours' in fields;
+  const setReady = 'readiness' in fields;
+  const setNote = 'note' in fields;
+  await sql`
+    INSERT INTO daily_check_ins (user_id, date, body_weight_kg, sleep_hours, readiness, note)
+    VALUES (${userId}, ${date}, ${next.body_weight_kg}, ${next.sleep_hours}, ${next.readiness}, ${next.note})
+    ON CONFLICT (user_id, date) DO UPDATE SET
+      body_weight_kg = CASE WHEN ${setBw} THEN EXCLUDED.body_weight_kg ELSE daily_check_ins.body_weight_kg END,
+      sleep_hours    = CASE WHEN ${setSleep} THEN EXCLUDED.sleep_hours ELSE daily_check_ins.sleep_hours END,
+      readiness      = CASE WHEN ${setReady} THEN EXCLUDED.readiness ELSE daily_check_ins.readiness END,
+      note           = CASE WHEN ${setNote} THEN EXCLUDED.note ELSE daily_check_ins.note END,
+      updated_at     = NOW()
+  `;
 }
 
 export async function getActivityCaloriesForDate(
