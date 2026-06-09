@@ -30,16 +30,31 @@
     if (path.startsWith('/settings')) return { title: 'Settings', subtitle: 'Backup, export, about' };
     return { title: 'Biceps 2026', subtitle: undefined };
   });
+
+  // Shell visibility is driven by the URL, not by the layout data. SvelteKit's
+  // client-side navigation can briefly hand us a stale layout-data snapshot
+  // during a transition (the new page's data lands, but the layout data hasn't
+  // re-resolved yet); we'd render the no-shell branch in that gap and the
+  // sidebar + topbar would disappear. Auth is enforced in hooks.server.ts —
+  // if a user reaches any path besides /login they ARE logged in, full stop.
+  const isLoginPath = $derived(page.url.pathname.startsWith('/login'));
+  const showShell = $derived(!isLoginPath);
+  // Use whatever user info is currently available, falling back to a minimal
+  // placeholder if a transition stripped it. The TopBar's sign-out form still
+  // works either way since the server reads the cookie, not the prop.
+  const shellUser = $derived(
+    data.user ?? { id: '', email: '', display_name: '' }
+  );
 </script>
 
 {#if navigating.to}
   <div class="nav-progress" aria-hidden="true"></div>
 {/if}
 
-{#if data.user}
+{#if showShell}
   <div class="app-shell">
     <AppNav />
-    <TopBar title={titles.title} subtitle={titles.subtitle} user={data.user} />
+    <TopBar title={titles.title} subtitle={titles.subtitle} user={shellUser} />
     <main>
       {@render children()}
     </main>
