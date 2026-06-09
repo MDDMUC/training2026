@@ -10,7 +10,14 @@
 
   // Series for the three priority charts
   const weightPoints = $derived<Point[]>(
-    data.bodyweightHistory.map((p) => ({ id: p.session_id, date: p.date, value: p.body_weight_kg }))
+    data.bodyweightHistory.map((p) => ({
+      // session_id is null for sessionless daily_check_ins rows; coerce to
+      // undefined so PriorityChart's `p.id ?? p.date` fallback engages and
+      // each-key duplicates can't form.
+      id: p.session_id ?? undefined,
+      date: p.date,
+      value: p.body_weight_kg
+    }))
   );
   const pullPoints = $derived<Point[]>(
     data.pullupTests.map((t) => ({ id: t.id, date: t.date, value: t.estimated_1rm_added_kg }))

@@ -662,7 +662,9 @@ export async function getPhaseProgress(
 export interface BodyweightPoint {
   date: string;
   body_weight_kg: number;
-  session_id: number;
+  // null for sessionless daily_check_ins rows (no session to link back to).
+  // Consumers keying off this id must fall back to `date` for those rows.
+  session_id: number | null;
 }
 
 /**
@@ -691,10 +693,12 @@ export async function getBodyweightHistory(sql: Sql, userId: string): Promise<Bo
       AND body_weight_kg IS NOT NULL
   `;
 
-  // Sessionless daily check-ins. -1 sentinel session_id so chart code that
-  // links back to a session knows there isn't one.
+  // Sessionless daily check-ins. session_id is NULL (no session to link back
+  // to). Using NULL — not a sentinel like -1 — keeps the field unique-by-date
+  // and prevents `{#each ... (p.id)}` collisions when multiple check-ins
+  // appear in the same series.
   const fromCheckIns = await sql<BodyweightPoint[]>`
-    SELECT date::text, body_weight_kg, -1 AS session_id
+    SELECT date::text, body_weight_kg, NULL::int AS session_id
     FROM daily_check_ins
     WHERE user_id = ${userId}
       AND body_weight_kg IS NOT NULL
@@ -704,10 +708,14 @@ export async function getBodyweightHistory(sql: Sql, userId: string): Promise<Bo
   // Apply in priority order: tindeq < pullup < check-in < session, so sessions win
   // when both exist for a day. Check-ins are the canonical daily surface so they
   // take precedence over test-derived weights.
-  for (const p of fromTindeq) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
-  for (const p of fromPullup) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
-  for (const p of fromCheckIns) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
-  for (const p of fromSessions) byDate.set(p.date, { ...p, session_id: Number(p.session_id) });
+  const norm = (p: BodyweightPoint): BodyweightPoint => ({
+    ...p,
+    session_id: p.session_id === null ? null : Number(p.session_id)
+  });
+  for (const p of fromTindeq) byDate.set(p.date, norm(p));
+  for (const p of fromPullup) byDate.set(p.date, norm(p));
+  for (const p of fromCheckIns) byDate.set(p.date, norm(p));
+  for (const p of fromSessions) byDate.set(p.date, norm(p));
 
   return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
 }
@@ -720,7 +728,8 @@ export async function getLatestBodyweight(sql: Sql, userId: string): Promise<Bod
 export interface SleepPoint {
   date: string;
   sleep_hours: number;
-  session_id: number;
+  // null for sessionless daily_check_ins rows.
+  session_id: number | null;
 }
 
 export async function getSleepHistory(sql: Sql, userId: string): Promise<SleepPoint[]> {
@@ -731,7 +740,7 @@ export async function getSleepHistory(sql: Sql, userId: string): Promise<SleepPo
       AND sleep_hours IS NOT NULL
   `;
   const fromCheckIns = await sql<SleepPoint[]>`
-    SELECT date::text, sleep_hours, -1 AS session_id
+    SELECT date::text, sleep_hours, NULL::int AS session_id
     FROM daily_check_ins
     WHERE user_id = ${userId}
       AND sleep_hours IS NOT NULL
