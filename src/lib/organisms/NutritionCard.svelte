@@ -126,10 +126,6 @@
       <div class="ring-label">
         <span class="ring-value">{Math.round(totals.calories).toLocaleString()}</span>
         <span class="ring-unit">/ {targets.goal_kcal.toLocaleString()} kcal</span>
-        <span class="ring-delta" class:over={calorieDelta > 0} class:hit={calorieHit}>
-          {calorieDelta > 0 ? '+' : ''}{Math.round(calorieDelta).toLocaleString()}
-          {calorieHit ? '· on target' : calorieDelta > 0 ? '· over' : '· remaining'}
-        </span>
       </div>
     </div>
 
@@ -176,32 +172,45 @@
     </div>
   </div>
 
-  <!-- Workout burn input -->
-  <form
-    method="POST"
-    action="?/updateActivityCalories"
-    use:enhance
-    class="burn-row"
-  >
-    <label class="burn-label">
-      <span>Workout burn (from watch)</span>
-      <div class="burn-input">
-        <input
-          type="number"
-          name="activity_calories"
-          step="1"
-          min="0"
-          max="5000"
-          inputmode="numeric"
-          bind:value={burnInput}
-          placeholder="0"
-          onchange={(e) => (e.currentTarget.closest('form') as HTMLFormElement).requestSubmit()}
-        />
-        <span class="unit">kcal</span>
-      </div>
-    </label>
-    <span class="burn-hint">Adds to today's calorie goal.</span>
-  </form>
+  <!-- Workout burn + today's balance -->
+  <div class="metrics-row">
+    <form
+      method="POST"
+      action="?/updateActivityCalories"
+      use:enhance
+      class="burn-cell"
+    >
+      <label class="cell-label">
+        <span>Workout burn (from watch)</span>
+        <div class="num-row">
+          <input
+            type="number"
+            name="activity_calories"
+            step="1"
+            min="0"
+            max="5000"
+            inputmode="numeric"
+            bind:value={burnInput}
+            placeholder="0"
+            onchange={(e) => (e.currentTarget.closest('form') as HTMLFormElement).requestSubmit()}
+          />
+          <span class="unit">kcal</span>
+        </div>
+      </label>
+      <span class="cell-hint">Adds to today's calorie goal.</span>
+    </form>
+
+    <div class="balance-cell">
+      <span class="cell-label-text">Today's balance</span>
+      <span class="balance-value" class:over={calorieDelta > 0} class:hit={calorieHit}>
+        {calorieDelta > 0 ? '+' : ''}{Math.round(calorieDelta).toLocaleString()}
+        <span class="balance-unit">kcal</span>
+      </span>
+      <span class="cell-hint">
+        {calorieHit ? 'on target' : calorieDelta > 0 ? 'over goal' : 'remaining today'}
+      </span>
+    </div>
+  </div>
 
   <!-- Entries list -->
   {#if entries.length > 0}
@@ -469,14 +478,6 @@
     color: var(--color-fg-muted);
     margin-top: 4px;
   }
-  .ring-delta {
-    font: var(--weight-semibold) 10px/1 var(--font-mono);
-    color: var(--color-fg-muted);
-    margin-top: 6px;
-    letter-spacing: 0.02em;
-  }
-  .ring-delta.over { color: var(--color-fg-accent); }
-  .ring-delta.hit { color: var(--color-fg-default); }
 
   .macros { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
   .macro { display: flex; flex-direction: column; gap: 4px; }
@@ -513,26 +514,27 @@
   .bar-fill.subtle { background: var(--color-border-strong); }
   .bar-fill.hit { background: var(--color-fg-default); }
 
-  /* ---------- Burn row ---------- */
-  .burn-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
+  /* ---------- Metrics row: burn + balance ---------- */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
     padding: var(--space-3) 0;
     border-top: 1px solid var(--color-border-default);
     border-bottom: 1px solid var(--color-border-default);
   }
-  .burn-label {
-    display: flex; flex-direction: column; gap: 4px;
-  }
-  .burn-label > span {
+  .burn-cell, .balance-cell { display: flex; flex-direction: column; gap: 6px; }
+  .balance-cell { align-items: flex-end; text-align: right; }
+  .cell-label { display: flex; flex-direction: column; gap: 4px; }
+  .cell-label > span,
+  .cell-label-text {
     font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
     letter-spacing: var(--text-micro-tracking);
     text-transform: uppercase;
     color: var(--color-fg-muted);
   }
-  .burn-input { display: inline-flex; align-items: baseline; gap: var(--space-2); }
-  .burn-input input {
+  .num-row { display: inline-flex; align-items: baseline; gap: var(--space-2); }
+  .num-row input {
     width: 90px;
     padding: var(--space-2) var(--space-3);
     border: 1px solid var(--color-border-strong);
@@ -542,10 +544,28 @@
     font: var(--weight-bold) 18px/1 var(--font-mono);
     font-variant-numeric: tabular-nums;
     text-align: right;
+    -moz-appearance: textfield;
+    appearance: textfield;
   }
-  .burn-input .unit { color: var(--color-fg-muted); font: var(--weight-medium) 12px/1 var(--font-mono); }
-  .burn-input input:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
-  .burn-hint {
+  .num-row input::-webkit-inner-spin-button,
+  .num-row input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .num-row input:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
+  .num-row .unit { color: var(--color-fg-muted); font: var(--weight-medium) 12px/1 var(--font-mono); }
+
+  .balance-value {
+    font: var(--weight-bold) 22px/1 var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-fg-default);
+  }
+  .balance-value.over { color: var(--color-fg-accent); }
+  .balance-unit {
+    font: var(--weight-medium) 12px/1 var(--font-mono);
+    color: var(--color-fg-muted);
+  }
+  .cell-hint {
     font: var(--text-body-sm-weight) 11px/1 var(--font-sans);
     color: var(--color-fg-subtle);
   }
@@ -655,6 +675,13 @@
     font: var(--weight-bold) 18px/1 var(--font-mono);
     font-variant-numeric: tabular-nums;
     text-align: right;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .num-input input::-webkit-inner-spin-button,
+  .num-input input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
   .num-input input:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
   .num-input .unit { color: var(--color-fg-muted); font: var(--weight-medium) 12px/1 var(--font-mono); }
@@ -754,5 +781,7 @@
     .input-row { flex-direction: column; }
     .manual-grid { grid-template-columns: repeat(2, 1fr); }
     .manual-actions { flex-direction: column; align-items: stretch; gap: var(--space-2); }
+    .metrics-row { grid-template-columns: 1fr; gap: var(--space-3); }
+    .balance-cell { align-items: flex-start; text-align: left; }
   }
 </style>

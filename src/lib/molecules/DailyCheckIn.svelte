@@ -1,6 +1,5 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import { invalidateAll } from '$app/navigation';
 
   type Props = {
     bodyWeight: number | null;
@@ -42,12 +41,15 @@
   );
 
   function trackSave(field: string) {
-    return () =>
-      async ({ update }: { update: (opts?: { reset?: boolean }) => Promise<void> }) => {
+    return () => {
+      // Optimistic — show the ✓ the instant the input blurs. The server
+      // upsert is small; failures would require an auth-level problem.
+      // Re-running the heavy Today load inline would delay the badge 1–2s.
+      markSaved(field);
+      return async ({ update }: { update: (opts?: { reset?: boolean }) => Promise<void> }) => {
         await update({ reset: false });
-        markSaved(field);
-        await invalidateAll();
       };
+    };
   }
 
   function submitForm(e: Event) {
@@ -205,6 +207,13 @@
     font: var(--weight-bold) 24px/1 var(--font-mono);
     font-variant-numeric: tabular-nums;
     text-align: right;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
   input:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
 
