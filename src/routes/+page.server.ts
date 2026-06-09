@@ -46,25 +46,89 @@ export const load: PageServerLoad = async ({ locals }) => {
   const userId = locals.user!.id;
   const todayISO = format(new Date(), 'yyyy-MM-dd');
 
-  const todaySession = await getSessionByDate(sql, userId, todayISO);
-  const phase = await getPhaseForDate(sql, userId, todayISO);
-  const tindeq = await getLatestTindeqPerHand(sql, userId);
-  const pullup = await getLatestPullupTest(sql, userId);
-  const bodyweight = await getLatestBodyweight(sql, userId);
-  const sleep = await getLatestSleep(sql, userId);
-
-  // This-week snapshot
+  // Date math — no I/O.
   const today = new Date();
   const weekStartISO = formatDate(startOfWeek(today, { weekStartsOn: 1 }), 'yyyy-MM-dd');
   const weekEndISO = formatDate(endOfWeek(today, { weekStartsOn: 1 }), 'yyyy-MM-dd');
-  const weekSessions = await getSessionsInRangeWithCounts(sql, userId, weekStartISO, weekEndISO);
-  const allClimbs = await getAllClimbingAttempts(sql, userId);
+  const tomorrowISO = formatDate(addDays(today, 1), 'yyyy-MM-dd');
+  const lookaheadEnd = formatDate(addDays(today, 14), 'yyyy-MM-dd');
+  const prevWeekStart = formatDate(subWeeks(startOfWeek(today, { weekStartsOn: 1 }), 1), 'yyyy-MM-dd');
+  const prevWeekEnd = formatDate(subWeeks(endOfWeek(today, { weekStartsOn: 1 }), 1), 'yyyy-MM-dd');
+
+  // Stage 1 — every independent query in parallel. Was ~20 sequential RTTs
+  // through the Supabase pooler (~2.5–3s); now collapses to one batched round-trip.
+  const [
+    todaySession,
+    phase,
+    tindeq,
+    pullup,
+    bodyweight,
+    sleep,
+    weekSessions,
+    allClimbs,
+    allRuns,
+    latestRun,
+    sleepHistory,
+    upcomingRaw,
+    prevWeekSessions,
+    allPhases,
+    upcomingTestsRaw,
+    profileRow,
+    nutritionEntries,
+    activityCaloriesToday,
+    bodyWeightOnOrBefore,
+    dailyCheckIn
+  ] = await Promise.all([
+    getSessionByDate(sql, userId, todayISO),
+    getPhaseForDate(sql, userId, todayISO),
+    getLatestTindeqPerHand(sql, userId),
+    getLatestPullupTest(sql, userId),
+    getLatestBodyweight(sql, userId),
+    getLatestSleep(sql, userId),
+    getSessionsInRangeWithCounts(sql, userId, weekStartISO, weekEndISO),
+    getAllClimbingAttempts(sql, userId),
+    getAllRunningLogs(sql, userId),
+    getLatestRun(sql, userId),
+    getSleepHistory(sql, userId),
+    getSessionsInRangeWithCounts(sql, userId, tomorrowISO, lookaheadEnd),
+    getSessionsInRangeWithCounts(sql, userId, prevWeekStart, prevWeekEnd),
+    getAllPhases(sql, userId),
+    getSessionsInRangeWithCounts(sql, userId, todayISO, '2026-08-30'),
+    getNutritionProfile(sql, userId),
+    listNutritionEntriesForDate(sql, userId, todayISO),
+    getActivityCaloriesForDate(sql, userId, todayISO),
+    getBodyWeightOnOrBefore(sql, userId, todayISO),
+    getDailyCheckIn(sql, userId, todayISO)
+  ]);
+
+  // Stage 2 — per-session set fetches for week + prev-week tonnage, all in parallel.
+  // Was a sequential for-loop per week (5–7 RTTs each); now one batched round-trip total.
+  const [weekSetsBySession, prevWeekSetsBySession] = await Promise.all([
+    Promise.all(weekSessions.map((s) => getAllSetsForSession(sql, userId, s.id))),
+    Promise.all(prevWeekSessions.map((s) => getAllSetsForSession(sql, userId, s.id)))
+  ]);
+
+  // ---------- Roll up week / prev-week tonnage + iso seconds ----------
+  let weekTonnage = 0;
+  let weekIsoSec = 0;
+  weekSessions.forEach((s, i) => {
+    const load = computeSessionLoad(weekSetsBySession[i], s.body_weight_kg ?? null);
+    weekTonnage += load.tonnage_kg;
+    weekIsoSec += load.isometric_seconds;
+  });
+
+  let prevWeekTonnage = 0;
+  prevWeekSessions.forEach((s, i) => {
+    prevWeekTonnage += computeSessionLoad(
+      prevWeekSetsBySession[i],
+      s.body_weight_kg ?? null
+    ).tonnage_kg;
+  });
+
+  // ---------- Per-week filtering on already-fetched lists ----------
   const weekClimbs = allClimbs.filter((a) => a.date >= weekStartISO && a.date <= weekEndISO);
-  const allRuns = await getAllRunningLogs(sql, userId);
   const weekRuns = allRuns.filter((r) => r.date >= weekStartISO && r.date <= weekEndISO);
   const weekKm = weekRuns.reduce((a, r) => a + r.distance_km, 0);
-  const latestRun = await getLatestRun(sql, userId);
-  const sleepHistory = await getSleepHistory(sql, userId);
   const weekSleepEntries = sleepHistory.filter(
     (s) => s.date >= weekStartISO && s.date <= weekEndISO
   );
@@ -74,16 +138,6 @@ export const load: PageServerLoad = async ({ locals }) => {
           (weekSleepEntries.reduce((a, s) => a + s.sleep_hours, 0) / weekSleepEntries.length) * 10
         ) / 10
       : null;
-
-  // Roll up tonnage + isometric seconds across the week's sessions
-  let weekTonnage = 0;
-  let weekIsoSec = 0;
-  for (const s of weekSessions) {
-    const sets = await getAllSetsForSession(sql, userId, s.id);
-    const load = computeSessionLoad(sets, s.body_weight_kg ?? null);
-    weekTonnage += load.tonnage_kg;
-    weekIsoSec += load.isometric_seconds;
-  }
 
   const week = {
     startISO: weekStartISO,
@@ -100,9 +154,8 @@ export const load: PageServerLoad = async ({ locals }) => {
     runKm: Math.round(weekKm * 10) / 10
   };
 
-  const tomorrowISO = formatDate(addDays(today, 1), 'yyyy-MM-dd');
-  const lookaheadEnd = formatDate(addDays(today, 14), 'yyyy-MM-dd');
-  const upcoming = (await getSessionsInRangeWithCounts(sql, userId, tomorrowISO, lookaheadEnd))
+  // ---------- Next session, phase math, insights ----------
+  const upcoming = upcomingRaw
     .filter((s) => s.type !== 'rest')
     .sort((a, b) => a.date.localeCompare(b.date));
   const nextSession = upcoming[0] ?? null;
@@ -112,30 +165,12 @@ export const load: PageServerLoad = async ({ locals }) => {
       ? asymmetryPercent(tindeq.R.peak_force_kg, tindeq.L.peak_force_kg)
       : null;
 
-  const prevWeekStart = formatDate(subWeeks(startOfWeek(today, { weekStartsOn: 1 }), 1), 'yyyy-MM-dd');
-  const prevWeekEnd = formatDate(subWeeks(endOfWeek(today, { weekStartsOn: 1 }), 1), 'yyyy-MM-dd');
-  const prevWeekSessions = await getSessionsInRangeWithCounts(
-    sql,
-    userId,
-    prevWeekStart,
-    prevWeekEnd
-  );
-  let prevWeekTonnage = 0;
-  for (const s of prevWeekSessions) {
-    const setRows = await getAllSetsForSession(sql, userId, s.id);
-    prevWeekTonnage += computeSessionLoad(setRows, s.body_weight_kg ?? null).tonnage_kg;
-  }
-
   const daysSincePlanStart = differenceInCalendarDays(today, new Date(2026, 5, 10));
-
-  const allPhases = await getAllPhases(sql, userId);
   const daysUntilPhaseEnd = phase ? differenceInCalendarDays(new Date(phase.end_date), today) : null;
   const nextPhase = phase
     ? allPhases.find((p) => p.mesocycle_num === phase.mesocycle_num + 1) ?? null
     : null;
-  const upcomingTests = (
-    await getSessionsInRangeWithCounts(sql, userId, todayISO, '2026-08-30')
-  ).filter((s) => s.type === 'test');
+  const upcomingTests = upcomingTestsRaw.filter((s) => s.type === 'test');
   const nextTestDate = upcomingTests.length > 0 ? upcomingTests[0].date : null;
 
   const insights = generateInsights({
@@ -158,7 +193,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   });
 
   // ---------- Nutrition (today only) ----------
-  const profile = (await getNutritionProfile(sql, userId)) ?? {
+  const profile = profileRow ?? {
     user_id: userId,
     age: 43,
     height_cm: 196,
@@ -169,17 +204,9 @@ export const load: PageServerLoad = async ({ locals }) => {
     calorie_tolerance_pct: PROFILE_DEFAULTS.calorie_tolerance_pct,
     updated_at: new Date().toISOString()
   };
-  const nutritionEntries = await listNutritionEntriesForDate(sql, userId, todayISO);
-  const activityCaloriesToday = await getActivityCaloriesForDate(sql, userId, todayISO);
-  const bodyWeightForGoal =
-    (await getBodyWeightOnOrBefore(sql, userId, todayISO)) ??
-    profile.default_weight_kg ??
-    83;
+  const bodyWeightForGoal = bodyWeightOnOrBefore ?? profile.default_weight_kg ?? 83;
   const nutritionTargets = computeDailyTargets(profile, bodyWeightForGoal, activityCaloriesToday);
   const nutritionTotals = sumEntries(nutritionEntries);
-
-  // ---------- Daily check-in (sessionless) ----------
-  const dailyCheckIn = await getDailyCheckIn(sql, userId, todayISO);
   // Seed the form from today's session if a check-in row doesn't exist yet —
   // avoids "lost data" feel when the user logged via MorningCheckIn earlier.
   const checkInSeed = dailyCheckIn ?? {

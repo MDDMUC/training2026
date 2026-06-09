@@ -23,17 +23,35 @@ export const load: PageServerLoad = async ({ locals }) => {
   const userId = locals.user!.id;
   const todayISO = format(new Date(), 'yyyy-MM-dd');
 
-  const tindeqTests = await getAllTindeqTests(sql, userId);
-  const pullupTests = await getAllPullupTests(sql, userId);
-  const phase = await getPhaseForDate(sql, userId, todayISO);
-  const phaseProgress = phase ? await getPhaseProgress(sql, userId, phase.id) : null;
-  const weeklyLoad = await getWeeklyLoad(sql, userId);
-  const bodyweightHistory = await getBodyweightHistory(sql, userId);
-
-  // ---------- Nutrition consistency (rolling 60 days) ----------
+  // ---------- Nutrition consistency range ----------
   const RANGE_DAYS = 60;
   const startISO = format(subDays(new Date(), RANGE_DAYS - 1), 'yyyy-MM-dd');
-  const profile = (await getNutritionProfile(sql, userId)) ?? {
+
+  // Stage 1 — fire every query that doesn't depend on another in parallel.
+  // Drops TTFB from ~8 sequential RTTs (~2.5s through the pooler) to a single
+  // round-trip's worth of latency (~300ms).
+  const [
+    tindeqTests,
+    pullupTests,
+    phase,
+    weeklyLoad,
+    bodyweightHistory,
+    profileRow,
+    rollups
+  ] = await Promise.all([
+    getAllTindeqTests(sql, userId),
+    getAllPullupTests(sql, userId),
+    getPhaseForDate(sql, userId, todayISO),
+    getWeeklyLoad(sql, userId),
+    getBodyweightHistory(sql, userId),
+    getNutritionProfile(sql, userId),
+    getDailyNutritionRollups(sql, userId, startISO, todayISO)
+  ]);
+
+  // Stage 2 — phaseProgress depends on phase.id.
+  const phaseProgress = phase ? await getPhaseProgress(sql, userId, phase.id) : null;
+
+  const profile = profileRow ?? {
     user_id: userId,
     age: 43,
     height_cm: 196,
@@ -44,7 +62,6 @@ export const load: PageServerLoad = async ({ locals }) => {
     calorie_tolerance_pct: PROFILE_DEFAULTS.calorie_tolerance_pct,
     updated_at: new Date().toISOString()
   };
-  const rollups = await getDailyNutritionRollups(sql, userId, startISO, todayISO);
 
   // Build a continuous per-day series. Days without a nutrition log → not a hit
   // for either goal, but still occupy a slot in the streak/strip view.

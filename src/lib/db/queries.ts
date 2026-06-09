@@ -443,23 +443,30 @@ export async function getExerciseInstancesByName(
     ORDER BY s.date ASC, s.id ASC
   `;
 
-  const out: ExerciseInstance[] = [];
-  for (const r of rows) {
-    const sets = await getSetsForExercise(sql, userId, r.exercise_id);
-    const top = await topWorkSet(sql, r.exercise_id);
-    out.push({
-      exercise_id: r.exercise_id,
-      session_id: r.session_id,
-      session_date: r.session_date,
-      session_completed: coerceBool(r.session_completed),
-      phase_short_name: r.phase_short_name,
-      athlete_notes: r.athlete_notes,
-      prescription_notes: r.prescription_notes,
-      sets,
-      top_set: top
-    });
-  }
-  return out;
+  // Was: 2 sequential queries per instance row inside a for-loop. With ~5
+  // instances per exercise that's 10 sequential RTTs; the PR page calls this
+  // for every exercise (30+), compounding into 300+ serial round-trips.
+  // Now: fire both inner queries in parallel, all rows in parallel.
+  const fetched = await Promise.all(
+    rows.map(async (r) => {
+      const [sets, top] = await Promise.all([
+        getSetsForExercise(sql, userId, r.exercise_id),
+        topWorkSet(sql, r.exercise_id)
+      ]);
+      return { r, sets, top };
+    })
+  );
+  return fetched.map(({ r, sets, top }) => ({
+    exercise_id: r.exercise_id,
+    session_id: r.session_id,
+    session_date: r.session_date,
+    session_completed: coerceBool(r.session_completed),
+    phase_short_name: r.phase_short_name,
+    athlete_notes: r.athlete_notes,
+    prescription_notes: r.prescription_notes,
+    sets,
+    top_set: top
+  }));
 }
 
 export async function getDistinctExerciseNames(sql: Sql, userId: string): Promise<string[]> {

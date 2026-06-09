@@ -18,12 +18,15 @@ export const load: PageServerLoad = async ({ url, locals }) => {
   const weekStart = startOfWeek(anchor, { weekStartsOn: 1 });
   const weekEnd = endOfWeek(anchor, { weekStartsOn: 1 });
 
-  const sessions = await getSessionsInRangeWithCounts(
-    sql,
-    userId,
-    format(weekStart, 'yyyy-MM-dd'),
-    format(weekEnd, 'yyyy-MM-dd')
-  );
+  const [sessions, phases] = await Promise.all([
+    getSessionsInRangeWithCounts(
+      sql,
+      userId,
+      format(weekStart, 'yyyy-MM-dd'),
+      format(weekEnd, 'yyyy-MM-dd')
+    ),
+    getAllPhases(sql, userId)
+  ]);
 
   return {
     weekStartISO: format(weekStart, 'yyyy-MM-dd'),
@@ -32,6 +35,6 @@ export const load: PageServerLoad = async ({ url, locals }) => {
     nextWeekStart: format(addDays(weekStart, 7), 'yyyy-MM-dd'),
     todayISO: format(today, 'yyyy-MM-dd'),
     sessions,
-    phases: await getAllPhases(sql, userId)
+    phases
   };
 };

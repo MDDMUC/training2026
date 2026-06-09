@@ -17,7 +17,21 @@ export const load: PageServerLoad = async ({ locals }) => {
   const userId = locals.user!.id;
   const todayISO = format(new Date(), 'yyyy-MM-dd');
 
-  const tindeq = await getAllTindeqTests(sql, userId);
+  // Stage 1 — every aggregate query independent. Parallel.
+  const [tindeq, pullups, climbsRaw, runs, weeks, exNames] = await Promise.all([
+    getAllTindeqTests(sql, userId),
+    getAllPullupTests(sql, userId),
+    getAllClimbingAttempts(sql, userId),
+    getAllRunningLogs(sql, userId),
+    getWeeklyLoad(sql, userId),
+    getExerciseIndex(sql, userId)
+  ]);
+
+  // Stage 2 — per-exercise instances, fired together instead of N sequential RTTs.
+  const allInstances = await Promise.all(
+    exNames.map((row) => getExerciseInstancesByName(sql, userId, row.name))
+  );
+
   const tindeqR = tindeq.filter((t) => t.hand === 'R');
   const tindeqL = tindeq.filter((t) => t.hand === 'L');
   const bestTindeqR =
@@ -29,7 +43,6 @@ export const load: PageServerLoad = async ({ locals }) => {
       ? tindeqL.reduce((a, b) => (b.peak_force_kg > a.peak_force_kg ? b : a))
       : null;
 
-  const pullups = await getAllPullupTests(sql, userId);
   const bestPullup =
     pullups.length > 0
       ? pullups.reduce((a, b) =>
@@ -37,7 +50,6 @@ export const load: PageServerLoad = async ({ locals }) => {
         )
       : null;
 
-  const climbsRaw = await getAllClimbingAttempts(sql, userId);
   const climbs = climbsRaw.map((a) => ({ ...a, rank: gradeRank(a.grade) }));
   const onsightOrFlash = climbs.filter(
     (a) => (a.style === 'onsight' || a.style === 'flash') && a.rank > 0
@@ -52,7 +64,6 @@ export const load: PageServerLoad = async ({ locals }) => {
   const hardestRedpoint =
     redpoint.length > 0 ? redpoint.reduce((a, b) => (b.rank > a.rank ? b : a)) : null;
 
-  const runs = await getAllRunningLogs(sql, userId);
   const fastestRun =
     runs.filter((r) => r.pace_min_per_km !== null).length > 0
       ? runs
@@ -64,21 +75,18 @@ export const load: PageServerLoad = async ({ locals }) => {
   const longestRun =
     runs.length > 0 ? runs.reduce((a, b) => (b.distance_km > a.distance_km ? b : a)) : null;
 
-  const weeks = await getWeeklyLoad(sql, userId);
   const peakTonnageWeek =
     weeks.length > 0 ? weeks.reduce((a, b) => (b.tonnage_kg > a.tonnage_kg ? b : a)) : null;
 
-  const exNames = await getExerciseIndex(sql, userId);
   const exercisePRs: Array<{
     name: string;
     instances: number;
     best_date: string;
     top_set: NonNullable<Awaited<ReturnType<typeof getExerciseInstancesByName>>[number]['top_set']>;
   }> = [];
-  for (const row of exNames) {
-    const instances = await getExerciseInstancesByName(sql, userId, row.name);
-    const completed = instances.filter((i) => i.session_completed === 1 && i.top_set);
-    if (completed.length === 0) continue;
+  exNames.forEach((row, i) => {
+    const completed = allInstances[i].filter((inst) => inst.session_completed === 1 && inst.top_set);
+    if (completed.length === 0) return;
     const best = completed.reduce((a, b) => {
       const sa = a.top_set!.load_kg_added ?? a.top_set!.load_kg ?? a.top_set!.hold_seconds ?? 0;
       const sb = b.top_set!.load_kg_added ?? b.top_set!.load_kg ?? b.top_set!.hold_seconds ?? 0;
@@ -90,7 +98,7 @@ export const load: PageServerLoad = async ({ locals }) => {
       best_date: best.session_date,
       top_set: best.top_set!
     });
-  }
+  });
 
   return {
     todayISO,

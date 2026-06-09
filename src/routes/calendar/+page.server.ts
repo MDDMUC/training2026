@@ -27,14 +27,15 @@ export const load: PageServerLoad = async ({ url, locals }) => {
   const gridStart = startOfWeek(startOfMonth(month), { weekStartsOn: 1 });
   const gridEnd = endOfWeek(endOfMonth(month), { weekStartsOn: 1 });
 
-  const sessions = await getSessionsInRangeWithCounts(
-    sql,
-    userId,
-    format(gridStart, 'yyyy-MM-dd'),
-    format(gridEnd, 'yyyy-MM-dd')
-  );
-
-  const phases = await getAllPhases(sql, userId);
+  const [sessions, phases] = await Promise.all([
+    getSessionsInRangeWithCounts(
+      sql,
+      userId,
+      format(gridStart, 'yyyy-MM-dd'),
+      format(gridEnd, 'yyyy-MM-dd')
+    ),
+    getAllPhases(sql, userId)
+  ]);
 
   return {
     monthISO: format(month, 'yyyy-MM'),
