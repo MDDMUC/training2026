@@ -222,8 +222,17 @@
   }
 
   @media (max-width: 768px) {
-    .primary { grid-template-columns: 1fr; }
+    .card { padding: var(--space-4); }
+    .card-head { margin-bottom: var(--space-4); padding-bottom: var(--space-3); }
+    .primary { grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4); }
+    .metric-value .num { font-size: 28px; }
     .secondary { grid-template-columns: 1fr 1fr; }
+    .cell { padding: var(--space-2) var(--space-3); }
+    .cell-value { font-size: 14px; }
     .cell.wide { grid-column: 1 / -1; }
+  }
+  @media (max-width: 380px) {
+    .primary { grid-template-columns: 1fr; gap: var(--space-3); }
+    .metric-value .num { font-size: 26px; }
   }
 </style>

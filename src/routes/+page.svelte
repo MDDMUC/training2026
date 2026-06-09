@@ -288,8 +288,32 @@
     .bm-grid { grid-template-columns: repeat(4, 1fr); row-gap: var(--space-4); }
   }
   @media (max-width: 768px) {
-    .page-head { flex-direction: column; align-items: flex-start; }
-    .session-strip { flex-direction: column; align-items: flex-start; }
-    .bm-grid { grid-template-columns: repeat(2, 1fr); }
+    .today-page { gap: var(--space-3); }
+    .page-head {
+      flex-direction: column;
+      align-items: stretch;
+      padding: var(--space-3) var(--space-4);
+      gap: var(--space-3);
+    }
+    .next-pill {
+      width: 100%;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+    }
+    .session-strip {
+      flex-direction: column;
+      align-items: stretch;
+      padding: var(--space-4) var(--space-5);
+      gap: var(--space-3);
+    }
+    .session-title { font-size: 19px; line-height: 1.2; }
+    .session-actions { gap: var(--space-2); }
+    .session-actions :global(a) { flex: 1; text-align: center; }
+    .benchmarks { padding: var(--space-3) var(--space-4); }
+    .bm-grid { grid-template-columns: repeat(2, 1fr); row-gap: var(--space-3); }
+    .bm-grid :global(.stat-value) { font-size: 20px !important; }
+  }
+  @media (max-width: 380px) {
+    .bm-grid :global(.stat-value) { font-size: 18px !important; }
   }
 </style>

@@ -118,7 +118,7 @@
     </label>
 
     <label class="cell">
-      <span class="label">How I feel · readiness</span>
+      <span class="label"><span class="label-full">How I feel · readiness</span><span class="label-short">How I feel</span></span>
       <form method="POST" action="?/updateDailyCheckIn" use:enhance={trackSave('readiness')}>
         <div class="input-row">
           <input
@@ -240,8 +240,36 @@
   }
   .hint.warn { color: var(--color-fg-accent); }
 
+  /* Hide/show label variants based on viewport */
+  .label-short { display: none; }
+
   @media (max-width: 768px) {
+    .daily { padding: var(--space-4); }
     .grid { grid-template-columns: 1fr; gap: var(--space-3); }
-    .daily { padding: var(--space-4) var(--space-5); }
+    h2 { font-size: 18px; }
+    .subtitle { font-size: 11px; }
+    /* Each cell becomes a horizontal row so the form stays scannable */
+    .cell {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .label { flex: 1; min-width: 0; }
+    .input-row { flex-shrink: 0; }
+    input[type='number'] {
+      width: 88px;
+      font-size: 22px;
+      padding: 10px var(--space-3);
+    }
+    .delta, .hint { flex-basis: 100%; text-align: right; }
+    .label-full { display: none; }
+    .label-short { display: inline; }
+  }
+
+  @media (max-width: 380px) {
+    .daily { padding: var(--space-3) var(--space-4); }
+    input[type='number'] { width: 78px; font-size: 20px; }
   }
 </style>

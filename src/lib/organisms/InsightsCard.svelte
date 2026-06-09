@@ -159,4 +159,13 @@
     text-decoration: none;
   }
   .action:hover { text-decoration: none; opacity: 0.75; }
+
+  @media (max-width: 768px) {
+    .card { padding: var(--space-4); }
+    .card-head { margin-bottom: var(--space-3); padding-bottom: var(--space-3); }
+    .insight { padding: var(--space-3); gap: var(--space-2); grid-template-columns: 24px 1fr; }
+    .marker { width: 22px; height: 22px; }
+    .title { font-size: 14px; }
+    .detail { font-size: 13px; line-height: 1.4; }
+  }
 </style>

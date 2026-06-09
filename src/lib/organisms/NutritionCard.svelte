@@ -775,13 +775,26 @@
   }
   .confirm-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
 
-  @media (max-width: 640px) {
-    .dash { grid-template-columns: 1fr; justify-items: center; }
+  @media (max-width: 768px) {
+    .nutrition { padding: var(--space-4); gap: var(--space-3); }
+    .dash { grid-template-columns: 1fr; justify-items: center; gap: var(--space-4); }
     .macros { width: 100%; }
+    .metrics-row { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .entry-desc { font-size: 13px; }
+    .mode-tab { padding: var(--space-2); font-size: 10px; }
+  }
+
+  @media (max-width: 640px) {
     .input-row { flex-direction: column; }
-    .manual-grid { grid-template-columns: repeat(2, 1fr); }
+    .input-row .primary { width: 100%; }
+    .manual-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
     .manual-actions { flex-direction: column; align-items: stretch; gap: var(--space-2); }
     .metrics-row { grid-template-columns: 1fr; gap: var(--space-3); }
     .balance-cell { align-items: flex-start; text-align: left; }
+    .balance-value { font-size: 20px; }
+    .entry { flex-wrap: wrap; }
+    .entry-macros { font-size: 10px; }
+    /* Larger tap target for delete on phone */
+    .del { width: 32px; height: 32px; font-size: 18px; }
   }
 </style>

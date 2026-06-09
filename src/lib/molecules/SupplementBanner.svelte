@@ -65,4 +65,14 @@
     color: var(--color-fg-muted);
     margin: 0;
   }
+
+  @media (max-width: 640px) {
+    .supp {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4);
+    }
+    .supp-line { font-size: 13px; line-height: 1.4; }
+    .supp-timing { display: block; margin-top: 2px; }
+  }
 </style>
