@@ -173,14 +173,14 @@ function weightedPullsHeavy(order: number, week: 1 | 2 | 3 | 4): PrescribedExerc
 
 function bicepCurls(order: number): PrescribedExercise {
   return {
-    name: 'Bicep Curls · 16 kg',
+    name: 'Bicep Curls · Bar · 16 kg',
     display_order: order,
-    notes: 'Slow eccentric. Each set per arm.',
+    notes: 'Two-handed barbell curl. Slow eccentric.',
     sets: [
-      { set_num: 1, kind: 'work', label: 'L arm', reps: 12, load_kg: 16, rest_seconds: 60 },
-      { set_num: 2, kind: 'work', label: 'R arm', reps: 12, load_kg: 16, rest_seconds: 60 },
-      { set_num: 3, kind: 'work', label: 'L arm', reps: 12, load_kg: 16, rest_seconds: 60 },
-      { set_num: 4, kind: 'work', label: 'R arm', reps: 12, load_kg: 16, rest_seconds: 60 }
+      { set_num: 1, kind: 'work', reps: 12, load_kg: 16, rest_seconds: 60 },
+      { set_num: 2, kind: 'work', reps: 12, load_kg: 16, rest_seconds: 60 },
+      { set_num: 3, kind: 'work', reps: 12, load_kg: 16, rest_seconds: 60 },
+      { set_num: 4, kind: 'work', reps: 12, load_kg: 16, rest_seconds: 60 }
     ]
   };
 }
