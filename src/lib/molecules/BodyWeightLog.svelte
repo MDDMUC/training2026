@@ -21,6 +21,26 @@
   const deltaSign = $derived(delta === null ? '' : delta > 0 ? '+' : delta < 0 ? '−' : '±');
   const deltaAbs = $derived(delta === null ? 0 : Math.abs(delta));
 
+  // Optimistic save: flash ✓ on blur. Default enhance behaviour resets the
+  // form, which two-way-binds null back into `weight` — making the value
+  // visually disappear until a page reload. Returning a callback suppresses
+  // the reset; we don't need invalidation since local state is the truth.
+  let saved = $state(false);
+  let savedTimer: ReturnType<typeof setTimeout> | null = null;
+  function trackSave() {
+    return () => {
+      saved = true;
+      if (savedTimer) clearTimeout(savedTimer);
+      savedTimer = setTimeout(() => (saved = false), 1500);
+      return ({ result }: { result: { type: string } }) => {
+        if (result.type !== 'success') {
+          if (savedTimer) clearTimeout(savedTimer);
+          saved = false;
+        }
+      };
+    };
+  }
+
   function submitForm(e: Event) {
     const form = (e.currentTarget as HTMLElement).closest('form') as HTMLFormElement | null;
     form?.requestSubmit();
@@ -36,7 +56,7 @@
   </div>
 
   <div class="right">
-    <form method="POST" action="?/updateSession" use:enhance>
+    <form method="POST" action="?/updateSession" use:enhance={trackSave()}>
       <input type="hidden" name="sessionId" value={sessionId} />
       <input
         type="number"
@@ -48,6 +68,7 @@
         onchange={submitForm}
       />
       <span class="unit">kg</span>
+      <span class="saved-badge" class:visible={saved}>✓</span>
     </form>
 
     {#if delta !== null && weight !== null}
@@ -113,6 +134,15 @@
   input:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
 
   .unit { color: var(--color-fg-muted); font: var(--weight-medium) 14px/1 var(--font-mono); }
+
+  .saved-badge {
+    opacity: 0;
+    transition: opacity 180ms ease;
+    color: var(--color-fg-accent);
+    font: var(--weight-bold) 14px/1 var(--font-sans);
+    margin-left: var(--space-1);
+  }
+  .saved-badge.visible { opacity: 1; }
 
   .delta {
     font: var(--weight-semibold) var(--text-data-size)/1 var(--font-mono);

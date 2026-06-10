@@ -15,6 +15,24 @@
   let exerciseNotes = $state<string>(exercise.athlete_notes ?? '');
   let showNotesField = $state(Boolean(exercise.athlete_notes && exercise.athlete_notes.length > 0));
 
+  // Optimistic save: flash ✓ on blur. Bare enhance would reset the form on
+  // submit, two-way-binding the textarea back to empty until reload.
+  let notesSaved = $state(false);
+  let notesSavedTimer: ReturnType<typeof setTimeout> | null = null;
+  function trackNotesSave() {
+    return () => {
+      notesSaved = true;
+      if (notesSavedTimer) clearTimeout(notesSavedTimer);
+      notesSavedTimer = setTimeout(() => (notesSaved = false), 1500);
+      return ({ result }: { result: { type: string } }) => {
+        if (result.type !== 'success') {
+          if (notesSavedTimer) clearTimeout(notesSavedTimer);
+          notesSaved = false;
+        }
+      };
+    };
+  }
+
   // Current top working set — used for PR comparison vs context.previous
   const currentTopSet = $derived.by(() => {
     const work = exercise.sets.filter((s) => s.kind === 'work');
@@ -85,10 +103,13 @@
 
   <div class="ex-notes-wrap">
     {#if showNotesField}
-      <form method="POST" action="?/updateExerciseNotes" use:enhance>
+      <form method="POST" action="?/updateExerciseNotes" use:enhance={trackNotesSave()}>
         <input type="hidden" name="exerciseId" value={exercise.id} />
         <label class="ex-notes-label">
-          <span>Notes for this exercise</span>
+          <span>
+            Notes for this exercise
+            <span class="saved-badge" class:visible={notesSaved}>✓ Saved</span>
+          </span>
           <textarea
             name="notes"
             rows="2"
@@ -221,6 +242,17 @@
     text-transform: uppercase;
     color: var(--color-fg-muted);
   }
+
+  .saved-badge {
+    margin-left: var(--space-2);
+    color: var(--color-fg-accent);
+    font: var(--weight-semibold) 10px/1 var(--font-sans);
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transition: opacity 180ms ease;
+    pointer-events: none;
+  }
+  .saved-badge.visible { opacity: 1; }
 
   textarea {
     padding: var(--space-2) var(--space-3);

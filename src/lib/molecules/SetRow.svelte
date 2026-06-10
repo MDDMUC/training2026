@@ -23,6 +23,27 @@
 
   const isChecklist = $derived(set.kind === 'checklist');
   const kindClass = $derived(`kind-${set.kind}`);
+
+  // Optimistic save: flash ✓ on blur. Default enhance behaviour resets the
+  // form, which two-way-binds null back into our local $state — so the
+  // typed value visually disappears until the page reloads. Returning a
+  // callback (without calling update()) suppresses the reset and the
+  // page-data invalidation; local state is the source of truth here.
+  let savedField = $state<string | null>(null);
+  let savedTimer: ReturnType<typeof setTimeout> | null = null;
+  function trackSave(field: string) {
+    return () => {
+      savedField = field;
+      if (savedTimer) clearTimeout(savedTimer);
+      savedTimer = setTimeout(() => (savedField = null), 1200);
+      return ({ result }: { result: { type: string } }) => {
+        if (result.type !== 'success') {
+          if (savedTimer) clearTimeout(savedTimer);
+          savedField = null;
+        }
+      };
+    };
+  }
 </script>
 
 <div class="set-row {kindClass}" class:done={completed}>
@@ -64,7 +85,7 @@
       {#if showReps}
         <label class="field">
           <span>Reps</span>
-          <form method="POST" action="?/updateSet" use:enhance>
+          <form method="POST" action="?/updateSet" use:enhance={trackSave('reps')}>
             <input type="hidden" name="setId" value={set.id} />
             <input type="hidden" name="field" value="reps" />
             <input
@@ -75,6 +96,7 @@
               bind:value={reps}
               onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
             />
+            <span class="saved-badge" class:visible={savedField === 'reps'}>✓</span>
           </form>
         </label>
       {/if}
@@ -82,7 +104,7 @@
       {#if showHold}
         <label class="field">
           <span>Hold</span>
-          <form method="POST" action="?/updateSet" use:enhance>
+          <form method="POST" action="?/updateSet" use:enhance={trackSave('hold_seconds')}>
             <input type="hidden" name="setId" value={set.id} />
             <input type="hidden" name="field" value="hold_seconds" />
             <input
@@ -94,6 +116,7 @@
               onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
             />
             <span class="unit">s</span>
+            <span class="saved-badge" class:visible={savedField === 'hold_seconds'}>✓</span>
           </form>
         </label>
       {/if}
@@ -101,7 +124,7 @@
       {#if showLoadAdded}
         <label class="field">
           <span>Added</span>
-          <form method="POST" action="?/updateSet" use:enhance>
+          <form method="POST" action="?/updateSet" use:enhance={trackSave('load_kg_added')}>
             <input type="hidden" name="setId" value={set.id} />
             <input type="hidden" name="field" value="load_kg_added" />
             <input
@@ -113,6 +136,7 @@
               onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
             />
             <span class="unit">kg</span>
+            <span class="saved-badge" class:visible={savedField === 'load_kg_added'}>✓</span>
           </form>
         </label>
       {/if}
@@ -120,7 +144,7 @@
       {#if showLoadKg}
         <label class="field">
           <span>Load</span>
-          <form method="POST" action="?/updateSet" use:enhance>
+          <form method="POST" action="?/updateSet" use:enhance={trackSave('load_kg')}>
             <input type="hidden" name="setId" value={set.id} />
             <input type="hidden" name="field" value="load_kg" />
             <input
@@ -132,6 +156,7 @@
               onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
             />
             <span class="unit">kg</span>
+            <span class="saved-badge" class:visible={savedField === 'load_kg'}>✓</span>
           </form>
         </label>
       {/if}
@@ -139,7 +164,7 @@
       {#if showRpe}
         <label class="field rpe">
           <span>RPE</span>
-          <form method="POST" action="?/updateSet" use:enhance>
+          <form method="POST" action="?/updateSet" use:enhance={trackSave('rpe')}>
             <input type="hidden" name="setId" value={set.id} />
             <input type="hidden" name="field" value="rpe" />
             <input
@@ -152,6 +177,7 @@
               placeholder="–"
               onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
             />
+            <span class="saved-badge" class:visible={savedField === 'rpe'}>✓</span>
           </form>
         </label>
       {/if}
@@ -274,6 +300,17 @@
   }
 
   .field .unit { color: var(--color-fg-muted); font-size: 11px; }
+
+  .field .saved-badge {
+    opacity: 0;
+    transition: opacity 160ms ease;
+    color: var(--color-fg-accent);
+    font: var(--weight-bold) 11px/1 var(--font-sans);
+    width: 10px;
+    text-align: center;
+    pointer-events: none;
+  }
+  .field .saved-badge.visible { opacity: 1; }
 
   .field.rpe input { width: 40px; }
 

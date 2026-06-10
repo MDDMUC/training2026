@@ -56,34 +56,53 @@
       if (ctx.state === 'suspended') ctx.resume();
       const t0 = ctx.currentTime;
 
-      // Two-tone chime: A5 (880 Hz) → D6 (1175 Hz), 180ms apart
-      const tones: Array<{ freq: number; startOffset: number; durSec: number }> = [
-        { freq: 880,  startOffset: 0.0,  durSec: 0.18 },
-        { freq: 1175, startOffset: 0.18, durSec: 0.22 }
-      ];
+      // Proper alarm: 6 cycles of high/low beep pair, loud enough to hear
+      // over gym noise. Triangle wave carries louder than sine at the same
+      // peak gain. Two oscillators per beep (fundamental + an octave above)
+      // give it a richer, more piercing timbre — closer to a real alarm
+      // clock than a polite chime.
+      const cycles = 6;
+      const beepDur = 0.14;
+      const gapDur = 0.08;
+      const cycleDur = (beepDur + gapDur) * 2;
 
-      for (const tone of tones) {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = tone.freq;
-        osc.connect(gain).connect(ctx.destination);
-
-        const start = t0 + tone.startOffset;
-        const peak = start + 0.015;
-        const end = start + tone.durSec;
-        gain.gain.setValueAtTime(0.0001, start);
-        gain.gain.linearRampToValueAtTime(0.28, peak);
-        gain.gain.exponentialRampToValueAtTime(0.0001, end);
-
-        osc.start(start);
-        osc.stop(end + 0.02);
+      for (let i = 0; i < cycles; i++) {
+        const cycleStart = t0 + i * cycleDur;
+        scheduleBeep(ctx, cycleStart,                  880,  beepDur);
+        scheduleBeep(ctx, cycleStart + beepDur + gapDur, 1320, beepDur);
       }
 
-      // Release AudioContext after the tones have finished
-      window.setTimeout(() => ctx.close().catch(() => {}), 600);
+      const total = cycles * cycleDur;
+      window.setTimeout(() => ctx.close().catch(() => {}), (total + 0.2) * 1000);
     } catch {
       /* audio failure is non-fatal — timer still works visually */
+    }
+  }
+
+  function scheduleBeep(ctx: AudioContext, start: number, freq: number, durSec: number): void {
+    const end = start + durSec;
+    const peak = start + 0.008;
+
+    // Triangle fundamental + sine an octave up for brightness
+    const partials: Array<{ type: OscillatorType; freq: number; gain: number }> = [
+      { type: 'triangle', freq, gain: 0.55 },
+      { type: 'sine', freq: freq * 2, gain: 0.18 }
+    ];
+
+    for (const p of partials) {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = p.type;
+      osc.frequency.value = p.freq;
+      osc.connect(g).connect(ctx.destination);
+
+      g.gain.setValueAtTime(0.0001, start);
+      g.gain.linearRampToValueAtTime(p.gain, peak);
+      g.gain.setValueAtTime(p.gain, end - 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, end);
+
+      osc.start(start);
+      osc.stop(end + 0.02);
     }
   }
 </script>
