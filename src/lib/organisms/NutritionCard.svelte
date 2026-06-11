@@ -25,7 +25,7 @@
 
   let burnInput = $state<number | null>(activityCalories || null);
 
-  let mode = $state<'estimate' | 'manual'>('estimate');
+  let mode = $state<'estimate' | 'manual'>('manual');
   let manualDescription = $state('');
   let manualCalories = $state<number | null>(null);
   let manualProtein = $state<number | null>(null);
