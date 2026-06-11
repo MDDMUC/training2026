@@ -5,7 +5,6 @@
   import ThisWeekCard from '$lib/organisms/ThisWeekCard.svelte';
   import DailyCheckIn from '$lib/molecules/DailyCheckIn.svelte';
   import SupplementBanner from '$lib/molecules/SupplementBanner.svelte';
-  import InsightsCard from '$lib/organisms/InsightsCard.svelte';
   import NutritionCard from '$lib/organisms/NutritionCard.svelte';
   import { SESSION_TYPE_LABELS } from '$lib/domain/types';
   import { parseISO, format } from 'date-fns';
@@ -48,25 +47,28 @@
 
   <SupplementBanner />
 
-  <!-- ============================== 1 · DAILY CHECK-IN (always present) ============================== -->
-  <DailyCheckIn
-    bodyWeight={data.dailyCheckIn.body_weight_kg}
-    sleepHours={data.dailyCheckIn.sleep_hours}
-    readiness={data.dailyCheckIn.readiness}
-    prevBodyWeight={data.bodyweight?.body_weight_kg ?? null}
-    dateLabel={data.todayLabel}
-  />
+  <!-- ============================== 1 · DAILY CHECK-IN + NUTRITION (shared tint) ============================== -->
+  <div class="tint tint-checkin">
+    <DailyCheckIn
+      bodyWeight={data.dailyCheckIn.body_weight_kg}
+      sleepHours={data.dailyCheckIn.sleep_hours}
+      readiness={data.dailyCheckIn.readiness}
+      prevBodyWeight={data.bodyweight?.body_weight_kg ?? null}
+      dateLabel={data.todayLabel}
+    />
+  </div>
 
-  <!-- ============================== 2 · NUTRITION ============================== -->
-  <NutritionCard
-    entries={data.nutrition.entries}
-    totals={data.nutrition.totals}
-    targets={data.nutrition.targets}
-    activityCalories={data.nutrition.activityCalories}
-    bodyWeightKg={data.nutrition.bodyWeightKg}
-  />
+  <div class="tint tint-checkin">
+    <NutritionCard
+      entries={data.nutrition.entries}
+      totals={data.nutrition.totals}
+      targets={data.nutrition.targets}
+      activityCalories={data.nutrition.activityCalories}
+      bodyWeightKg={data.nutrition.bodyWeightKg}
+    />
+  </div>
 
-  <!-- ============================== 3 · TODAY'S SESSION STRIP ============================== -->
+  <!-- ============================== 2 · TODAY'S SESSION STRIP ============================== -->
   <section class="session-strip" class:has-session={!!data.todaySession}>
     {#if data.todaySession}
       <div class="session-info">
@@ -91,26 +93,25 @@
     {/if}
   </section>
 
-  <!-- ============================== 4 · INSIGHTS ============================== -->
-  <InsightsCard insights={data.insights} />
+  <!-- ============================== 3 · THIS WEEK ============================== -->
+  <div class="tint tint-week">
+    <ThisWeekCard
+      startISO={data.week.startISO}
+      endISO={data.week.endISO}
+      sessionsTotal={data.week.sessionsTotal}
+      sessionsCompleted={data.week.sessionsCompleted}
+      setsTotal={data.week.setsTotal}
+      setsCompleted={data.week.setsCompleted}
+      climbs={data.week.climbs}
+      sleepAvg={data.week.sleepAvg}
+      tonnageKg={data.week.tonnageKg}
+      isometricSeconds={data.week.isometricSeconds}
+      runsCount={data.week.runsCount}
+      runKm={data.week.runKm}
+    />
+  </div>
 
-  <!-- ============================== 5 · THIS WEEK ============================== -->
-  <ThisWeekCard
-    startISO={data.week.startISO}
-    endISO={data.week.endISO}
-    sessionsTotal={data.week.sessionsTotal}
-    sessionsCompleted={data.week.sessionsCompleted}
-    setsTotal={data.week.setsTotal}
-    setsCompleted={data.week.setsCompleted}
-    climbs={data.week.climbs}
-    sleepAvg={data.week.sleepAvg}
-    tonnageKg={data.week.tonnageKg}
-    isometricSeconds={data.week.isometricSeconds}
-    runsCount={data.week.runsCount}
-    runKm={data.week.runKm}
-  />
-
-  <!-- ============================== 6 · BENCHMARKS (reference) ============================== -->
+  <!-- ============================== 4 · BENCHMARKS (reference, no tint) ============================== -->
   <section class="benchmarks" aria-label="Latest benchmarks">
     <h3 class="bm-title">Latest benchmarks</h3>
     <div class="bm-grid">
@@ -236,9 +237,22 @@
     padding: var(--space-4) var(--space-6);
     border: 1px solid var(--color-border-default);
     border-radius: var(--radius-2);
-    background: var(--color-bg-surface);
+    background: var(--color-bg-tint-session);
   }
-  .session-strip:not(.has-session) { background: var(--color-bg-subtle); }
+  .session-strip:not(.has-session) { background: var(--color-bg-tint-session); }
+
+  /* ============================== CATEGORY TINTS ==============================
+     Wraps a card and recolors its inner surface so each input zone reads as a
+     distinct category at a glance. The :global() selectors target each card's
+     own root class (.daily, .nutrition, .card) from inside this scoped style. */
+  .tint { display: contents; }
+  .tint-checkin :global(.daily),
+  .tint-checkin :global(.nutrition) {
+    background: var(--color-bg-tint-checkin);
+  }
+  .tint-week :global(.card) {
+    background: var(--color-bg-tint-week);
+  }
   .session-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
   .session-eyebrow {
     font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
