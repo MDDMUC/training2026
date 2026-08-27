@@ -40,6 +40,29 @@ const HARD_SESSION_TYPES = new Set(['pull-heavy', 'push', 'climb-outdoor', 'test
 export function generateInsights(i: InsightInputs): Insight[] {
   const out: Insight[] = [];
 
+  const spineReset =
+    i.currentPhaseShortName === 'HOLD' || i.currentPhaseShortName === 'RESTORE';
+  if (spineReset) {
+    out.push({
+      id: 'spine-reset',
+      severity: 'warn',
+      title: 'Spine reset — no loading',
+      detail:
+        'Back joint is being adjusted. Walk and rest only. No hangs, pull-ups, climbing, or running. Stop if the joint speaks. H2 2026 is under Log → Previous plan — not deleted.',
+      action: { href: '/log?cycle=previous', label: 'Open previous plan' }
+    });
+    if (i.sleepAvg7 !== null && i.sleepEntriesCount >= 3 && i.sleepAvg7 < 7) {
+      out.push({
+        id: 'sleep',
+        severity: 'warn',
+        title: `7-day sleep avg ${i.sleepAvg7.toFixed(1)} h — below 7 h target`,
+        detail: 'Sleep still matters while the joint settles. Do not add training to compensate.',
+        action: { href: '/analysis', label: 'See sleep chart' }
+      });
+    }
+    return out;
+  }
+
   // 1. Asymmetry warning
   if (i.asymmetryPct !== null && Math.abs(i.asymmetryPct) >= 5) {
     out.push({

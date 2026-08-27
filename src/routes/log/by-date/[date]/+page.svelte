@@ -43,7 +43,17 @@
   <header class="head">
     <p class="eyebrow">{data.dateLabel}</p>
 
-    {#if data.phase}
+    {#if data.session?.archived === 1}
+      <div class="phase-line">
+        <Tag variant="filled">{data.session.cycle_name ?? 'H2 2026'}</Tag>
+        <span class="phase-name">Previous plan — kept, not deleted</span>
+      </div>
+    {:else if data.session?.phase_short_name}
+      <div class="phase-line">
+        <Tag variant="filled">{data.session.phase_short_name}</Tag>
+        <span class="phase-name">{data.session.phase_name}</span>
+      </div>
+    {:else if data.phase}
       <div class="phase-line">
         <Tag variant="filled">{data.phase.short_name}</Tag>
         <span class="phase-name">{data.phase.name}</span>
@@ -62,6 +72,7 @@
               href="/log/by-date/{data.dateISO}?session={s.id}"
             >
               {s.title ?? SESSION_TYPE_LABELS[s.type]}
+              {#if s.archived === 1}<span class="free-badge">{s.cycle_name ?? 'old'}</span>{/if}
               {#if !s.scheduled}<span class="free-badge">free</span>{/if}
             </a>
           {/each}

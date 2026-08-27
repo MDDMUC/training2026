@@ -38,20 +38,28 @@
     'test'
   ];
 
-  function filterHref(filter: string): string {
+  function hrefFor(opts: { filter?: string; type?: SessionType | null; cycle?: string }): string {
+    const filter = opts.filter ?? data.filter;
+    const cycle = opts.cycle ?? data.cycle;
+    const type = opts.type === undefined ? data.typeFilter : opts.type;
     const params = new URLSearchParams();
     if (filter !== 'all') params.set('filter', filter);
-    if (data.typeFilter) params.set('type', data.typeFilter);
+    if (cycle !== 'current') params.set('cycle', cycle);
+    if (type) params.set('type', type);
     const q = params.toString();
     return q ? `/log?${q}` : '/log';
   }
 
+  function filterHref(filter: string): string {
+    return hrefFor({ filter });
+  }
+
   function typeHref(t: SessionType | null): string {
-    const params = new URLSearchParams();
-    if (data.filter !== 'all') params.set('filter', data.filter);
-    if (t) params.set('type', t);
-    const q = params.toString();
-    return q ? `/log?${q}` : '/log';
+    return hrefFor({ type: t });
+  }
+
+  function cycleHref(cycle: string): string {
+    return hrefFor({ cycle });
   }
 </script>
 
@@ -59,7 +67,10 @@
   <header class="head">
     <div class="left">
       <h2>Session history</h2>
-      <p class="subtitle">{data.sessions.length} sessions match · click any day to open</p>
+      <p class="subtitle">
+        {data.sessions.length} sessions match · click any day to open
+        {#if data.cycle === 'previous'} · previous plan (kept, not deleted){/if}
+      </p>
     </div>
     <div class="right">
       <a class="free-cta" href="/log/free">+ Log free session</a>
@@ -67,6 +78,12 @@
   </header>
 
   <div class="filters">
+    <div class="filter-group">
+      <span class="filter-label">Plan</span>
+      <a class="chip" class:active={data.cycle === 'current'} href={cycleHref('current')}>Current</a>
+      <a class="chip" class:active={data.cycle === 'previous'} href={cycleHref('previous')}>Previous</a>
+      <a class="chip" class:active={data.cycle === 'all'} href={cycleHref('all')}>All</a>
+    </div>
     <div class="filter-group">
       <span class="filter-label">View</span>
       <a class="chip" class:active={data.filter === 'all'} href={filterHref('all')}>All</a>
@@ -100,12 +117,13 @@
             {#each g.items as s (s.id)}
               {@const isToday = isSameDay(parseISO(s.date), today)}
               <li class:today={isToday} class:completed={s.completed === 1}>
-                <a href="/log/by-date/{s.date}" class="row">
+                            <a href="/log/by-date/{s.date}{s.archived === 1 ? `?session=${s.id}` : ''}" class="row">
                   <span class="date">
                     <span class="dow">{format(parseISO(s.date), 'EEE')}</span>
                     <span class="dom">{format(parseISO(s.date), 'MMM d')}</span>
                   </span>
                   <span class="phase">
+                    {#if s.archived === 1}<Tag>{s.cycle_name ?? 'H2 2026'}</Tag>{/if}
                     {#if s.phase_short_name}<Tag>{s.phase_short_name}</Tag>{/if}
                   </span>
                   <span class="info">

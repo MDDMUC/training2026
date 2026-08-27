@@ -16,6 +16,7 @@ const VALID_TYPES = [
 ] as const;
 
 type Filter = 'all' | 'completed' | 'pending' | 'today-and-back' | 'upcoming';
+type CycleFilter = 'current' | 'previous' | 'all';
 
 export const load: PageServerLoad = async ({ url, locals }) => {
   const sql = getSql();
@@ -23,6 +24,9 @@ export const load: PageServerLoad = async ({ url, locals }) => {
   const todayISO = format(new Date(), 'yyyy-MM-dd');
 
   const filter = (url.searchParams.get('filter') ?? 'all') as Filter;
+  const cycleParam = url.searchParams.get('cycle');
+  const cycle: CycleFilter =
+    cycleParam === 'previous' || cycleParam === 'all' ? cycleParam : 'current';
   const typeFilter = url.searchParams.get('type');
   const validType =
     typeFilter && (VALID_TYPES as readonly string[]).includes(typeFilter) ? typeFilter : null;
@@ -30,6 +34,9 @@ export const load: PageServerLoad = async ({ url, locals }) => {
   let sessions = await getAllSessionsWithCounts(sql, userId);
 
   sessions.sort((a, b) => a.date.localeCompare(b.date));
+
+  if (cycle === 'current') sessions = sessions.filter((s) => s.archived !== 1);
+  else if (cycle === 'previous') sessions = sessions.filter((s) => s.archived === 1);
 
   if (filter === 'completed') sessions = sessions.filter((s) => s.completed === 1);
   else if (filter === 'pending') sessions = sessions.filter((s) => s.completed === 0);
@@ -42,6 +49,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
     sessions,
     todayISO,
     filter,
+    cycle,
     typeFilter: validType
   };
 };

@@ -1,5 +1,7 @@
 # Training 2026 — 12-Week Plan Overview
 
+> **Archived 2026-08 (spine reset).** This H2 2026 macrocycle is kept as Previous plan in the app — not deleted. Active work is [`07-reset-spine.md`](07-reset-spine.md). Do not resume hangs / pull-ups / climbing from this file until the joint is cleared.
+
 **Macrocycle:** Wed Jun 10 → Tue Sep 1, 2026 (12 weeks, 3 × 4-week mesocycles).
 **Athlete:** Martin, 43, 82 kg, ~8a sport.
 **Baseline metrics (set 2026-05-28):**

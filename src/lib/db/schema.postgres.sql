@@ -25,9 +25,12 @@ CREATE TABLE IF NOT EXISTS phases (
   start_date      DATE NOT NULL,
   end_date        DATE NOT NULL,
   description     TEXT,
+  archived        BOOLEAN NOT NULL DEFAULT FALSE,
+  cycle_name      TEXT,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_phases_user ON phases(user_id);
+CREATE INDEX IF NOT EXISTS idx_phases_user_archived ON phases(user_id, archived);
 
 -- ============================================================================
 -- SESSIONS — every training day, per user
@@ -47,12 +50,15 @@ CREATE TABLE IF NOT EXISTS sessions (
   sleep_hours     DOUBLE PRECISION,
   readiness       INTEGER CHECK (readiness IS NULL OR readiness BETWEEN 1 AND 10),
   notes           TEXT,
+  archived        BOOLEAN NOT NULL DEFAULT FALSE,
+  cycle_name      TEXT,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_sessions_user_date ON sessions(user_id, date);
 CREATE INDEX IF NOT EXISTS idx_sessions_phase ON sessions(phase_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_type ON sessions(type);
+CREATE INDEX IF NOT EXISTS idx_sessions_user_archived ON sessions(user_id, archived, date);
 
 -- ============================================================================
 -- EXERCISES — within a session (inherits user via session_id)
@@ -188,6 +194,15 @@ CREATE INDEX IF NOT EXISTS idx_nutrition_user_date ON nutrition_entries(user_id,
 -- Per-day workout burn from the user's watch. Surfaced on Today and added
 -- on top of the baseline TDEE to derive the calorie goal.
 ALTER TABLE sessions ADD COLUMN IF NOT EXISTS activity_calories INTEGER;
+
+-- Plan cycles: archived rows stay in history (Log → Previous) but drop off
+-- Today / Calendar / current-plan surfaces. Never delete them.
+ALTER TABLE phases ADD COLUMN IF NOT EXISTS archived BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE phases ADD COLUMN IF NOT EXISTS cycle_name TEXT;
+ALTER TABLE sessions ADD COLUMN IF NOT EXISTS archived BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE sessions ADD COLUMN IF NOT EXISTS cycle_name TEXT;
+CREATE INDEX IF NOT EXISTS idx_phases_user_archived ON phases(user_id, archived);
+CREATE INDEX IF NOT EXISTS idx_sessions_user_archived ON sessions(user_id, archived, date);
 
 -- Sessionless daily check-in. Captures body weight, sleep, and "how I feel"
 -- (readiness, 1–10) every day — even on rest days where no session exists.

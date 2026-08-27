@@ -6,6 +6,7 @@
   import DailyCheckIn from '$lib/molecules/DailyCheckIn.svelte';
   import SupplementBanner from '$lib/molecules/SupplementBanner.svelte';
   import NutritionCard from '$lib/organisms/NutritionCard.svelte';
+  import InsightsCard from '$lib/organisms/InsightsCard.svelte';
   import { SESSION_TYPE_LABELS } from '$lib/domain/types';
   import { parseISO, format } from 'date-fns';
 
@@ -45,7 +46,13 @@
     {/if}
   </header>
 
-  <SupplementBanner />
+  {#if data.insights?.length}
+    <InsightsCard insights={data.insights} />
+  {/if}
+
+  {#if data.phase?.short_name !== 'HOLD' && data.phase?.short_name !== 'RESTORE'}
+    <SupplementBanner />
+  {/if}
 
   <!-- ============================== 1 · DAILY CHECK-IN + NUTRITION (shared tint) ============================== -->
   <div class="tint tint-checkin">

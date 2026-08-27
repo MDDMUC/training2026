@@ -47,8 +47,9 @@ export const load: PageServerLoad = async ({ params, locals }) => {
     });
   }
 
-  const prevMeso = meso > 1 ? meso - 1 : null;
-  const nextMeso = meso < 3 ? meso + 1 : null;
+  const mesoNums = phases.map((p) => p.mesocycle_num).sort((a, b) => a - b);
+  const prevMeso = mesoNums.filter((n) => n < meso).at(-1) ?? null;
+  const nextMeso = mesoNums.find((n) => n > meso) ?? null;
 
   return {
     phase,

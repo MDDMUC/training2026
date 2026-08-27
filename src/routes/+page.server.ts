@@ -36,7 +36,8 @@ import {
   endOfWeek,
   format as formatDate,
   addDays,
-  subWeeks
+  subWeeks,
+  parseISO
 } from 'date-fns';
 import { format } from 'date-fns';
 import { asymmetryPercent } from '$lib/domain/types';
@@ -93,7 +94,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     getSessionsInRangeWithCounts(sql, userId, tomorrowISO, lookaheadEnd),
     getSessionsInRangeWithCounts(sql, userId, prevWeekStart, prevWeekEnd),
     getAllPhases(sql, userId),
-    getSessionsInRangeWithCounts(sql, userId, todayISO, '2026-08-30'),
+    getSessionsInRangeWithCounts(sql, userId, todayISO, formatDate(addDays(today, 60), 'yyyy-MM-dd')),
     getNutritionProfile(sql, userId),
     listNutritionEntriesForDate(sql, userId, todayISO),
     getActivityCaloriesForDate(sql, userId, todayISO),
@@ -165,7 +166,8 @@ export const load: PageServerLoad = async ({ locals }) => {
       ? asymmetryPercent(tindeq.R.peak_force_kg, tindeq.L.peak_force_kg)
       : null;
 
-  const daysSincePlanStart = differenceInCalendarDays(today, new Date(2026, 5, 10));
+  const planStart = allPhases[0] ? parseISO(allPhases[0].start_date) : new Date(2026, 5, 10);
+  const daysSincePlanStart = differenceInCalendarDays(today, planStart);
   const daysUntilPhaseEnd = phase ? differenceInCalendarDays(new Date(phase.end_date), today) : null;
   const nextPhase = phase
     ? allPhases.find((p) => p.mesocycle_num === phase.mesocycle_num + 1) ?? null

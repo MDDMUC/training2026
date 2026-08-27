@@ -23,12 +23,36 @@ function coerceBool(v: unknown): number {
   return v === true || v === 1 || v === '1' ? 1 : 0;
 }
 
-function coerceSession<T extends { completed?: unknown; scheduled?: unknown }>(row: T): T {
+function coerceSession<T extends { completed?: unknown; scheduled?: unknown; archived?: unknown }>(
+  row: T
+): T {
   if (row && typeof row === 'object') {
     if ('completed' in row) (row as { completed: number }).completed = coerceBool(row.completed);
     if ('scheduled' in row) (row as { scheduled: number }).scheduled = coerceBool(row.scheduled);
+    if ('archived' in row) (row as { archived: number }).archived = coerceBool(row.archived);
   }
   return row;
+}
+
+function coercePhase<T extends { archived?: unknown }>(row: T): T {
+  if (row && typeof row === 'object' && 'archived' in row) {
+    (row as { archived: number }).archived = coerceBool(row.archived);
+  }
+  return row;
+}
+
+/** exclude = current plan only (Today, Calendar). include = all history. only = archived cycle. */
+export type ArchivedFilter = 'exclude' | 'include' | 'only';
+
+// Filter in JS, not SQL: `archived` may not exist until tomorrow's seed/ALTER.
+// Missing column → coerce to 0 → exclude keeps every row (same as today).
+function applyArchivedFilter<T extends { archived?: number }>(
+  rows: T[],
+  archived: ArchivedFilter
+): T[] {
+  if (archived === 'include') return rows;
+  if (archived === 'only') return rows.filter((r) => r.archived === 1);
+  return rows.filter((r) => r.archived !== 1);
 }
 
 function coerceSet<T extends { completed?: unknown }>(row: T): T {
@@ -40,13 +64,17 @@ function coerceSet<T extends { completed?: unknown }>(row: T): T {
 
 // ---------- Phases ----------
 
-export async function getAllPhases(sql: Sql, userId: string): Promise<Phase[]> {
+export async function getAllPhases(
+  sql: Sql,
+  userId: string,
+  archived: ArchivedFilter = 'exclude'
+): Promise<Phase[]> {
   const rows = await sql<Phase[]>`
     SELECT * FROM phases
     WHERE user_id = ${userId}
     ORDER BY mesocycle_num ASC
   `;
-  return rows.map((r) => ({ ...r }));
+  return applyArchivedFilter(rows.map(coercePhase), archived);
 }
 
 export async function getPhaseForDate(sql: Sql, userId: string, date: string): Promise<Phase | null> {
@@ -55,9 +83,10 @@ export async function getPhaseForDate(sql: Sql, userId: string, date: string): P
     WHERE user_id = ${userId}
       AND start_date <= ${date}
       AND end_date >= ${date}
-    LIMIT 1
+    ORDER BY mesocycle_num ASC
   `;
-  return rows[0] ?? null;
+  const sorted = rows.map(coercePhase).sort((a, b) => (a.archived ?? 0) - (b.archived ?? 0));
+  return sorted[0] ?? null;
 }
 
 // ---------- Sessions ----------
@@ -66,7 +95,8 @@ export async function getSessionsInRange(
   sql: Sql,
   userId: string,
   startDate: string,
-  endDate: string
+  endDate: string,
+  archived: ArchivedFilter = 'exclude'
 ): Promise<SessionWithPhase[]> {
   const rows = await sql<SessionWithPhase[]>`
     SELECT s.*,
@@ -79,7 +109,7 @@ export async function getSessionsInRange(
       AND s.date BETWEEN ${startDate} AND ${endDate}
     ORDER BY s.date ASC, s.id ASC
   `;
-  return rows.map(coerceSession);
+  return applyArchivedFilter(rows.map(coerceSession), archived);
 }
 
 export async function getSessionByDate(
@@ -87,19 +117,8 @@ export async function getSessionByDate(
   userId: string,
   date: string
 ): Promise<SessionWithPhase | null> {
-  const rows = await sql<SessionWithPhase[]>`
-    SELECT s.*,
-           p.name          AS phase_name,
-           p.short_name    AS phase_short_name,
-           p.mesocycle_num AS phase_mesocycle_num
-    FROM sessions s
-    LEFT JOIN phases p ON p.id = s.phase_id
-    WHERE s.user_id = ${userId}
-      AND s.date = ${date}
-    ORDER BY s.id ASC
-    LIMIT 1
-  `;
-  return rows[0] ? coerceSession(rows[0]) : null;
+  const rows = (await getSessionsForDate(sql, userId, date)).filter((s) => s.archived !== 1);
+  return rows[0] ?? null;
 }
 
 export async function getSessionById(
@@ -525,7 +544,9 @@ export async function getSessionsForDate(
       AND s.date = ${date}
     ORDER BY s.scheduled DESC, s.id ASC
   `;
-  return rows.map(coerceSession);
+  return rows
+    .map(coerceSession)
+    .sort((a, b) => (a.archived ?? 0) - (b.archived ?? 0) || b.scheduled - a.scheduled);
 }
 
 export async function getExerciseIndex(sql: Sql, userId: string): Promise<ExerciseIndexRow[]> {
@@ -590,7 +611,8 @@ export async function getSessionsInRangeWithCounts(
   sql: Sql,
   userId: string,
   startDate: string,
-  endDate: string
+  endDate: string,
+  archived: ArchivedFilter = 'exclude'
 ): Promise<SessionWithCounts[]> {
   const rows = await sql<SessionWithCounts[]>`
     SELECT s.*,
@@ -613,12 +635,13 @@ export async function getSessionsInRangeWithCounts(
       AND s.date BETWEEN ${startDate} AND ${endDate}
     ORDER BY s.date ASC, s.id ASC
   `;
-  return rows.map((r) => {
-    const coerced = coerceSession(r);
-    coerced.sets_total = Number(coerced.sets_total);
-    coerced.sets_completed = Number(coerced.sets_completed);
-    return coerced;
+  const coerced = rows.map((r) => {
+    const row = coerceSession(r);
+    row.sets_total = Number(row.sets_total);
+    row.sets_completed = Number(row.sets_completed);
+    return row;
   });
+  return applyArchivedFilter(coerced, archived);
 }
 
 // ---------- Phase progress ----------
@@ -941,7 +964,7 @@ export async function getAllSessionsWithCounts(
   sql: Sql,
   userId: string
 ): Promise<SessionWithCounts[]> {
-  return getSessionsInRangeWithCounts(sql, userId, '2026-01-01', '2026-12-31');
+  return getSessionsInRangeWithCounts(sql, userId, '2026-01-01', '2026-12-31', 'include');
 }
 
 // ---------- Running logs ----------

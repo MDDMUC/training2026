@@ -68,6 +68,8 @@ export interface Phase {
   start_date: string;
   end_date: string;
   description: string | null;
+  archived: number;
+  cycle_name: string | null;
   created_at: string;
 }
 
@@ -85,6 +87,8 @@ export interface Session {
   sleep_hours: number | null;
   readiness: number | null;
   notes: string | null;
+  archived: number;
+  cycle_name: string | null;
   created_at: string;
   updated_at: string;
 }
