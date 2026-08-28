@@ -2,28 +2,28 @@
 
 > Rewrite this whole file at session end. Next session reads this first after the protocol.
 
-**Last updated:** 2026-08-28 (session close)
-**Session:** Spine reset coded, committed, pushed. **Seed is tomorrow.**
+**Last updated:** 2026-08-28 (commit + push; seed still not live)
+**Session:** Re-entry plan committed and pushed. Calendar seed is **not applied** — pooler still rejects this machine.
 
 ---
 
-## Do this tomorrow (first)
+## Do this first
 
-1. **Apply the archive + seed** (H2 2026 is still live until this runs):
-   - Supabase SQL editor: paste `scripts/archive-h2-and-seed-reset.sql`
-   - or `npx tsx scripts/archive-h2-and-seed-reset.ts` if `DATABASE_URL` connects
-2. Verify: Today = HOLD walk/rest; Calendar has no hangs / pull-ups / climbing; **Log → Previous** still has every old session; Analysis/PR unchanged.
-3. Do not hang, pull, climb, or run until the joint is quiet.
-
-The deploy is safe *without* the seed: queries filter `archived` in JS, so a missing column behaves like “nothing archived yet.” After the seed, old work drops off Today/Calendar.
+1. **Paste the seed in Supabase SQL editor** (H2 is still the live calendar until this runs):
+   - File: `scripts/archive-h2-and-seed-reentry.sql`
+   - Dashboard: https://supabase.com/dashboard/project/gohqxsbqswyomyfeuipt/sql/new
+   - Do **not** paste `archive-h2-and-seed-reset.sql` (HOLD/RESTORE, superseded)
+   - Local fallback if `DATABASE_URL` ever connects: `npx tsx -r dotenv/config scripts/archive-h2-and-seed-reentry.ts`
+2. Verify: Today this weekend = no session, next = Mon 31 Pull A; Calendar Sep = Pull/Push/Run; **Log → Previous** still has H2; no hangs/climbing on the current cycle. Collagen banner hidden on REENTRY once the deploy is up.
 
 ## Current focus
 
-- Back joint misaligned, being adjusted. Cannot fully train.
-- H2 2026 kept as Previous plan (not deleted). New plan: HOLD 14d + RESTORE 28d walk/rest. See `plan/07-reset-spine.md`.
-- Antonia untouched. Unfinished AM/PM badges (`ExerciseBlock.svelte`, `timeOfDay.ts`) left uncommitted.
+- Re-entry cycle locked: Mon 31 Aug → Sun 27 Sep. Pull A → Push A → Run → Pull B → Push B → Run → Rest. See `plan/08-reentry.md`.
+- Doctor cleared training. Conservative loads, no hangboard, no climbing. Box pistol on run days; split squat on Push A.
+- H2 stays Previous. HOLD/RESTORE never seeded.
+- Antonia untouched. AM/PM badges still uncommitted (`ExerciseBlock.svelte`, `timeOfDay.ts`).
 
 ## Blockers / watchouts
 
-- Do not resume the old Phase 3 calendar.
-- Next performance block is a new decision after clearance.
+- This machine: pooler `tenant/user postgres.gohqxsbqswyomyfeuipt not found`; `*.supabase.co` REST DNS fail. Same as 2026-08-27.
+- Do not resume Phase 3. Next performance block is after Week 4.

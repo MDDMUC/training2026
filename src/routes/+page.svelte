@@ -50,7 +50,7 @@
     <InsightsCard insights={data.insights} />
   {/if}
 
-  {#if data.phase?.short_name !== 'HOLD' && data.phase?.short_name !== 'RESTORE'}
+  {#if data.phase && data.phase.short_name !== 'HOLD' && data.phase.short_name !== 'RESTORE' && data.phase.short_name !== 'REENTRY'}
     <SupplementBanner />
   {/if}
 

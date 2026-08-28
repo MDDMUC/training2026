@@ -189,9 +189,10 @@ export const load: PageServerLoad = async ({ locals }) => {
     latestRunPace: latestRun?.pace_min_per_km ?? null,
     runPaceTarget: 8.0,
     daysUntilPhaseEnd,
-    currentPhaseShortName: phase?.short_name ?? null,
+    currentPhaseShortName: phase?.short_name ?? allPhases[0]?.short_name ?? null,
     nextPhaseShortName: nextPhase?.short_name ?? null,
-    nextTestDate
+    nextTestDate,
+    planStartISO: allPhases[0]?.start_date ?? null
   });
 
   // ---------- Nutrition (today only) ----------

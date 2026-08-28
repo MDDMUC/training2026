@@ -70,3 +70,40 @@ Append-only. Newest entries at the **bottom**.
 1. Paste `scripts/archive-h2-and-seed-reset.sql` in the Supabase SQL editor (or run the tsx script)
 2. Check Today / Calendar / Log → Previous
 3. No loaded training until the joint is cleared
+
+---
+
+## 2026-08-28 — Re-entry cycle locked (seed not live)
+
+**Focus:** Restart training Mon 31 Aug. Pull → Push → Run. Conservative loads. Box pistol + split squat. Discussed then coded.
+
+**Locked:**
+- Cycle: Mon 31 Aug → Sun 27 Sep (`plan/08-reentry.md`). Phase short_name `REENTRY`, cycle_name `Re-entry`.
+- Week: Pull A, Push A, Run, Pull B, Push B, Run, Rest.
+- No hangboard, no climbing, no added pull-up weight. Surgical (R) first on legs.
+- HOLD/RESTORE superseded, never seeded. Archive-don't-delete still holds.
+
+**Shipped (code, not live data):**
+- `src/lib/domain/reentryPlan.ts` + `scripts/archive-h2-and-seed-reentry.ts` + `.sql`
+- Insights + hide collagen banner on REENTRY
+- `npm run check` — 0 errors
+
+**Blocked:** Pooler still `tenant/user not found`. Calendar will not change until Martin pastes `scripts/archive-h2-and-seed-reentry.sql` in the Supabase SQL editor.
+
+**Open:**
+- Apply seed
+- Browser-verify after seed
+- Push UI copy if Martin wants production Today to match
+- AM/PM badges still uncommitted, unrelated
+
+---
+
+## 2026-08-28 — Session close (commit + push re-entry)
+
+**Focus:** Log, commit, push the re-entry plan. Martin still applies the seed in Supabase.
+
+**Shipped:**
+- Commit + push of re-entry cycle (plan, seed scripts, insights, hide collagen banner on REENTRY)
+- AM/PM badges left uncommitted (`ExerciseBlock.svelte`, `timeOfDay.ts`)
+
+**Still blocked:** live archive + seed. Paste `scripts/archive-h2-and-seed-reentry.sql` in the Supabase SQL editor. Until then production calendar is still H2.

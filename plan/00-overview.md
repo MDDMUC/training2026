@@ -1,6 +1,6 @@
 # Training 2026 — 12-Week Plan Overview
 
-> **Archived 2026-08 (spine reset).** This H2 2026 macrocycle is kept as Previous plan in the app — not deleted. Active work is [`07-reset-spine.md`](07-reset-spine.md). Do not resume hangs / pull-ups / climbing from this file until the joint is cleared.
+> **Archived 2026-08.** This H2 2026 macrocycle is Previous plan in the app — not deleted. Active work is [`08-reentry.md`](08-reentry.md) (conservative Pull / Push / Run, Mon 31 Aug → Sun 27 Sep). Hangboard and climbing stay off until after that block.
 
 **Macrocycle:** Wed Jun 10 → Tue Sep 1, 2026 (12 weeks, 3 × 4-week mesocycles).
 **Athlete:** Martin, 43, 82 kg, ~8a sport.
@@ -113,3 +113,5 @@ This matches the over-40 envelope: **2 hard sessions per quality per week**, har
 - `04-phase3-power-peak.md` — outline for weeks 9–12 (detailed after Week 8 test)
 - `05-testing-protocol.md` — exact test session protocol, repeated every 4 weeks
 - `06-exercise-library.md` — form notes for every prescribed exercise
+- `07-reset-spine.md` — superseded HOLD/RESTORE walk plan (never seeded)
+- `08-reentry.md` — **active** 4-week conservative Pull / Push / Run (Mon 31 Aug → Sun 27 Sep)

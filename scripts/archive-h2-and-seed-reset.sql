@@ -1,3 +1,7 @@
+-- SUPERSEDED 2026-08-28. Do not paste this. Use:
+--   npx tsx -r dotenv/config scripts/archive-h2-and-seed-reentry.ts
+-- HOLD/RESTORE walk plan was never the live prescription.
+--
 -- Archive Martin's H2 2026 plan (keep every row) and seed the spine-reset plan.
 -- Paste in the Supabase SQL editor if the Node script cannot reach the pooler.
 -- Idempotent. Does not touch Antonia. Does not DELETE sessions.

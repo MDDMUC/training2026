@@ -33,6 +33,8 @@ export interface InsightInputs {
   nextPhaseShortName: string | null;
   /** ISO date of the next scheduled test session (if any). */
   nextTestDate: string | null;
+  /** First day of the current (non-archived) cycle, if any. */
+  planStartISO: string | null;
 }
 
 const HARD_SESSION_TYPES = new Set(['pull-heavy', 'push', 'climb-outdoor', 'test']);
@@ -61,6 +63,17 @@ export function generateInsights(i: InsightInputs): Insight[] {
       });
     }
     return out;
+  }
+
+  if (i.currentPhaseShortName === 'REENTRY' && i.daysSincePlanStart >= 0) {
+    out.push({
+      id: 'reentry',
+      severity: 'info',
+      title: 'Conservative re-entry — light loads',
+      detail:
+        'Back joint still being adjusted. 3–4 RIR, bodyweight pulls, no hangboard, no climbing. Stop if the joint speaks. H2 2026 is under Log → Previous plan.',
+      action: { href: '/log?cycle=previous', label: 'Open previous plan' }
+    });
   }
 
   // 1. Asymmetry warning
@@ -152,13 +165,15 @@ export function generateInsights(i: InsightInputs): Insight[] {
 
   // 7. Pre-plan window
   if (i.daysSincePlanStart < 0) {
+    const start = i.planStartISO ?? '2026-08-31';
+    const days = -i.daysSincePlanStart;
     out.push({
       id: 'pre-plan',
       severity: 'info',
-      title: `Plan starts in ${-i.daysSincePlanStart} day${i.daysSincePlanStart === -1 ? '' : 's'}`,
+      title: `Plan starts in ${days} day${days === 1 ? '' : 's'}`,
       detail:
-        'Use the runway to confirm the Tindeq baseline, sleep, and a body-weight check-in are recorded. Phase 1 starts Wed Jun 10.',
-      action: { href: '/log/by-date/2026-06-10', label: 'Preview Wed Jun 10' }
+        'Conservative re-entry. First session is Pull A — bodyweight pulls, no hangboard. Light loads, stop if the joint speaks.',
+      action: { href: `/log/by-date/${start}`, label: 'Preview first session' }
     });
   }
 

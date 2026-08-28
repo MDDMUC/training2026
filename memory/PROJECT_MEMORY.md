@@ -45,17 +45,18 @@ Harvested 2026-08-27 from Claude Code memory at `~/.claude/projects/C--Users-hey
 - Age 43, BW ~82 kg, sport ~8a, target beyond
 - Tindeq 20 mm one-arm: R 55 / L 52 kg (left A2 healed)
 - Pull-up: +18 kg × 5; estimated 1RM ~+30–35 kg added
-- Knee: ACL reconstruction + meniscus stitch Jan 22 2024
-- **Back joint misaligned (2026-08), being adjusted. Cannot fully train.**
+- Knee: ACL reconstruction + meniscus stitch Jan 22 2024 (**right** leg)
+- **Back joint misaligned (2026-08), being adjusted.** Doctor cleared training 2026-08-28 for blood flow / to keep the joint seated. Conservative re-entry, not a performance block.
 - Tools: Tindeq Progressor, hangboard, weights
 - Outdoor window: Aug–early Sep 2026 — paused for the joint
 - No FlexBar / Tindeq extensor — bands for extensors
 
 ## Plan
 
-- **Active:** spine reset — see `plan/07-reset-spine.md`. HOLD 14 days (walk/rest) then RESTORE 28 days (same constraint, longer walks). No hangs, pull-ups, climbing, running.
+- **Active:** conservative re-entry — see `plan/08-reentry.md`. Mon 31 Aug → Sun 27 Sep 2026. Pull → Push → Run twice, then rest. Bodyweight pulls, light push, box pistol + easy run. No hangboard, no climbing.
 - **Archived (not deleted):** H2 2026 Wed 2026-06-10 → Tue 2026-09-01. `sessions.archived` + `cycle_name='H2 2026'`. Log → Previous plan.
-- Next performance block is a new decision after clearance. Do not auto-resume Phase 3.
+- HOLD/RESTORE (`plan/07-reset-spine.md`) was coded and **not seeded**; superseded by re-entry.
+- Next performance / hangboard / climbing block is a new decision after Week 4. Do not auto-resume Phase 3.
 - Schema: `phases.archived`, `sessions.archived`, `cycle_name`. Current surfaces filter `archived=false`. Analysis/PR/exercise library still read lifetime rows.
 
 ## Product (beyond the original CLAUDE.md catalog)

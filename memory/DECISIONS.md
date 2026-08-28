@@ -54,11 +54,23 @@ Canonical write-up: `context/synthesis.md`.
 
 **Decision:** Misaligned back joint, being adjusted. Cannot fully train. Archive every Martin session/phase as cycle `H2 2026`. Seed a new Reset cycle (HOLD 14d + RESTORE 28d) of walk / rest / unloaded mobility only. No hangs, pull-ups, climbing, running, loaded spinal work. Next climbing block is designed after clearance.
 
+**Superseded 2026-08-28** by the re-entry cycle below. Archive-don't-delete still holds. HOLD/RESTORE was never seeded.
+
 **Implications:**
 - Never DELETE old workouts. Log → Previous plan.
 - Antonia untouched.
 - `archived` + `cycle_name` on phases and sessions. Today/Calendar show current cycle only.
 - Analysis, PR, exercise library keep lifetime data.
+
+## 2026-08-28 — Re-entry cycle (Pull / Push / Run)
+
+**Decision:** Doctor cleared training (blood flow, keep the joint seated). Start a 4-week conservative re-entry **Mon 31 Aug → Sun 27 Sep 2026**, not a continuation of H2 Phase 3 and not the HOLD walk plan. Weekly order: Pull A → Push A → Run → Pull B → Push B → Run → Rest. Imitate H2 session DNA at ~60% of Phase 1 Week 1 loads. No hangboard, no climbing, no Abrahangs, no added pull-up weight. Legs: Bulgarian split squat on Push A; box-pistol skill on the two run days (before the run). Surgical (R) side first. Stop if the joint speaks.
+
+**Implications:**
+- Archive H2 (and HOLD if it ever existed) in place. Seed cycle_name `Re-entry`, phase short_name `REENTRY`.
+- Antonia untouched.
+- Next performance / hangboard / climbing block is a new decision after Week 4.
+- Not clinical advice.
 
 ## 2026-08-27 — Grok installed as coding agent
 
