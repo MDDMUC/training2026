@@ -135,3 +135,18 @@ Append-only. Newest entries at the **bottom**.
 - AM/PM badges (`timeOfDay.ts` + ExerciseBlock) included in this commit as requested.
 
 **After deploy:** Antonia → Calendar → a session → **How to perform** under each exercise.
+
+---
+
+## 2026-08-28 — Hang-pull recut + session close
+
+**Focus:** Fix the hang-pull photo (torso twist). Then log and stop.
+
+**Shipped:**
+- `hang-pull.jpg` recut: square to the bar, legs together, no twist. `65c36e2` on `main`.
+- Form guides live: Antonia day log + exercise page. Martin unchanged.
+- Re-entry seed live: 28 sessions, Mon 31 Aug Pull A first.
+
+**Open:** more photo recuts if Antonia asks. No app work required before Monday.
+
+**Next:** Mon 31 Aug Pull A. Do not resume Phase 3.

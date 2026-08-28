@@ -2,23 +2,24 @@
 
 > Rewrite this whole file at session end. Next session reads this first after the protocol.
 
-**Last updated:** 2026-08-28 (Antonia form guides committed + pushed)
-**Session:** Form guides + photos for Antonia are on `main`. Re-entry seed is live.
+**Last updated:** 2026-08-28 (session close)
+**Session:** Re-entry is live. Antonia form guides are on production. Day closed.
 
 ---
 
 ## Do this first
 
-After Vercel deploys: log in as **antonia**, open Calendar → Fri 21 Aug (or any session) → the day log. Each exercise has **How to perform** (photos + setup + cues). Collapse with the heading. Same guide on `/exercise/[name]`. Martin’s sessions stay unchanged.
+Nothing required for the app. Martin’s first re-entry session is **Mon 31 Aug — Pull A** (bodyweight pulls, no hangboard).
 
-Monday 31 Aug is Martin’s Pull A.
+If Antonia flags more form photos, recut the file in `static/form-guides/antonia/` (hang-pull.jpg was already replaced: square to the bar, no torso twist).
 
 ## Current focus
 
-- Martin re-entry: Mon 31 Aug → Sun 27 Sep. Pull A → Push A → Run → Pull B → Push B → Run → Rest. `plan/08-reentry.md`.
-- Antonia: how-to + photos on every prescribed exercise (`FormGuide`, `antoniaFormGuides.ts`, `static/form-guides/antonia/`).
-- H2 archived as Previous. HOLD/RESTORE never seeded.
+- **Martin:** conservative re-entry Mon 31 Aug → Sun 27 Sep. Pull A → Push A → Run → Pull B → Push B → Run → Rest. `plan/08-reentry.md`. Doctor cleared training; stop if the joint speaks. No hangboard, no climbing this block.
+- **Antonia:** How to perform (photos + copy) on the day log and `/exercise/[name]`. Martin’s log unchanged.
+- H2 2026 is Previous (archived, not deleted). HOLD/RESTORE never seeded.
 
 ## Blockers / watchouts
 
-- Do not resume Phase 3. Next performance block is after Week 4.
+- Do not resume Phase 3. Next performance / hangboard / climbing block is a decision after Week 4.
+- Seeded login: `martin` / `antonia`, password `apple` unless changed.
