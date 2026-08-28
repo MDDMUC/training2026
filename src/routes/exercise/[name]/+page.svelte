@@ -5,6 +5,10 @@
   import type { Point } from '$lib/organisms/LineChart.svelte';
   import { renderInlineMarkdown } from '$lib/utils/markdown';
   import { parseISO, format } from 'date-fns';
+  import FormGuide from '$lib/molecules/FormGuide.svelte';
+  import { page } from '$app/state';
+
+  const isAntonia = $derived(page.data.user?.id === 'antonia');
 
   let { data } = $props();
 
@@ -67,6 +71,12 @@
       <Button variant="ghost" size="sm" href="/exercise/{encodeURIComponent(data.nextName)}">{data.nextName} &raquo;</Button>
     {/if}
   </div>
+
+  {#if isAntonia}
+    <div class="form-guide-wrap">
+      <FormGuide exerciseName={data.name} />
+    </div>
+  {/if}
 
   {#if trendPoints.length > 0}
     <LineChart title="Top working set over time" points={trendPoints} unit={unit} yPad={3} />
@@ -186,6 +196,10 @@
 
   .check { color: var(--color-fg-accent); font-weight: var(--weight-bold); }
   .dot { color: var(--color-fg-subtle); }
+
+  .form-guide-wrap {
+    margin: 0 0 var(--space-6);
+  }
 
   .athlete-notes {
     padding: 0 var(--space-4) var(--space-3) 124px;

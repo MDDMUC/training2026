@@ -86,7 +86,7 @@ export async function getPhaseForDate(sql: Sql, userId: string, date: string): P
     ORDER BY mesocycle_num ASC
   `;
   const sorted = rows.map(coercePhase).sort((a, b) => (a.archived ?? 0) - (b.archived ?? 0));
-  return sorted[0] ?? null;
+  return sorted.find((p) => p.archived !== 1) ?? null;
 }
 
 // ---------- Sessions ----------

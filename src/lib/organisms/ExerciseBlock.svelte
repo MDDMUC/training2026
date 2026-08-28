@@ -4,10 +4,15 @@
   import ExerciseContext from '$lib/molecules/ExerciseContext.svelte';
   import type { ExerciseWithSets, ExerciseContext as ExContext } from '$lib/db/queries';
   import { renderInlineMarkdown } from '$lib/utils/markdown';
+  import { getTimeOfDay, timeOfDayShort, timeOfDayTitle } from '$lib/domain/timeOfDay';
+  import FormGuide from '$lib/molecules/FormGuide.svelte';
+  import { page } from '$app/state';
 
   type Props = { exercise: ExerciseWithSets; sessionId: number; context?: ExContext };
   let { exercise, sessionId, context }: Props = $props();
+  const isAntonia = $derived(page.data.user?.id === 'antonia');
 
+  const timeOfDay = $derived(getTimeOfDay(exercise.name));
   const total = $derived(exercise.sets.length);
   const done = $derived(exercise.sets.filter((s) => s.completed === 1).length);
   const allDone = $derived(total > 0 && done === total);
@@ -53,7 +58,12 @@
 <section class="block" class:done={allDone}>
   <header>
     <div class="title-row">
-      <h3><a href="/exercise/{encodeURIComponent(exercise.name)}" class="ex-link" title="View history of this exercise">{exercise.name}</a></h3>
+      <h3>
+        <a href="/exercise/{encodeURIComponent(exercise.name)}" class="ex-link" title="View history of this exercise">{exercise.name}</a>
+        {#if timeOfDay}
+          <span class="tod tod-{timeOfDay}" title={timeOfDayTitle[timeOfDay]}>{timeOfDayShort[timeOfDay]}</span>
+        {/if}
+      </h3>
       <div class="progress">
         <span class="progress-text">{done}/{total}</span>
         <div class="progress-bar" role="progressbar" aria-valuenow={done} aria-valuemin={0} aria-valuemax={total}>
@@ -85,6 +95,9 @@
     </div>
     {#if exercise.notes}
       <p class="ex-notes">{@html renderInlineMarkdown(exercise.notes)}</p>
+    {/if}
+    {#if isAntonia}
+      <FormGuide exerciseName={exercise.name} />
     {/if}
   </header>
 
@@ -168,6 +181,21 @@
   .ex-link:hover {
     border-bottom-color: var(--color-border-default);
     text-decoration: none;
+  }
+
+  /* Time-of-day hint — tiny uppercase tag next to the exercise name. */
+  .tod {
+    display: inline-block;
+    margin-left: var(--space-2);
+    padding: 1px 5px;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-1);
+    font: var(--text-micro-weight) 9px/1.3 var(--font-mono);
+    letter-spacing: var(--text-micro-tracking);
+    color: var(--color-fg-muted);
+    vertical-align: 3px;
+    cursor: help;
+    user-select: none;
   }
 
   .progress {

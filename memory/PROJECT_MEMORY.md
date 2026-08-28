@@ -63,6 +63,7 @@ Harvested 2026-08-27 from Claude Code memory at `~/.claude/projects/C--Users-hey
 
 Shipped after the charter was written, still live:
 
+- Antonia-only form guides: every prescribed exercise has a how-to (setup, movement, cues, stop-if) plus instructional photos. Shown on the day log and the exercise page. Martin’s log is unchanged.
 - Nutrition on Today + Analysis (profile, manual entry, NL parse, consistency card)
 - Sessionless daily check-in
 - Free-form log (`/log/free`)

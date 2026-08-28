@@ -107,3 +107,31 @@ Append-only. Newest entries at the **bottom**.
 - AM/PM badges left uncommitted (`ExerciseBlock.svelte`, `timeOfDay.ts`)
 
 **Still blocked:** live archive + seed. Paste `scripts/archive-h2-and-seed-reentry.sql` in the Supabase SQL editor. Until then production calendar is still H2.
+
+---
+
+## 2026-08-28 — Re-entry seed applied
+
+**Focus:** Martin ran the SQL. Verify live data.
+
+**Verified:**
+- Martin current: 28 Re-entry sessions, 2026-08-31 → 2026-09-27, Pull/Push/Run as locked
+- Martin H2: 92 sessions archived, phases BASE/MAX/PEAK
+- Antonia: 36 sessions, untouched
+- Mon 31: warmup, 4× BW pull-ups, curls, mobility. Zero hangboard/climb on current cycle
+- Production: Today = nothing scheduled + plan starts; Sep calendar = re-entry; Log Previous = H2
+
+**Open:** `getPhaseForDate` still returns archived H2 PEAK for Aug 28–30 (date overlap). Collagen banner on Today this weekend. Local one-line fix in `queries.ts` (skip archived). AM/PM badges still uncommitted.
+
+---
+
+## 2026-08-28 — Antonia form guides (commit + push)
+
+**Focus:** Log, commit, push everything so Antonia can see how-tos on production.
+
+**Shipped:**
+- Antonia-only **How to perform** on the day log and exercise page (photos + setup / movement / cues / stop-if). All 43 prescribed names mapped. Martin unchanged.
+- `getPhaseForDate` skips archived phases (this-weekend collagen/PEAK leak).
+- AM/PM badges (`timeOfDay.ts` + ExerciseBlock) included in this commit as requested.
+
+**After deploy:** Antonia → Calendar → a session → **How to perform** under each exercise.
