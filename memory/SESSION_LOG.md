@@ -317,3 +317,18 @@ Append-only. Newest entries at the **bottom**.
 **Cause:** `filter: brightness()` on the looping `<video>` + `backdrop-filter` on the form card forced per-frame recomposite.
 
 **Fix:** static `.bg-veil` overlay; solid card background; JS picks desktop/mobile src; pause when tab hidden. Verified in Chromium: playing, `filter: none`, time advancing ~0.4s/sample.
+
+---
+
+## 2026-09-04 — Session close
+
+**Focus:** Nutrition finish + commit/push + handoff.
+
+**Nutrition (live DB, Fri 4 Sep):**
+- Cheesecake + coffees 285 · eggs+bread 580 · mince+eggs+bread 1435 · 3 eggs 215
+- Day food **2515 kcal / 156 g P** (goal ~3155 / 162 — intentional cut)
+- Scripts: `log-2026-09-04-beef-meal.ts`, `log-2026-09-04-three-eggs.ts`
+
+**Already on main earlier today:** hypertrophy base ramp, OHP drop, login video fix (`b4fbe95`).
+
+**Next:** Sat 5 Sep Push A at ~50%, no OHP.
