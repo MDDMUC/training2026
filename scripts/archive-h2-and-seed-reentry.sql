@@ -1,4 +1,4 @@
--- Archive Martin's current cycle and seed Re-entry (Wed 2026-09-02 -> Tue 2026-09-29).
+-- Archive Martin's current cycle and seed Re-entry (2026-09-04 -> 2026-10-01).
 -- Generated from src/lib/domain/reentryPlan.ts — do not hand-edit.
 -- Paste in the Supabase SQL editor if the Node script cannot reach the pooler.
 -- Idempotent. Martin only. Does not DELETE H2 rows. Does not touch Antonia.
@@ -43,14 +43,14 @@ BEGIN
     user_id, mesocycle_num, name, short_name, start_date, end_date, description, archived, cycle_name
   ) VALUES (
     'martin', 1, 'Re-entry — conservative base', 'REENTRY',
-    '2026-09-02', '2026-09-29', 'Four weeks. Pull → Push → Run twice, then rest. Bodyweight pulls, light push loads, box-pistol skill, easy running. Hangboard and climbing parked. Stop if the joint speaks. Next block is a separate decision after Week 4.', false, 'Re-entry'
+    '2026-09-04', '2026-10-01', 'Four weeks. Pull → Push → Run twice, then rest. Bodyweight pulls, light push loads, box-pistol skill, easy running. Hangboard and climbing parked. Stop if the joint speaks. Next block is a separate decision after Week 4.', false, 'Re-entry'
   ) RETURNING id INTO phase_id;
 
-  -- 2026-09-02 · pull-heavy · Pull A — bodyweight pulls + curls
+  -- 2026-09-04 · pull-heavy · Pull A — bodyweight pulls + curls
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-02', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
+    'martin', '2026-09-04', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -148,11 +148,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-03 · push · Push A — press, chest, delts, split squat
+  -- 2026-09-05 · push · Push A — press, chest, delts, split squat
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-03', phase_id, 'push', 'Push A — press, chest, delts, split squat',
+    'martin', '2026-09-05', phase_id, 'push', 'Push A — press, chest, delts, split squat',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -357,11 +357,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10–15 min · 90/90, hamstring, ankle', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-04 · run · Run — box pistol + easy run
+  -- 2026-09-06 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-04', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-06', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -449,11 +449,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 20 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-05 · pull-light · Pull B — light pulls + bird-dog
+  -- 2026-09-07 · pull-light · Pull B — light pulls + bird-dog
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-05', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
+    'martin', '2026-09-07', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -536,11 +536,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-06 · push · Push B — push-ups, incline, delts
+  -- 2026-09-08 · push · Push B — push-ups, incline, delts
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-06', phase_id, 'push', 'Push B — push-ups, incline, delts',
+    'martin', '2026-09-08', phase_id, 'push', 'Push B — push-ups, incline, delts',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -648,11 +648,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 5, 'work', 'Prone Y-T-W · 1 kg · set 2', 8, 1, NULL, NULL, 60, 6, NULL
   );
 
-  -- 2026-09-07 · run · Run — box pistol + easy run
+  -- 2026-09-09 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-07', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-09', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -740,11 +740,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 20 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-08 · rest · Rest
+  -- 2026-09-10 · rest · Rest
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-08', phase_id, 'rest', 'Rest',
+    'martin', '2026-09-10', phase_id, 'rest', 'Rest',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.
@@ -752,11 +752,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
 Optional 20–30 min walk. No “I’ll just do curls.”', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
 
-  -- 2026-09-09 · pull-heavy · Pull A — bodyweight pulls + curls
+  -- 2026-09-11 · pull-heavy · Pull A — bodyweight pulls + curls
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-09', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
+    'martin', '2026-09-11', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -859,11 +859,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-10 · push · Push A — press, chest, delts, split squat
+  -- 2026-09-12 · push · Push A — press, chest, delts, split squat
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-10', phase_id, 'push', 'Push A — press, chest, delts, split squat',
+    'martin', '2026-09-12', phase_id, 'push', 'Push A — press, chest, delts, split squat',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1078,11 +1078,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10–15 min · 90/90, hamstring, ankle', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-11 · run · Run — box pistol + easy run
+  -- 2026-09-13 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-11', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-13', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1170,11 +1170,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 25 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-12 · pull-light · Pull B — light pulls + bird-dog
+  -- 2026-09-14 · pull-light · Pull B — light pulls + bird-dog
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-12', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
+    'martin', '2026-09-14', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1257,11 +1257,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-13 · push · Push B — push-ups, incline, delts
+  -- 2026-09-15 · push · Push B — push-ups, incline, delts
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-13', phase_id, 'push', 'Push B — push-ups, incline, delts',
+    'martin', '2026-09-15', phase_id, 'push', 'Push B — push-ups, incline, delts',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1379,11 +1379,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 5, 'work', 'Prone Y-T-W · 1 kg · set 2', 8, 1, NULL, NULL, 60, 6, NULL
   );
 
-  -- 2026-09-14 · run · Run — box pistol + easy run
+  -- 2026-09-16 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-14', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-16', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1471,11 +1471,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 25 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-15 · rest · Rest
+  -- 2026-09-17 · rest · Rest
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-15', phase_id, 'rest', 'Rest',
+    'martin', '2026-09-17', phase_id, 'rest', 'Rest',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.
@@ -1483,11 +1483,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
 Optional 20–30 min walk. No “I’ll just do curls.”', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
 
-  -- 2026-09-16 · pull-heavy · Pull A — bodyweight pulls + curls
+  -- 2026-09-18 · pull-heavy · Pull A — bodyweight pulls + curls
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-16', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
+    'martin', '2026-09-18', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1590,11 +1590,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-17 · push · Push A — press, chest, delts, split squat
+  -- 2026-09-19 · push · Push A — press, chest, delts, split squat
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-17', phase_id, 'push', 'Push A — press, chest, delts, split squat',
+    'martin', '2026-09-19', phase_id, 'push', 'Push A — press, chest, delts, split squat',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1809,11 +1809,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10–15 min · 90/90, hamstring, ankle', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-18 · run · Run — box pistol + easy run
+  -- 2026-09-20 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-18', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-20', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1901,11 +1901,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 30 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-19 · pull-light · Pull B — light pulls + bird-dog
+  -- 2026-09-21 · pull-light · Pull B — light pulls + bird-dog
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-19', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
+    'martin', '2026-09-21', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1993,11 +1993,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-20 · push · Push B — push-ups, incline, delts
+  -- 2026-09-22 · push · Push B — push-ups, incline, delts
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-20', phase_id, 'push', 'Push B — push-ups, incline, delts',
+    'martin', '2026-09-22', phase_id, 'push', 'Push B — push-ups, incline, delts',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2115,11 +2115,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 5, 'work', 'Prone Y-T-W · 1 kg · set 2', 8, 1, NULL, NULL, 60, 6, NULL
   );
 
-  -- 2026-09-21 · run · Run — box pistol + easy run
+  -- 2026-09-23 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-21', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-23', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2207,11 +2207,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 30 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-22 · rest · Rest
+  -- 2026-09-24 · rest · Rest
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-22', phase_id, 'rest', 'Rest',
+    'martin', '2026-09-24', phase_id, 'rest', 'Rest',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.
@@ -2219,11 +2219,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
 Optional 20–30 min walk. No “I’ll just do curls.”', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
 
-  -- 2026-09-23 · pull-heavy · Pull A — bodyweight pulls + curls
+  -- 2026-09-25 · pull-heavy · Pull A — bodyweight pulls + curls
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-23', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
+    'martin', '2026-09-25', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2296,11 +2296,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-24 · push · Push A — press, chest, delts, split squat
+  -- 2026-09-26 · push · Push A — press, chest, delts, split squat
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-24', phase_id, 'push', 'Push A — press, chest, delts, split squat',
+    'martin', '2026-09-26', phase_id, 'push', 'Push A — press, chest, delts, split squat',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2440,11 +2440,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10–15 min · 90/90, hamstring, ankle', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-25 · run · Run — box pistol + easy run
+  -- 2026-09-27 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-25', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-27', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2522,11 +2522,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 20 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-26 · pull-light · Pull B — light pulls + bird-dog
+  -- 2026-09-28 · pull-light · Pull B — light pulls + bird-dog
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-26', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
+    'martin', '2026-09-28', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2594,11 +2594,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-27 · push · Push B — push-ups, incline, delts
+  -- 2026-09-29 · push · Push B — push-ups, incline, delts
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-27', phase_id, 'push', 'Push B — push-ups, incline, delts',
+    'martin', '2026-09-29', phase_id, 'push', 'Push B — push-ups, incline, delts',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2671,11 +2671,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 3, 'work', 'Prone Y-T-W · 1 kg · set 1', 8, 1, NULL, NULL, 60, 6, NULL
   );
 
-  -- 2026-09-28 · run · Run — box pistol + easy run
+  -- 2026-09-30 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-28', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-30', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2753,11 +2753,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 20 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-29 · rest · Rest
+  -- 2026-10-01 · rest · Rest
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-29', phase_id, 'rest', 'Rest',
+    'martin', '2026-10-01', phase_id, 'rest', 'Rest',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.

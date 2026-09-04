@@ -20,7 +20,7 @@ function lit(value: string | number | boolean | null | undefined): string {
 const { phases, sessions } = buildReentryPlan();
 const lines: string[] = [];
 
-lines.push(`-- Archive Martin's current cycle and seed Re-entry (Wed ${REENTRY_START} -> Tue ${REENTRY_END}).`);
+lines.push(`-- Archive Martin's current cycle and seed Re-entry (${REENTRY_START} -> ${REENTRY_END}).`);
 lines.push(`-- Generated from src/lib/domain/reentryPlan.ts — do not hand-edit.`);
 lines.push(`-- Paste in the Supabase SQL editor if the Node script cannot reach the pooler.`);
 lines.push(`-- Idempotent. Martin only. Does not DELETE H2 rows. Does not touch Antonia.`);

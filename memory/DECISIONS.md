@@ -107,6 +107,17 @@ Canonical write-up: `context/synthesis.md`.
 - No front raises, no 0 RIR, no extra press stack.
 
 **Implications:** Live cycle rebuilt. Dates unchanged (Wed 2 Sep → Tue 29 Sep).
+- **Dates superseded 2026-09-04** — cycle is now Fri 4 Sep → Thu 1 Oct (Day 1 = Pull A).
+
+## 2026-09-04 — Re-entry Day 1 = today (Pull A)
+
+**Decision:** After Wed adjustment + outdoor climbing, Thu soreness, and a rest day, start the block today. Shift the live Re-entry cycle so **Fri 4 Sep is Day 1 Pull A**: **Fri 4 Sep → Thu 1 Oct 2026**. Sequence unchanged; weekdays slide (rest is Thursday).
+
+**Implications:**
+- Live DB rebuilt from `reentryPlan.ts`. Scheduled template only — Sep 1 ad-hoc log preserved.
+- `REENTRY_START` / `REENTRY_END` are the source of truth.
+- Antonia and archived H2 untouched.
+- Still no hangboard, no climbing, no added pull-up weight. Stop if the joint speaks.
 
 ## 2026-08-27 — Grok installed as coding agent
 

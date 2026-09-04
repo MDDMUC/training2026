@@ -1,5 +1,5 @@
 // Conservative 4-week re-entry after the back-joint adjustment.
-// Locked with Martin 2026-08-28; start shifted to Wed 2 Sep (2026-09-01 +1, then +1).
+// Locked with Martin 2026-08-28; start shifted to Fri 4 Sep (Day 1 = Pull A).
 // Not a performance block. No hangboard, no climbing, no Abrahangs. Stop if the joint speaks.
 // Push days include extra chest + side-delt looks work at 3–4 RIR.
 
@@ -10,8 +10,8 @@ import { H2_CYCLE_NAME } from './resetPlan';
 export { H2_CYCLE_NAME };
 
 export const REENTRY_CYCLE_NAME = 'Re-entry';
-export const REENTRY_START = '2026-09-02';
-export const REENTRY_END = '2026-09-29';
+export const REENTRY_START = '2026-09-04';
+export const REENTRY_END = '2026-10-01';
 
 export const REENTRY_CONSTRAINT =
   'Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.';

@@ -47,6 +47,7 @@ try {
     process.exit(1);
   }
 
+  // Only scheduled template sessions are rebuilt. Ad-hoc logs (e.g. 2026-09-01) stay.
   const [{ done }] = await sql<{ done: string }[]>`
     SELECT COUNT(es.id)::text AS done
     FROM sessions s
@@ -55,10 +56,11 @@ try {
     WHERE s.user_id = ${USER_ID}
       AND s.cycle_name = ${REENTRY_CYCLE_NAME}
       AND COALESCE(s.archived, false) = false
+      AND s.scheduled = true
       AND es.completed = true
   `;
   if (Number(done) > 0) {
-    console.error(`Aborting: ${done} completed re-entry sets exist. Do not wipe a logged cycle.`);
+    console.error(`Aborting: ${done} completed scheduled re-entry sets exist. Do not wipe a logged cycle.`);
     process.exit(1);
   }
 
@@ -74,28 +76,56 @@ try {
       WHERE user_id = ${USER_ID}
         AND cycle_name = ${REENTRY_CYCLE_NAME}
         AND COALESCE(archived, false) = false
+        AND scheduled = true
     `;
-    await tx`
-      DELETE FROM phases
+
+    const existingPhase = await tx<{ id: number }[]>`
+      SELECT id FROM phases
       WHERE user_id = ${USER_ID}
         AND cycle_name = ${REENTRY_CYCLE_NAME}
         AND COALESCE(archived, false) = false
+      ORDER BY id
+      LIMIT 1
     `;
 
     const phaseIds: Record<number, number> = {};
     for (const p of phases) {
-      const [{ id }] = await tx<{ id: number }[]>`
-        INSERT INTO phases (
-          user_id, mesocycle_num, name, short_name, start_date, end_date, description, archived, cycle_name
-        )
-        VALUES (
-          ${USER_ID}, ${p.mesocycle_num}, ${p.name}, ${p.short_name},
-          ${p.start_date}, ${p.end_date}, ${p.description}, false, ${REENTRY_CYCLE_NAME}
-        )
-        RETURNING id
-      `;
-      phaseIds[p.mesocycle_num] = Number(id);
+      if (existingPhase[0]) {
+        await tx`
+          UPDATE phases
+          SET mesocycle_num = ${p.mesocycle_num},
+              name = ${p.name},
+              short_name = ${p.short_name},
+              start_date = ${p.start_date},
+              end_date = ${p.end_date},
+              description = ${p.description}
+          WHERE id = ${existingPhase[0].id}
+        `;
+        phaseIds[p.mesocycle_num] = Number(existingPhase[0].id);
+      } else {
+        const [{ id }] = await tx<{ id: number }[]>`
+          INSERT INTO phases (
+            user_id, mesocycle_num, name, short_name, start_date, end_date, description, archived, cycle_name
+          )
+          VALUES (
+            ${USER_ID}, ${p.mesocycle_num}, ${p.name}, ${p.short_name},
+            ${p.start_date}, ${p.end_date}, ${p.description}, false, ${REENTRY_CYCLE_NAME}
+          )
+          RETURNING id
+        `;
+        phaseIds[p.mesocycle_num] = Number(id);
+      }
     }
+
+    // Point preserved ad-hoc sessions at the current phase.
+    await tx`
+      UPDATE sessions
+      SET phase_id = ${phaseIds[1]}
+      WHERE user_id = ${USER_ID}
+        AND cycle_name = ${REENTRY_CYCLE_NAME}
+        AND COALESCE(archived, false) = false
+        AND scheduled = false
+    `;
 
     for (const row of sessions) {
       const spec = row.spec;

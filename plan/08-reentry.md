@@ -2,7 +2,7 @@
 
 **Active cycle.** Locked 2026-08-28 with Martin.
 
-**Dates:** Wed 2 Sep → Tue 29 Sep 2026 (4 weeks). Shifted so the first session is tomorrow (2026-09-02).
+**Dates:** Fri 4 Sep → Thu 1 Oct 2026 (4 weeks). Day 1 is Pull A on 2026-09-04.
 **Athlete:** Martin. Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated.
 **Not a performance block.** No hangboard, no climbing, no Abrahangs, no added weight on pull-ups. Stop if the joint speaks.
 
@@ -12,10 +12,10 @@ H2 2026 is **archived, not deleted** (Log → Previous plan). The HOLD/RESTORE w
 
 | Week | Dates | Intent |
 |------|--------|--------|
-| 1 | Wed 2 Sep – Tue 8 Sep | Onboarding. Lowest loads. |
-| 2 | Wed 9 – Tue 15 Sep | Same exercises. Small bump **only if Week 1 was quiet**. |
-| 3 | Wed 16 – Tue 22 Sep | Small volume bump. Still well below old Phase 1 working weights. |
-| 4 | Wed 23 – Tue 29 Sep | Deload. Then decide: hangboard, climbing, or another easy block. |
+| 1 | Fri 4 Sep – Thu 10 Sep | Onboarding. Lowest loads. |
+| 2 | Fri 11 – Thu 17 Sep | Same exercises. Small bump **only if Week 1 was quiet**. |
+| 3 | Fri 18 – Thu 24 Sep | Small volume bump. Still well below old Phase 1 working weights. |
+| 4 | Fri 25 Sep – Thu 1 Oct | Deload. Then decide: hangboard, climbing, or another easy block. |
 
 ## Weekly order
 
@@ -23,13 +23,13 @@ Pull → Push → Run, twice, then rest.
 
 | Day | Session | Copies |
 |-----|---------|--------|
-| Wed | **Pull A** | old heavy pull, bodyweight, no hangboard |
-| Thu | **Push A** | old push + antagonist; split squat; laterals then fly |
-| Fri | **Run** | box-pistol skill first, then mobility, then easy run |
-| Sat | **Pull B** | old light pull; bird-dog instead of hanging core |
-| Sun | **Push B** | push-ups + incline + seated laterals (SA press and extra dips cut) |
-| Mon | **Run** | same as Friday |
-| Tue | **Rest** | optional easy walk |
+| Fri | **Pull A** | old heavy pull, bodyweight, no hangboard |
+| Sat | **Push A** | old push + antagonist; split squat; laterals then fly |
+| Sun | **Run** | box-pistol skill first, then mobility, then easy run |
+| Mon | **Pull B** | old light pull; bird-dog instead of hanging core |
+| Tue | **Push B** | push-ups + incline + seated laterals (SA press and extra dips cut) |
+| Wed | **Run** | same as Sunday |
+| Thu | **Rest** | optional easy walk |
 
 ## Load rule
 

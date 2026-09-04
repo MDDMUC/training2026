@@ -247,3 +247,22 @@ Append-only. Newest entries at the **bottom**.
 **Open:** Whether Martin logs today’s Run as seeded or shifts to Pull A as Day 1 in the log. Do not resume Phase 3.
 
 **Next:** Train today. Stop if the joint speaks.
+
+---
+
+## 2026-09-04 — Re-entry Day 1 = today (Pull A)
+
+**Focus:** Shift the live cycle so today is officially Day 1 with Pull A.
+
+**Locked:** **Fri 4 Sep → Thu 1 Oct 2026**. Sequence unchanged. Rest is Thursday.
+
+**Live DB:**
+- Rebuilt scheduled Re-entry from `reentryPlan.ts` (+2 days from Wed 2 Sep start).
+- Today = Pull A. Sep 1 ad-hoc log preserved (rebuild now only wipes `scheduled = true`).
+- Antonia / H2 untouched.
+
+**Shipped:** dates in plan/docs/memory, insights + ⌘K, rebuild script preserve-ad-hoc, regenerated seed SQL; commit + push.
+
+**Open:** Do not resume Phase 3.
+
+**Next:** Train Pull A today.
