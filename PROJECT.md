@@ -61,7 +61,7 @@ Not a generic fitness tracker. Vocabulary is climbing: grades, projects, fingerb
 | `/analysis` | Charts, load, climbing, nutrition consistency |
 | `/settings` | Stats, ICS + JSON export/restore |
 | `/login` `/logout` | Cookie auth |
-| `/api/calendar.ics` `/api/backup.json` `/api/restore` `/api/nutrition/parse` | APIs |
+| `/api/calendar.ics` `/api/backup.json` `/api/restore` | APIs (`/api/nutrition/parse` retired — 410) |
 
 ---
 

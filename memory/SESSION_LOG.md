@@ -266,3 +266,20 @@ Append-only. Newest entries at the **bottom**.
 **Open:** Do not resume Phase 3.
 
 **Next:** Train Pull A today.
+
+---
+
+## 2026-09-04 — Logged Pull A (as done)
+
+**Live DB session 216:**
+- BW **81 kg**; session completed
+- Pull-ups **4 × 6** (set 4 last rep a bit hard)
+- Curls bilateral: biceps **4 / 6.5 / 6.5 kg × 14**; hammers **3 × 14 @ 6.5 kg**
+- Added **DB front raise** 3 × 20 @ 2.5 kg/hand
+- Script: `scripts/log-2026-09-04-pull-a.ts`
+
+**Assumption to confirm:** biceps set 3 and all hammer sets at 6.5 kg (Martin stated 4 and 6.5 for biceps sets 1–2; hammers “same weight”).
+
+**Nutrition today:** 2 cheesecake slices + 2 small coffees → **845 kcal** (P14 / C67 / F56). Café/home slice estimate (~420 each), black coffee ~negligible. Anthropic untethered: UI manual-only; parse API 410.
+
+**Next:** Sat 5 Sep Push A.

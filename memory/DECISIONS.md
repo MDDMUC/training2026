@@ -109,6 +109,15 @@ Canonical write-up: `context/synthesis.md`.
 **Implications:** Live cycle rebuilt. Dates unchanged (Wed 2 Sep → Tue 29 Sep).
 - **Dates superseded 2026-09-04** — cycle is now Fri 4 Sep → Thu 1 Oct (Day 1 = Pull A).
 
+## 2026-09-04 — Nutrition untethered from Anthropic
+
+**Decision:** Stop using Anthropic for food estimates. Martin tells the coding agent what he ate; the agent researches a brief estimate and writes `nutrition_entries`. Today UI is manual macros only.
+
+**Implications:**
+- `/api/nutrition/parse` returns 410; `NutritionCard` has no “Estimate from text” mode.
+- Do not call Anthropic from log scripts for nutrition.
+- `@anthropic-ai/sdk` may remain installed unused until a deliberate uninstall.
+
 ## 2026-09-04 — Re-entry Day 1 = today (Pull A)
 
 **Decision:** After Wed adjustment + outdoor climbing, Thu soreness, and a rest day, start the block today. Shift the live Re-entry cycle so **Fri 4 Sep is Day 1 Pull A**: **Fri 4 Sep → Thu 1 Oct 2026**. Sequence unchanged; weekdays slide (rest is Thursday).

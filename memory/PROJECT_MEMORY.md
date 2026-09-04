@@ -29,7 +29,7 @@ Harvested 2026-08-27 from Claude Code memory at `~/.claude/projects/C--Users-hey
 - adapter-vercel
 - date-fns, custom SVG charts
 - No Tailwind, no UI kit
-- Nutrition NL parse uses Anthropic (`ANTHROPIC_API_KEY` in `.env.local`)
+- Nutrition is **manual entry only** (or agent-logged). Anthropic NL parse retired 2026-09-04; `/api/nutrition/parse` returns 410.
 
 ## Infra
 

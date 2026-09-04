@@ -12,20 +12,8 @@
   };
   let { entries, totals, targets, activityCalories, bodyWeightKg }: Props = $props();
 
-  let description = $state('');
-  let parsing = $state(false);
-  let parseError = $state<string | null>(null);
-  let pendingParse = $state<{
-    calories: number;
-    protein_g: number;
-    carbs_g: number;
-    fat_g: number;
-    items: { food: string; qty?: string; calories: number; protein_g: number; carbs_g: number; fat_g: number }[];
-  } | null>(null);
-
   let burnInput = $state<number | null>(activityCalories || null);
 
-  let mode = $state<'estimate' | 'manual'>('manual');
   let manualDescription = $state('');
   let manualCalories = $state<number | null>(null);
   let manualProtein = $state<number | null>(null);
@@ -34,35 +22,6 @@
   const manualValid = $derived(
     manualCalories !== null && manualCalories > 0 && manualDescription.trim().length > 0
   );
-
-  async function parse() {
-    if (!description.trim()) return;
-    parsing = true;
-    parseError = null;
-    pendingParse = null;
-    try {
-      const res = await fetch('/api/nutrition/parse', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ description: description.trim() })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        parseError = data?.error ?? `HTTP ${res.status}`;
-      } else {
-        pendingParse = data.parsed;
-      }
-    } catch (e) {
-      parseError = String(e);
-    } finally {
-      parsing = false;
-    }
-  }
-
-  function cancelPending() {
-    pendingParse = null;
-    parseError = null;
-  }
 
   function pct(value: number, goal: number): number {
     if (goal <= 0) return 0;
@@ -240,187 +199,102 @@
     <p class="empty">Nothing logged yet today.</p>
   {/if}
 
-  <!-- Parse + save flow -->
-  {#if pendingParse}
-    <form
-      method="POST"
-      action="?/saveNutritionEntry"
-      class="confirm"
-      use:enhance={() => async ({ update }) => {
-        await update({ reset: false });
-        pendingParse = null;
-        description = '';
-        await invalidateAll();
-      }}
-    >
-      <header class="confirm-head">
-        <span class="confirm-label">Estimated</span>
-        <span class="confirm-totals">
-          <b>{Math.round(pendingParse.calories)}</b> kcal
-          <span class="dim">·</span>
-          {Math.round(pendingParse.protein_g)}p
-          <span class="dim">/</span>
-          {Math.round(pendingParse.carbs_g)}c
-          <span class="dim">/</span>
-          {Math.round(pendingParse.fat_g)}f
-        </span>
-      </header>
-      <ul class="items">
-        {#each pendingParse.items as item}
-          <li>
-            <span class="item-food">{item.food}{item.qty ? ` — ${item.qty}` : ''}</span>
-            <span class="item-kcal">{Math.round(item.calories)} kcal</span>
-          </li>
-        {/each}
-      </ul>
-      <input type="hidden" name="description" value={description} />
-      <input type="hidden" name="calories" value={pendingParse.calories} />
-      <input type="hidden" name="protein_g" value={pendingParse.protein_g} />
-      <input type="hidden" name="carbs_g" value={pendingParse.carbs_g} />
-      <input type="hidden" name="fat_g" value={pendingParse.fat_g} />
-      <input type="hidden" name="items_json" value={JSON.stringify(pendingParse.items)} />
-      <div class="confirm-actions">
-        <button type="button" class="ghost" onclick={cancelPending}>Discard</button>
-        <button type="submit" class="primary">Save entry</button>
-      </div>
-    </form>
-  {:else}
-    <div class="mode-tabs" role="tablist" aria-label="Entry mode">
-      <button
-        type="button"
-        role="tab"
-        aria-selected={mode === 'estimate'}
-        class="mode-tab"
-        class:active={mode === 'estimate'}
-        onclick={() => (mode = 'estimate')}
-      >
-        Estimate from text
-      </button>
-      <button
-        type="button"
-        role="tab"
-        aria-selected={mode === 'manual'}
-        class="mode-tab"
-        class:active={mode === 'manual'}
-        onclick={() => (mode = 'manual')}
-      >
-        Enter values
-      </button>
-    </div>
-    {#if mode === 'estimate'}
-      <div class="input-row">
-        <textarea
-          bind:value={description}
-          placeholder="e.g. 2 eggs scrambled, 2 slices sourdough toast with butter, large coffee with oat milk"
-          rows="2"
-          disabled={parsing}
-        ></textarea>
-        <button type="button" class="primary" onclick={parse} disabled={parsing || !description.trim()}>
-          {parsing ? 'Estimating…' : 'Estimate'}
-        </button>
-      </div>
-      {#if parseError}
-        <p class="error">{parseError}</p>
-      {/if}
-    {:else}
-      <form
-        method="POST"
-        action="?/saveNutritionEntry"
-        class="manual-form"
-        use:enhance={() => async ({ update }) => {
-          await update({ reset: false });
-          manualDescription = '';
-          manualCalories = null;
-          manualProtein = null;
-          manualCarbs = null;
-          manualFat = null;
-          await invalidateAll();
-        }}
-      >
-        <label class="manual-desc">
-          <span>Label</span>
+  <form
+    method="POST"
+    action="?/saveNutritionEntry"
+    class="manual-form"
+    use:enhance={() => async ({ update }) => {
+      await update({ reset: false });
+      manualDescription = '';
+      manualCalories = null;
+      manualProtein = null;
+      manualCarbs = null;
+      manualFat = null;
+      await invalidateAll();
+    }}
+  >
+    <label class="manual-desc">
+      <span>Label</span>
+      <input
+        type="text"
+        name="description"
+        bind:value={manualDescription}
+        placeholder="e.g. day total, lunch, post-session shake"
+        maxlength="200"
+      />
+    </label>
+    <div class="manual-grid">
+      <label class="manual-field">
+        <span>Calories</span>
+        <div class="num-input">
           <input
-            type="text"
-            name="description"
-            bind:value={manualDescription}
-            placeholder="e.g. day total, lunch, post-session shake"
-            maxlength="200"
+            type="number"
+            name="calories"
+            step="1"
+            min="0"
+            max="10000"
+            inputmode="numeric"
+            bind:value={manualCalories}
+            placeholder="0"
+            required
           />
-        </label>
-        <div class="manual-grid">
-          <label class="manual-field">
-            <span>Calories</span>
-            <div class="num-input">
-              <input
-                type="number"
-                name="calories"
-                step="1"
-                min="0"
-                max="10000"
-                inputmode="numeric"
-                bind:value={manualCalories}
-                placeholder="0"
-                required
-              />
-              <span class="unit">kcal</span>
-            </div>
-          </label>
-          <label class="manual-field">
-            <span>Protein</span>
-            <div class="num-input">
-              <input
-                type="number"
-                name="protein_g"
-                step="1"
-                min="0"
-                max="1000"
-                inputmode="numeric"
-                bind:value={manualProtein}
-                placeholder="0"
-              />
-              <span class="unit">g</span>
-            </div>
-          </label>
-          <label class="manual-field">
-            <span>Carbs</span>
-            <div class="num-input">
-              <input
-                type="number"
-                name="carbs_g"
-                step="1"
-                min="0"
-                max="2000"
-                inputmode="numeric"
-                bind:value={manualCarbs}
-                placeholder="0"
-              />
-              <span class="unit">g</span>
-            </div>
-          </label>
-          <label class="manual-field">
-            <span>Fat</span>
-            <div class="num-input">
-              <input
-                type="number"
-                name="fat_g"
-                step="1"
-                min="0"
-                max="500"
-                inputmode="numeric"
-                bind:value={manualFat}
-                placeholder="0"
-              />
-              <span class="unit">g</span>
-            </div>
-          </label>
+          <span class="unit">kcal</span>
         </div>
-        <div class="manual-actions">
-          <span class="manual-hint">Adds an entry to today's totals.</span>
-          <button type="submit" class="primary" disabled={!manualValid}>Add entry</button>
+      </label>
+      <label class="manual-field">
+        <span>Protein</span>
+        <div class="num-input">
+          <input
+            type="number"
+            name="protein_g"
+            step="1"
+            min="0"
+            max="1000"
+            inputmode="numeric"
+            bind:value={manualProtein}
+            placeholder="0"
+          />
+          <span class="unit">g</span>
         </div>
-      </form>
-    {/if}
-  {/if}
+      </label>
+      <label class="manual-field">
+        <span>Carbs</span>
+        <div class="num-input">
+          <input
+            type="number"
+            name="carbs_g"
+            step="1"
+            min="0"
+            max="2000"
+            inputmode="numeric"
+            bind:value={manualCarbs}
+            placeholder="0"
+          />
+          <span class="unit">g</span>
+        </div>
+      </label>
+      <label class="manual-field">
+        <span>Fat</span>
+        <div class="num-input">
+          <input
+            type="number"
+            name="fat_g"
+            step="1"
+            min="0"
+            max="500"
+            inputmode="numeric"
+            bind:value={manualFat}
+            placeholder="0"
+          />
+          <span class="unit">g</span>
+        </div>
+      </label>
+    </div>
+    <div class="manual-actions">
+      <span class="manual-hint">Manual entry — no AI estimate.</span>
+      <button type="submit" class="primary" disabled={!manualValid}>Add entry</button>
+    </div>
+  </form>
 </section>
 
 <style>
@@ -600,31 +474,6 @@
     margin: 0;
   }
 
-  /* ---------- Mode tabs ---------- */
-  .mode-tabs {
-    display: flex;
-    gap: var(--space-1);
-    border-bottom: 1px solid var(--color-border-default);
-  }
-  .mode-tab {
-    appearance: none;
-    background: transparent;
-    border: 0;
-    padding: var(--space-2) var(--space-3);
-    margin-bottom: -1px;
-    border-bottom: 2px solid transparent;
-    color: var(--color-fg-muted);
-    font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
-    letter-spacing: var(--text-micro-tracking);
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  .mode-tab:hover { color: var(--color-fg-default); }
-  .mode-tab.active {
-    color: var(--color-fg-default);
-    border-bottom-color: var(--color-fg-default);
-  }
-
   /* ---------- Manual entry ---------- */
   .manual-form { display: flex; flex-direction: column; gap: var(--space-3); }
   .manual-desc { display: flex; flex-direction: column; gap: 4px; }
@@ -683,28 +532,11 @@
     color: var(--color-fg-subtle);
   }
 
-  /* ---------- Input + confirm ---------- */
-  .input-row { display: flex; gap: var(--space-2); align-items: stretch; }
-  .input-row textarea {
-    flex: 1;
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-2);
-    background: var(--color-bg-surface);
-    color: var(--color-fg-default);
-    font: var(--text-body-sm-weight) var(--text-body-sm-size)/1.45 var(--font-sans);
-    resize: vertical;
-    min-height: 56px;
-  }
-  .input-row textarea:focus { outline: 2px solid var(--color-focus-ring); outline-offset: 1px; }
-
-  .primary, .ghost {
+  .primary {
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-2);
     font: var(--weight-semibold) var(--text-body-sm-size)/1 var(--font-sans);
     cursor: pointer;
-  }
-  .primary {
     background: var(--color-fg-default);
     color: var(--color-fg-inverse);
     border: 1px solid var(--color-fg-default);
@@ -714,52 +546,6 @@
     border-color: var(--color-bg-accent);
   }
   .primary:disabled { opacity: 0.4; cursor: not-allowed; }
-  .ghost {
-    background: transparent;
-    color: var(--color-fg-default);
-    border: 1px solid var(--color-border-strong);
-  }
-  .ghost:hover { background: var(--color-bg-subtle); }
-
-  .error {
-    color: var(--color-fg-accent);
-    font: var(--text-body-sm-weight) 12px/1 var(--font-sans);
-    margin: 0;
-  }
-
-  /* ---------- Confirm block ---------- */
-  .confirm {
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-2);
-    padding: var(--space-3) var(--space-4);
-    display: flex; flex-direction: column; gap: var(--space-3);
-    background: var(--color-bg-subtle);
-  }
-  .confirm-head { display: flex; justify-content: space-between; align-items: baseline; }
-  .confirm-label {
-    font: var(--text-micro-weight) var(--text-micro-size)/1 var(--font-sans);
-    letter-spacing: var(--text-micro-tracking);
-    text-transform: uppercase;
-    color: var(--color-fg-muted);
-  }
-  .confirm-totals {
-    font: var(--weight-medium) 13px/1 var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-fg-muted);
-  }
-  .confirm-totals b { color: var(--color-fg-default); font-weight: var(--weight-bold); }
-  .items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
-  .items li {
-    display: flex; justify-content: space-between;
-    font: var(--text-body-sm-weight) 13px/1.3 var(--font-sans);
-    color: var(--color-fg-default);
-  }
-  .item-kcal {
-    font: var(--weight-medium) 12px/1 var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-fg-muted);
-  }
-  .confirm-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
 
   @media (max-width: 768px) {
     .nutrition { padding: var(--space-4); gap: var(--space-3); }
@@ -767,12 +553,9 @@
     .macros { width: 100%; }
     .metrics-row { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
     .entry-desc { font-size: 13px; }
-    .mode-tab { padding: var(--space-2); font-size: 10px; }
   }
 
   @media (max-width: 640px) {
-    .input-row { flex-direction: column; }
-    .input-row .primary { width: 100%; }
     .manual-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
     .manual-actions { flex-direction: column; align-items: stretch; gap: var(--space-2); }
     .metrics-row { grid-template-columns: 1fr; gap: var(--space-3); }
@@ -780,7 +563,6 @@
     .balance-value { font-size: 20px; }
     .entry { flex-wrap: wrap; }
     .entry-macros { font-size: 10px; }
-    /* Larger tap target for delete on phone */
     .del { width: 32px; height: 32px; font-size: 18px; }
   }
 </style>
