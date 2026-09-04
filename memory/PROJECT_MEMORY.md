@@ -46,17 +46,17 @@ Harvested 2026-08-27 from Claude Code memory at `~/.claude/projects/C--Users-hey
 - Tindeq 20 mm one-arm: R 55 / L 52 kg (left A2 healed)
 - Pull-up: +18 kg × 5; estimated 1RM ~+30–35 kg added
 - Knee: ACL reconstruction + meniscus stitch Jan 22 2024 (**right** leg)
-- **Back joint misaligned (2026-08), being adjusted.** Doctor cleared training 2026-08-28 for blood flow / to keep the joint seated. Conservative re-entry, not a performance block.
+- **Back joint misaligned (2026-08), being adjusted.** Doctor cleared training 2026-08-28 for blood flow / to keep the joint seated. Meso 1 is Hypertrophy Base (load ramp), not a performance block.
 - Tools: Tindeq Progressor, hangboard, weights
 - Outdoor window: Aug–early Sep 2026 — paused for the joint
 - No FlexBar / Tindeq extensor — bands for extensors
 
 ## Plan
 
-- **Active:** conservative re-entry — see `plan/08-reentry.md`. Fri 4 Sep → Thu 1 Oct 2026. Pull → Push → Run twice, then rest. Looks overlay (option A): laterals then fly on Push A; Push B is push-ups + incline + laterals (SA press and extra dips cut). No hangboard, no climbing.
+- **Active:** Meso 1 **Hypertrophy Base** — see `plan/08-reentry.md`. Fri 4 Sep → Thu 1 Oct 2026. Pull → Push → Run twice, then rest. Full size menu; loads ~50%→~90% of H2 Phase 1 Week-1 normals; Week 4 volume deload. No hangboard, climbing, OHP, or weighted pulls.
 - **Archived (not deleted):** H2 2026 Wed 2026-06-10 → Tue 2026-09-01. `sessions.archived` + `cycle_name='H2 2026'`. Log → Previous plan.
 - HOLD/RESTORE (`plan/07-reset-spine.md`) was coded and **not seeded**; superseded by re-entry.
-- Next performance / hangboard / climbing block is a new decision after Week 4. Do not auto-resume Phase 3.
+- Meso 2 (continued hypertrophy vs strength/hangboard) decided after Week 4. Do not auto-resume Phase 3.
 - Schema: `phases.archived`, `sessions.archived`, `cycle_name`. Current surfaces filter `archived=false`. Analysis/PR/exercise library still read lifetime rows.
 
 ## Product (beyond the original CLAUDE.md catalog)

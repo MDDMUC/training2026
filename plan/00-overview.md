@@ -1,6 +1,6 @@
 # Training 2026 — 12-Week Plan Overview
 
-> **Archived 2026-08.** This H2 2026 macrocycle is Previous plan in the app — not deleted. Active work is [`08-reentry.md`](08-reentry.md) (conservative Pull / Push / Run, Fri 4 Sep → Thu 1 Oct). Hangboard and climbing stay off until after that block.
+> **Archived 2026-08.** This H2 2026 macrocycle is Previous plan in the app — not deleted. Active work is [`08-reentry.md`](08-reentry.md) — **Meso 1 Hypertrophy Base** (Pull / Push / Run, load ramp ~50%→~90% of Phase 1 normals, Fri 4 Sep → Thu 1 Oct). Hangboard and climbing stay off until after that block.
 
 **Macrocycle:** Wed Jun 10 → Tue Sep 1, 2026 (12 weeks, 3 × 4-week mesocycles).
 **Athlete:** Martin, 43, 82 kg, ~8a sport.

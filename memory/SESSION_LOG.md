@@ -280,6 +280,40 @@ Append-only. Newest entries at the **bottom**.
 
 **Assumption to confirm:** biceps set 3 and all hammer sets at 6.5 kg (Martin stated 4 and 6.5 for biceps sets 1–2; hammers “same weight”).
 
-**Nutrition today:** 2 cheesecake slices + 2 small coffees → **845 kcal** (P14 / C67 / F56). Café/home slice estimate (~420 each), black coffee ~negligible. Anthropic untethered: UI manual-only; parse API 410.
+**Nutrition today:** corrected to **1 small cheesecake + 2 coffees (285)**; **5 eggs + 4 tiny WW bread (580)**; Pull A **burn 600**. Day food ~865 kcal / 45p. Anthropic untethered.
 
 **Next:** Sat 5 Sep Push A.
+
+---
+
+## 2026-09-04 — Drop OHP from Push A
+
+**Focus:** Remove overhead press from re-entry Push A (suspected slip-joint aggravator).
+
+**Live DB:** All 4 Push A sessions patched (Sep 5 / 12 / 19 / 26). OHP sets deleted; vertical block renamed to **Dips** with 120 s rest. Titles → `Push A — dips, chest, delts, split squat`. Logged Pull A untouched.
+
+**Shipped:** `reentryPlan.ts`, `plan/08-reentry.md`, DECISIONS, patch script `scripts/remove-ohp-from-reentry-push-a.ts`, regenerated seed SQL. `npm run check` 0 errors.
+
+**Next:** Sat 5 Sep Push A without OHP.
+
+---
+
+## 2026-09-04 — Hypertrophy Base meso (load ramp)
+
+**Focus:** Full size menu on Pull/Push/Run; ramp ~50%→~90% of H2 Phase 1 loads across 4 weeks. Align as Meso 1 of new macrocycle.
+
+**Live DB:** `reseed-future-reentry.ts` preserved logged Pull A (Sep 4); replaced 27 future sessions. Week 1 Push A: bench 27.5, row 12, laterals 4, fly 4, no OHP. Pull B gains easy curl touch; Pull A template gains forearms (future Pull As).
+
+**Shipped:** `reentryPlan.ts`, insights copy, `plan/08-reentry.md` + `00-overview.md`, DECISIONS, `scripts/reseed-future-reentry.ts`, regenerated seed SQL. `npm run check` 0 errors.
+
+**Open:** commit/push when Martin wants production app copy. Meso 2 after Week 4.
+
+**Next:** Sat 5 Sep Push A at ~50%.
+
+---
+
+## 2026-09-04 — Login bg video stutter fix
+
+**Cause:** `filter: brightness()` on the looping `<video>` + `backdrop-filter` on the form card forced per-frame recomposite.
+
+**Fix:** static `.bg-veil` overlay; solid card background; JS picks desktop/mobile src; pause when tab hidden. Verified in Chromium: playing, `filter: none`, time advancing ~0.4s/sample.

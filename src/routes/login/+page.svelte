@@ -1,31 +1,76 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import { onMount } from 'svelte';
   import type { ActionData, PageData } from './$types';
   import Logo from '$lib/atoms/Logo.svelte';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
   let pending = $state(false);
+  let bgVideo = $state<HTMLVideoElement | null>(null);
+
+  // Pick one source in JS — <source media> is unreliable on <video>, and
+  // CSS filter:brightness on a looping video forces per-frame recomposite
+  // (the usual cause of login-bg stutter). Darkening is a static veil instead.
+  onMount(() => {
+    const el = bgVideo;
+    if (!el) return;
+
+    const mobile = window.matchMedia('(max-width: 768px)').matches;
+    const src = mobile ? '/bg-mobile.mp4' : '/bg-desktop.mp4';
+    if (el.dataset.src !== src) {
+      el.dataset.src = src;
+      el.src = src;
+      el.load();
+    }
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const tryPlay = () => {
+      if (reduce.matches) {
+        el.pause();
+        return;
+      }
+      el.muted = true;
+      void el.play().catch(() => {
+        /* Autoplay can fail until a gesture; muted+playsinline usually works. */
+      });
+    };
+
+    const onVis = () => {
+      if (document.hidden) el.pause();
+      else tryPlay();
+    };
+
+    tryPlay();
+    el.addEventListener('canplay', tryPlay, { once: true });
+    document.addEventListener('visibilitychange', onVis);
+    reduce.addEventListener('change', tryPlay);
+
+    return () => {
+      document.removeEventListener('visibilitychange', onVis);
+      reduce.removeEventListener('change', tryPlay);
+      el.pause();
+    };
+  });
 </script>
 
 <svelte:head><title>Sign in · Biceps 2026</title></svelte:head>
 
 <div class="stage">
-  <!-- Full-bleed looping background video. Two encodes — 480p for phones,
-       720p for everything else. Browser picks the first matching <source>.
-       Muted + playsinline are required for iOS to autoplay; aria-hidden
-       because it's decorative. -->
+  <!-- Full-bleed looping background. Src set in onMount (mobile vs desktop).
+       Muted + playsinline required for iOS autoplay; decorative → aria-hidden. -->
   <video
+    bind:this={bgVideo}
     class="bg-video"
     autoplay
     muted
     loop
     playsinline
     preload="auto"
+    disablepictureinpicture
     aria-hidden="true"
-  >
-    <source src="/bg-mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
-    <source src="/bg-desktop.mp4" type="video/mp4" />
-  </video>
+  ></video>
+  <!-- Static darken — do not use filter:brightness on the <video> (GPU stutter). -->
+  <div class="bg-veil" aria-hidden="true"></div>
 
   <!-- Foreground content sits above the video -->
   <div class="content">
@@ -90,30 +135,26 @@
     isolation: isolate;
   }
 
-  /* Background video — cover-fit so it fills every viewport (portrait
-     phones included) without distorting. Sits behind the content layer. */
+  /* Background video — own compositor layer, no CSS filters on the element. */
   .bg-video {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* On portrait phones the source aspect rarely matches, so centering
-       avoids cropping off the horizon/sun. */
     object-position: center center;
     z-index: 0;
     pointer-events: none;
-    /* Slight darken so the white wordmark + form text stay legible
-       regardless of which frame happens to be visible. */
-    filter: brightness(0.85);
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
-  /* If the user prefers reduced motion, freeze the video on its first
-     frame. Browsers honour this by not autoplaying when set via JS, but
-     for declarative autoplay we can fall back to opacity styling — the
-     visual stays. */
-  @media (prefers-reduced-motion: reduce) {
-    .bg-video { animation-play-state: paused; }
+  .bg-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.15);
   }
 
   .content {
@@ -206,9 +247,9 @@
     display: grid;
     gap: 1.1rem;
     border: 1px solid rgba(255, 255, 255, 0.35);
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    /* Solid glass stand-in — live backdrop-filter over a looping video
+       re-blurs every frame and hitchs on mid-range GPUs. */
+    background: rgba(0, 0, 0, 0.72);
     animation: cardIn 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
   }
 

@@ -3,26 +3,25 @@
 > Rewrite this whole file at session end. Next session reads this first after the protocol.
 
 **Last updated:** 2026-09-04
-**Session:** Re-entry shifted so today is Day 1 Pull A. Live DB + app copy updated.
+**Session:** Hypertrophy Base meso (load ramp) live. Pull A logged; Push A tomorrow at ~50%.
 
 ---
 
 ## Do this first
 
-Today **Fri 4 Sep = Pull A** (Day 1). Cycle **Fri 4 Sep → Thu 1 Oct**. Rest is Thursday.
+**Fri 4 Sep Pull A is logged** (old template). Next: **Sat 5 Sep Push A** at **~50%** Phase 1 loads — **no OHP**. Cycle **Fri 4 Sep → Thu 1 Oct**. Rest is Thursday.
 
 ## Current focus
 
-- **Martin:** re-entry Day 1 Pull A. Pull → Push → Run twice, then rest.
-- **Push A:** dips+OHP, row+bench, **laterals then fly**, antagonist, BSS.
-- **Push B:** push-ups, incline DB press, laterals, Y-T-W. No SA press, no extra dips.
-- Looks stays 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing.
-- Sep 1 ad-hoc log preserved under Re-entry.
-- **Antonia:** untouched.
-- H2 2026 is Previous.
+- **Meso 1 — Hypertrophy Base** on Pull / Push / Run. Loads ~50% → ~90% of H2 Phase 1 normals. Week 4 volume deload.
+- **Push A (tomorrow):** dips BW, row **12 kg** + bench **27.5 kg**, laterals **4 kg**, fly **4 kg**, face pull / reverse fly, BSS.
+- **Pull A menu going forward:** pulls + curls/hammers (ramped) + forearms. (Today’s logged Pull A kept the old template.)
+- **Pull B:** light pulls + easy curl touch + bird-dog.
+- 3–4 RIR. No hangboard, climbing, OHP, weighted pulls.
+- Sep 1 ad-hoc + Fri Pull A preserved. **Antonia** untouched. H2 = Previous.
 
 ## Blockers / watchouts
 
-- Do not resume Phase 3.
-- Do not run `rebuild-reentry.ts` after scheduled sets are ticked (ad-hoc logs are preserved).
-- Next performance / hangboard / climbing block is a decision after Week 4.
+- Do not resume Phase 3 / hangboard until after Week 4 decision.
+- Prefer `scripts/reseed-future-reentry.ts` over full rebuild (preserves logged scheduled days).
+- Do not re-add OHP without an explicit clear.

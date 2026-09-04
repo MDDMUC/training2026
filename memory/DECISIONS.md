@@ -128,6 +128,25 @@ Canonical write-up: `context/synthesis.md`.
 - Antonia and archived H2 untouched.
 - Still no hangboard, no climbing, no added pull-up weight. Stop if the joint speaks.
 
+## 2026-09-04 — Drop OHP from Re-entry Push A
+
+**Decision:** Remove overhead press from Push A for the rest of re-entry. Suspected slip-joint aggravator. Keep bodyweight dips with full rest; laterals/fly stay for side delts.
+
+**Implications:**
+- `reentryPlan.ts` Push A is dips-only (no Dips+OHP superset). Title: `Push A — dips, chest, delts, split squat`.
+- Live Push A sessions patched via `scripts/remove-ohp-from-reentry-push-a.ts` (does not wipe logged Pull A).
+- Do not re-add OHP until Martin clears it after the joint is quiet.
+
+## 2026-09-04 — Hypertrophy Base meso (load ramp)
+
+**Decision:** Reframe the current 4-week block as **Meso 1 — Hypertrophy Base** of a new macrocycle. Keep Pull / Push / Run. Expand to the full size menu (chest, side delts, biceps, forearms). Ramp loads ~**50% → ~90%** of H2 Phase 1 Week-1 normals. Week 4 is a **volume** deload. Still no hangboard / climbing / OHP / weighted pulls. 3–4 RIR.
+
+**Implications:**
+- Supersedes “looks overlay only; full hypertrophy deferred until after Week 4.”
+- DB `cycle_name` stays `Re-entry`; phase display name becomes Hypertrophy Base.
+- Future sessions reseeded via `scripts/reseed-future-reentry.ts` (preserves logged Pull A).
+- Meso 2 (continued hypertrophy vs strength/hangboard) decided after Week 4.
+
 ## 2026-08-27 — Grok installed as coding agent
 
 **Decision:** Grok Build is installed in this repo (skills, rules, in-repo memory, dual-write) to cover Claude Code for a stretch. Do not redesign architecture. App source was not changed as part of the install.

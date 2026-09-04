@@ -69,9 +69,9 @@ export function generateInsights(i: InsightInputs): Insight[] {
     out.push({
       id: 'reentry',
       severity: 'info',
-      title: 'Conservative re-entry — light loads',
+      title: 'Hypertrophy Base — load ramp',
       detail:
-        'Back joint still being adjusted. 3–4 RIR, bodyweight pulls, no hangboard, no climbing. Stop if the joint speaks. H2 2026 is under Log → Previous plan.',
+        'Meso 1: full size menu at ~50%→~90% of Phase 1 loads. 3–4 RIR, bodyweight pulls, no hangboard, no climbing, no OHP. Stop if the joint speaks. H2 2026 is under Log → Previous plan.',
       action: { href: '/log?cycle=previous', label: 'Open previous plan' }
     });
   }
@@ -172,7 +172,7 @@ export function generateInsights(i: InsightInputs): Insight[] {
       severity: 'info',
       title: `Plan starts in ${days} day${days === 1 ? '' : 's'}`,
       detail:
-        'Conservative re-entry. First session is Pull A — bodyweight pulls, no hangboard. Light loads, stop if the joint speaks.',
+        'Hypertrophy Base meso. First session is Pull A — bodyweight pulls, arms, no hangboard. Ramped loads, stop if the joint speaks.',
       action: { href: `/log/by-date/${start}`, label: 'Preview first session' }
     });
   }

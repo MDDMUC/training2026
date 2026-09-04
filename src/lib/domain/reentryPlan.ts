@@ -1,7 +1,7 @@
-// Conservative 4-week re-entry after the back-joint adjustment.
-// Locked with Martin 2026-08-28; start shifted to Fri 4 Sep (Day 1 = Pull A).
-// Not a performance block. No hangboard, no climbing, no Abrahangs. Stop if the joint speaks.
-// Push days include extra chest + side-delt looks work at 3–4 RIR.
+// Meso 1 — Hypertrophy Base (load ramp) after the back-joint adjustment.
+// Cycle name stays "Re-entry" for DB continuity. Fri 4 Sep → Thu 1 Oct.
+// Full size menu on Pull/Push/Run; loads ramp ~50% → ~90% of H2 Phase 1 normals.
+// No hangboard, no climbing, no Abrahangs, no OHP, no added pull-up weight. 3–4 RIR.
 
 import { addDays, format } from 'date-fns';
 import type { SessionType, SetKind } from './types';
@@ -14,9 +14,28 @@ export const REENTRY_START = '2026-09-04';
 export const REENTRY_END = '2026-10-01';
 
 export const REENTRY_CONSTRAINT =
-  'Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.';
+  'Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Hypertrophy base: full size menu at ramped loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing, no OHP this block.';
 
 type Week = 1 | 2 | 3 | 4;
+
+/** Fraction of H2 Phase 1 Week-1 “normal” working load. */
+const LOAD_FRAC: Record<Week, number> = {
+  1: 0.5,
+  2: 0.65,
+  3: 0.825,
+  4: 0.9
+};
+
+/** H2 Phase 1 Week-1 anchors (kg). DB row is a supported proxy for the old 50 kg barbell hinge. */
+const NORMAL = {
+  bench: 55,
+  rowDb: 24,
+  curl: 16,
+  hammer: 9,
+  lateral: 8,
+  fly: 8,
+  incline: 14
+} as const;
 
 export interface SeedSet {
   kind: SetKind;
@@ -58,9 +77,9 @@ export interface ReentrySessionSeed {
   spec: ReentrySessionSpec;
 }
 
-const SESSION_NOTES = `**Re-entry · conservative.** ${REENTRY_CONSTRAINT}
+const SESSION_NOTES = `**Hypertrophy Base · Meso 1.** ${REENTRY_CONSTRAINT}
 
-H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.`;
+Loads ramp toward H2 Phase 1 Week-1 normals (~50% → ~90%). Week 4 cuts volume, not identity. If the joint spoke, repeat the earlier week instead of progressing. H2 2026 is archived (Log → Previous plan).`;
 
 function work(
   label: string,
@@ -71,6 +90,12 @@ function work(
 
 function check(label: string, notes?: string): SeedSet {
   return { kind: 'checklist', label, notes };
+}
+
+/** Round to nearest 0.5 kg (plate-friendly). */
+function kgAt(normal: number, week: Week): number {
+  const raw = normal * LOAD_FRAC[week];
+  return Math.max(1, Math.round(raw * 2) / 2);
 }
 
 function pullWarmup(): SeedExercise {
@@ -100,50 +125,82 @@ function pullUps(sets: number, reps: number, restFirst: number): SeedExercise {
   return {
     name: 'Pull-ups · bodyweight',
     notes:
-      'No added weight. Dead-hang start, chin over bar, controlled negative. Stop at 3+ RIR — if 5 is hard, do 3–4. No dip belt.',
+      'No added weight this meso (Phase 1 normal was +18 kg). Dead-hang start, chin over bar, controlled negative. Stop at 3+ RIR. No dip belt.',
     sets: rows
   };
 }
 
-function curls(week: Week): SeedExercise {
-  const reps = week === 3 ? 12 : 10;
-  const rounds = week === 4 ? 1 : 2;
+function curls(week: Week, rounds: number): SeedExercise {
+  const curlKg = kgAt(NORMAL.curl, week);
+  const hammerKg = kgAt(NORMAL.hammer, week);
+  const reps = week >= 3 ? 12 : 10;
   const sets: SeedSet[] = [];
   for (let i = 0; i < rounds; i++) {
     sets.push(
-      work(`Bicep curl L · 12 kg · set ${i + 1}`, {
+      work(`Bicep curl L · ${curlKg} kg · set ${i + 1}`, {
         reps,
-        load_kg: 12,
-        rest_seconds: 60
+        load_kg: curlKg,
+        rest_seconds: 45
       })
     );
     sets.push(
-      work(`Bicep curl R · 12 kg · set ${i + 1}`, {
+      work(`Bicep curl R · ${curlKg} kg · set ${i + 1}`, {
         reps,
-        load_kg: 12,
+        load_kg: curlKg,
         rest_seconds: 60
       })
     );
   }
   for (let i = 0; i < rounds; i++) {
     sets.push(
-      work(`Hammer curl L · 8 kg · set ${i + 1}`, {
+      work(`Hammer curl L · ${hammerKg} kg · set ${i + 1}`, {
         reps: 10,
-        load_kg: 8,
-        rest_seconds: 60
+        load_kg: hammerKg,
+        rest_seconds: 45
       })
     );
     sets.push(
-      work(`Hammer curl R · 8 kg · set ${i + 1}`, {
+      work(`Hammer curl R · ${hammerKg} kg · set ${i + 1}`, {
         reps: 10,
-        load_kg: 8,
+        load_kg: hammerKg,
         rest_seconds: 60
       })
     );
   }
   return {
     name: 'Curls',
-    notes: 'Was 16 kg / 9 kg in H2 Week 1. Slow eccentric. Stop with reps in reserve.',
+    notes: `Hypertrophy arms. Phase 1 normal 16 / 9 kg. This week ~${Math.round(LOAD_FRAC[week] * 100)}%. Slow eccentric. 3–4 RIR.`,
+    sets
+  };
+}
+
+function forearms(week: Week): SeedExercise {
+  const flexKg = kgAt(6, week); // light; no heavy Phase-1 anchor
+  const extKg = kgAt(4, week);
+  const rounds = week === 4 ? 1 : 2;
+  const sets: SeedSet[] = [];
+  for (let i = 0; i < rounds; i++) {
+    sets.push(
+      work(`Wrist curl · ${flexKg} kg · set ${i + 1}`, {
+        reps: 15,
+        load_kg: flexKg,
+        rest_seconds: 45
+      })
+    );
+  }
+  for (let i = 0; i < rounds; i++) {
+    sets.push(
+      work(`Wrist extensor · ${extKg} kg · set ${i + 1}`, {
+        reps: 15,
+        load_kg: extKg,
+        rest_seconds: 45
+      })
+    );
+  }
+  return {
+    name: 'Forearms',
+    notes:
+      'Wrist flexors + extensors. Light. Supported forearm on a bench. Full ROM, no elbow swing. Skip if tendons nag — pull grip already loads them.',
     sets
   };
 }
@@ -158,14 +215,16 @@ function shortMobility(): SeedExercise {
 
 function pullA(week: Week): ReentrySessionSpec {
   const setCount = { 1: 4, 2: 5, 3: 5, 4: 3 }[week];
+  const curlRounds = week === 4 ? 1 : 2;
   return {
     type: 'pull-heavy',
-    title: 'Pull A — bodyweight pulls + curls',
+    title: 'Pull A — pulls, biceps, forearms',
     notes: SESSION_NOTES,
     exercises: [
       pullWarmup(),
       pullUps(setCount, 5, 120),
-      curls(week),
+      curls(week, curlRounds),
+      forearms(week),
       shortMobility()
     ]
   };
@@ -175,22 +234,32 @@ function pullB(week: Week): ReentrySessionSpec {
   const setCount = { 1: 3, 2: 3, 3: 4, 4: 2 }[week];
   const reps = { 1: 5, 2: 6, 3: 5, 4: 5 }[week];
   const birdRounds = week === 4 ? 2 : 3;
+  const curlKg = kgAt(NORMAL.curl, week);
   const bird: SeedSet[] = [];
   for (let i = 0; i < birdRounds; i++) {
     bird.push(work(`Bird-dog L · round ${i + 1}`, { reps: 8, rest_seconds: 30 }));
     bird.push(work(`Bird-dog R · round ${i + 1}`, { reps: 8, rest_seconds: 45 }));
   }
+  const easyCurl: SeedSet[] = [
+    work(`Easy curl L · ${curlKg} kg`, { reps: 12, load_kg: curlKg, rest_seconds: 45 }),
+    work(`Easy curl R · ${curlKg} kg`, { reps: 12, load_kg: curlKg, rest_seconds: 60 })
+  ];
   return {
     type: 'pull-light',
-    title: 'Pull B — light pulls + bird-dog',
+    title: 'Pull B — light pulls, arms touch, bird-dog',
     notes: SESSION_NOTES,
     exercises: [
       pullWarmup(),
       pullUps(setCount, reps, 180),
       {
+        name: 'Easy curls',
+        notes: 'Second weekly biceps touch. One easy round. 3–4 RIR. Skip if elbows or the joint ask.',
+        sets: week === 4 ? easyCurl.slice(0, 2) : easyCurl
+      },
+      {
         name: 'Bird-dog',
         notes:
-          'Spine-friendly core. Opposite arm/leg, long spine, no rotation hunt. Hollow hold and hanging leg raise stay out this block. Pallof stays out unless anti-rotation is obviously quiet.',
+          'Spine-friendly core. Opposite arm/leg, long spine, no rotation hunt. Hollow hold and hanging leg raise stay out this block.',
         sets: bird
       },
       shortMobility()
@@ -201,7 +270,7 @@ function pullB(week: Week): ReentrySessionSpec {
 function pushWarmup(): SeedExercise {
   return {
     name: 'Warm-up · push',
-    notes: 'Band ER, scapular wall slides, one easy dip.',
+    notes: 'Band ER, scapular wall slides, one easy dip. No OHP.',
     sets: [
       check('Band ER + wall slides'),
       check('1 easy dip (range as comfort allows)')
@@ -210,8 +279,8 @@ function pushWarmup(): SeedExercise {
 }
 
 function looksLaterals(week: Week, rounds: number): SeedExercise {
-  const kg = week === 3 ? 7 : 6;
-  const reps = week === 3 ? 15 : 12;
+  const kg = kgAt(NORMAL.lateral, week);
+  const reps = week >= 3 ? 15 : 12;
   const sets: SeedSet[] = [];
   for (let i = 0; i < rounds; i++) {
     sets.push(
@@ -232,14 +301,14 @@ function looksLaterals(week: Week, rounds: number): SeedExercise {
   return {
     name: 'Seated DB lateral raise',
     notes:
-      'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.',
+      'Side delts — priority isolation. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause at the bottom. 3–4 RIR. Not the old 2 kg activation dose.',
     sets
   };
 }
 
 function looksFly(week: Week): SeedExercise {
-  const kg = 8;
-  const reps = week === 3 ? 15 : 12;
+  const kg = kgAt(NORMAL.fly, week);
+  const reps = week >= 3 ? 15 : 12;
   const rounds = week === 4 ? 1 : 2;
   const sets: SeedSet[] = [];
   for (let i = 0; i < rounds; i++) {
@@ -261,26 +330,26 @@ function looksFly(week: Week): SeedExercise {
   return {
     name: 'DB fly',
     notes:
-      'Looks work — pec sweep. Flat or slight-incline. Soft elbows, stop when the stretch is honest — do not dump into the anterior shoulder. 10–15 reps, 3–4 RIR. Skip if a pec or the joint nags.',
+      'Pec sweep. Flat or slight-incline. Soft elbows, stop when the stretch is honest — do not dump into the anterior shoulder. 3–4 RIR. Skip if a pec or the joint nags.',
     sets
   };
 }
 
 function looksInclinePress(week: Week): SeedExercise {
-  const kg = week === 3 ? 12 : 10;
+  const kg = kgAt(NORMAL.incline, week);
   const rounds = week === 4 ? 1 : 2;
   const sets: SeedSet[] = [];
   for (let i = 0; i < rounds; i++) {
     sets.push(
       work(`Incline DB press L · ${kg} kg · set ${i + 1}`, {
-        reps: 8,
+        reps: week >= 3 ? 10 : 8,
         load_kg: kg,
         rest_seconds: 45
       })
     );
     sets.push(
       work(`Incline DB press R · ${kg} kg · set ${i + 1}`, {
-        reps: 8,
+        reps: week >= 3 ? 10 : 8,
         load_kg: kg,
         rest_seconds: 75
       })
@@ -289,45 +358,38 @@ function looksInclinePress(week: Week): SeedExercise {
   return {
     name: 'Incline DB press',
     notes:
-      'Looks work — upper chest. Bench ~30°. Back supported. Left first. Lower the DBs deeper than the chest if the shoulder allows. 3–4 RIR. The only hard press on Push B — not stacked on SA press or extra dips.',
+      'Upper chest. Bench ~30°. Back supported. Left first. 3–4 RIR. The only hard press on Push B — not stacked on SA press, extra dips, or OHP.',
     sets
   };
 }
 
 function pushA(week: Week): ReentrySessionSpec {
   const rounds = { 1: 3, 2: 3, 3: 3, 4: 2 }[week];
-  const dipReps = { 1: 5, 2: 6, 3: 6, 4: 5 }[week];
-  const ohpKg = { 1: 20, 2: 20, 3: 22.5, 4: 20 }[week];
-  const ohpReps = { 1: 6, 2: 8, 3: 6, 4: 6 }[week];
-  const benchKg = { 1: 35, 2: 37.5, 3: 37.5, 4: 35 }[week];
+  const dipReps = { 1: 5, 2: 6, 3: 7, 4: 5 }[week];
+  const benchKg = kgAt(NORMAL.bench, week);
+  const rowKg = kgAt(NORMAL.rowDb, week);
   const bssReps = { 1: 6, 2: 6, 3: 8, 4: 6 }[week];
   const bssRounds = week === 4 ? 1 : 2;
   const antagonistRounds = week === 4 ? 1 : 2;
+  const lateralRounds = { 1: 3, 2: 4, 3: 4, 4: 2 }[week];
 
-  const vertical: SeedSet[] = [];
+  const dips: SeedSet[] = [];
   for (let i = 0; i < rounds; i++) {
-    vertical.push(work(`R${i + 1} Dips · BW`, { reps: dipReps, rest_seconds: 0 }));
-    vertical.push(
-      work(`R${i + 1} OHP · ${ohpKg} kg`, {
-        reps: ohpReps,
-        load_kg: ohpKg,
-        rest_seconds: 180
-      })
-    );
+    dips.push(work(`R${i + 1} Dips · BW`, { reps: dipReps, rest_seconds: 120 }));
   }
 
   const horizontal: SeedSet[] = [];
   for (let i = 0; i < rounds; i++) {
     horizontal.push(
-      work(`R${i + 1} DB / chest-supported row · 16 kg`, {
+      work(`R${i + 1} DB / chest-supported row · ${rowKg} kg`, {
         reps: 8,
-        load_kg: 16,
+        load_kg: rowKg,
         rest_seconds: 0
       })
     );
     horizontal.push(
       work(`R${i + 1} Bench · ${benchKg} kg`, {
-        reps: 6,
+        reps: week >= 3 ? 8 : 6,
         load_kg: benchKg,
         rest_seconds: 180
       })
@@ -340,9 +402,6 @@ function pushA(week: Week): ReentrySessionSpec {
   }
   for (let i = 0; i < antagonistRounds; i++) {
     prehab.push(work(`Reverse fly · set ${i + 1}`, { reps: 12, rest_seconds: 45 }));
-  }
-  for (let i = 0; i < antagonistRounds; i++) {
-    prehab.push(work(`Wrist extensors · set ${i + 1}`, { reps: 15, rest_seconds: 45 }));
   }
 
   const bss: SeedSet[] = [];
@@ -365,38 +424,38 @@ function pushA(week: Week): ReentrySessionSpec {
 
   return {
     type: 'push',
-    title: 'Push A — press, chest, delts, split squat',
+    title: 'Push A — dips, chest, delts, split squat',
     notes: SESSION_NOTES,
     exercises: [
       pushWarmup(),
       {
-        name: 'Superset A · Vertical (Dips + OHP)',
-        notes: '3–4 RIR. No added weight on dips. OHP well under the old 30 kg Week-1 load.',
-        sets: vertical
+        name: 'Dips',
+        notes:
+          '3–4 RIR. Bodyweight only. No OHP this block — overhead pressing paused while the joint settles. Full rest between sets.',
+        sets: dips
       },
       {
-        name: 'Superset B · Horizontal (Row + Bench)',
-        notes:
-          'Row is chest-supported or DB — more upright than the old 50 kg barbell hinge. Bench well under the old 55 kg.',
+        name: 'Superset · Horizontal (Row + Bench)',
+        notes: `Row is chest-supported or DB (proxy for old 50 kg hinge). Bench Phase 1 normal 55 kg — this week ~${Math.round(LOAD_FRAC[week] * 100)}%. 3–4 RIR.`,
         sets: horizontal
       },
-      looksLaterals(week, { 1: 3, 2: 4, 3: 4, 4: 2 }[week]),
+      looksLaterals(week, lateralRounds),
       looksFly(week),
       {
         name: 'Antagonist + prehab',
         notes:
-          'Rear-delt + elbow insurance. Side-delt looks work is the seated lateral raise above — not a 2 kg activation dose.',
+          'Rear-delt insurance. Wrist extensors live on Pull A forearms — not doubled here. Side delts are the seated laterals above.',
         sets: prehab
       },
       {
         name: 'Bulgarian split squat',
         notes:
-          'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. No step-up — pistol skill lives on the run days. Bodyweight, 3-1-3.',
+          'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. Bodyweight, 3-1-3.',
         sets: bss
       },
       {
         name: 'Hip + hamstring mobility · 10–15 min',
-        notes: '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow so they do not stack on the split squat.',
+        notes: '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow.',
         sets: [check('10–15 min · 90/90, hamstring, ankle')]
       }
     ]
@@ -408,6 +467,7 @@ function pushB(week: Week): ReentrySessionSpec {
   const puReps = { 1: 8, 2: 10, 3: 10, 4: 8 }[week];
   const bpaSets = week === 4 ? 2 : 3;
   const ytwSets = week === 4 ? 1 : 2;
+  const lateralRounds = { 1: 3, 2: 4, 3: 4, 4: 2 }[week];
 
   const pushups: SeedSet[] = [];
   for (let i = 0; i < puSets; i++) {
@@ -430,11 +490,11 @@ function pushB(week: Week): ReentrySessionSpec {
       {
         name: 'Push-ups',
         notes:
-          'The one leftover volume press. 3+ RIR. Knees-down is fine if the joint or a shoulder asks. Dips stay on Push A — not stacked here.',
+          'Volume press. 3+ RIR. Knees-down is fine if the joint or a shoulder asks. Dips stay on Push A — not stacked here.',
         sets: pushups
       },
       looksInclinePress(week),
-      looksLaterals(week, { 1: 3, 2: 4, 3: 4, 4: 2 }[week]),
+      looksLaterals(week, lateralRounds),
       {
         name: 'Shoulder insurance',
         notes: 'Band pull-aparts + prone Y-T-W. No extra run on this day.',
@@ -505,8 +565,7 @@ function runDay(week: Week): ReentrySessionSpec {
       },
       {
         name: 'Easy run',
-        notes:
-          `Conversational, ≤8:30/km. Walk breaks are the session, not a failure. If the joint or knee nags, cut to a brisk walk of the same time. Soft surface if you have it.`,
+        notes: `Conversational, ≤8:30/km. Walk breaks are the session, not a failure. If the joint or knee nags, cut to a brisk walk of the same time. Soft surface if you have it.`,
         sets: [check(`Easy run ${runMin} min · walk breaks OK`)]
       }
     ]
@@ -542,12 +601,12 @@ export function buildReentryPlan(): {
   const phases: ReentryPhaseSeed[] = [
     {
       mesocycle_num: 1,
-      name: 'Re-entry — conservative base',
+      name: 'Hypertrophy Base — load ramp',
       short_name: 'REENTRY',
       start_date: REENTRY_START,
       end_date: REENTRY_END,
       description:
-        'Four weeks. Pull → Push → Run twice, then rest. Bodyweight pulls, light push loads, box-pistol skill, easy running. Hangboard and climbing parked. Stop if the joint speaks. Next block is a separate decision after Week 4.'
+        'Meso 1 of the new macrocycle. Pull → Push → Run twice, then rest. Full size menu (chest, side delts, biceps, forearms) at ~50%→~90% of H2 Phase 1 loads. Week 4 volume deload. No hangboard, climbing, OHP, or weighted pulls. Next meso is a separate decision after Week 4.'
     }
   ];
 
