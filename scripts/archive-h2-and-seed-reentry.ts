@@ -1,5 +1,5 @@
 // Archive Martin's current cycle (H2 2026, or HOLD if that was seeded) and
-// seed the 4-week conservative re-entry starting Mon 2026-08-31.
+// seed the 4-week conservative re-entry starting Wed 2026-09-02.
 // Does not touch Antonia. Does not delete H2 / Reset rows.
 //
 // Idempotent: if a complete Re-entry cycle is already active, skip.

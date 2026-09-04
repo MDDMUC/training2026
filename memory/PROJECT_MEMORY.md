@@ -53,7 +53,7 @@ Harvested 2026-08-27 from Claude Code memory at `~/.claude/projects/C--Users-hey
 
 ## Plan
 
-- **Active:** conservative re-entry — see `plan/08-reentry.md`. Mon 31 Aug → Sun 27 Sep 2026. Pull → Push → Run twice, then rest. Bodyweight pulls, light push, box pistol + easy run. No hangboard, no climbing.
+- **Active:** conservative re-entry — see `plan/08-reentry.md`. Wed 2 Sep → Tue 29 Sep 2026. Pull → Push → Run twice, then rest. Looks overlay (option A): laterals then fly on Push A; Push B is push-ups + incline + laterals (SA press and extra dips cut). No hangboard, no climbing.
 - **Archived (not deleted):** H2 2026 Wed 2026-06-10 → Tue 2026-09-01. `sessions.archived` + `cycle_name='H2 2026'`. Log → Previous plan.
 - HOLD/RESTORE (`plan/07-reset-spine.md`) was coded and **not seeded**; superseded by re-entry.
 - Next performance / hangboard / climbing block is a new decision after Week 4. Do not auto-resume Phase 3.

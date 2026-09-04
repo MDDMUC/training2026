@@ -71,6 +71,42 @@ Canonical write-up: `context/synthesis.md`.
 - Antonia untouched.
 - Next performance / hangboard / climbing block is a new decision after Week 4.
 - Not clinical advice.
+- **Dates superseded 2026-09-01** — cycle is now Tue 1 Sep → Mon 28 Sep (whole block +1 day). Sequence unchanged.
+
+## 2026-09-01 — Re-entry start shifted +1 day
+
+**Decision:** Start the live Re-entry cycle today. Shift every Martin Re-entry session and the REENTRY phase **+1 day**: **Tue 1 Sep → Mon 28 Sep 2026**. Pull A is the first session (was Mon 31 Aug). Weekly order unchanged; weekdays slide (rest is now Monday).
+
+**Implications:**
+- Live DB already updated (28 sessions, no logged sets). Antonia and archived H2 untouched.
+- `REENTRY_START` / `REENTRY_END` in `src/lib/domain/reentryPlan.ts` are the source of truth.
+- **Dates superseded 2026-09-01 (later same day)** — cycle is now Wed 2 Sep → Tue 29 Sep, with chest/delt looks work on push days.
+
+## 2026-09-01 — Re-entry looks work + start tomorrow
+
+**Decision:** Add chest + side-delt isolation on both push days for looks (not a hypertrophy mesocycle). Shift the live cycle so the first session is **Wed 2 Sep → Tue 29 Sep**. Sequence unchanged. Rest is Tuesday.
+
+**Looks add-ons (3–4 RIR, seated/supported):**
+- Push A: DB fly 8 kg + seated lateral raise 6 kg (7 kg week 3)
+- Push B: incline DB press 10 kg (12 kg week 3) + seated laterals (fewer sets)
+- Drop 2 kg laterals from antagonist — activation, not a training stimulus. Face pulls + reverse fly stay.
+
+**Implications:**
+- Rebuild via `scripts/rebuild-reentry.ts` (aborts if any set was logged).
+- Antonia and archived H2 untouched.
+- Still no hangboard, no climbing, no added pull-up weight. Stop if the joint speaks.
+- **Structure superseded same day** by option A below (laterals before fly; Push B trimmed).
+
+## 2026-09-01 — Looks overlay cleaned (option A)
+
+**Decision:** Keep Pull / Push / Run. Do not add a hypertrophy split. Clean the looks overlay after Israetel / Schoenfeld / RP-app review.
+
+- Push A: compounds first, **laterals then fly**, then antagonist, then BSS.
+- Push B: push-ups + incline + laterals + Y-T-W. Drop SA press and tempo dips (overlap).
+- Isolation 10–15 reps, 3–4 RIR. Side-delt hard sets ~6 week 1, ~8 weeks 2–3.
+- No front raises, no 0 RIR, no extra press stack.
+
+**Implications:** Live cycle rebuilt. Dates unchanged (Wed 2 Sep → Tue 29 Sep).
 
 ## 2026-08-27 — Grok installed as coding agent
 

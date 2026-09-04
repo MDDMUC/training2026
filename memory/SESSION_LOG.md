@@ -150,3 +150,100 @@ Append-only. Newest entries at the **bottom**.
 **Open:** more photo recuts if Antonia asks. No app work required before Monday.
 
 **Next:** Mon 31 Aug Pull A. Do not resume Phase 3.
+
+---
+
+## 2026-09-01 — Re-entry +1 day (start today)
+
+**Focus:** Workout starts today. Push the whole Re-entry calendar forward 1 day.
+
+**Locked:** Cycle now **Tue 1 Sep → Mon 28 Sep 2026**. Sequence unchanged. Rest is Monday.
+
+**Live DB (already applied):**
+- 28 Martin Re-entry sessions shifted; REENTRY phase `2026-09-01` → `2026-09-28`
+- Today = Pull A. No current-cycle session on Aug 31. No sets had been logged.
+- Antonia (36 sessions) and archived H2 (92 sessions, still ends 2026-09-01) untouched.
+
+**Shipped (code, not pushed):**
+- `REENTRY_START` / `REENTRY_END` in `reentryPlan.ts`
+- Plan docs, insights fallback, ⌘K jump to Sep 1
+- `scripts/shift-reentry-by-1-day.ts` (idempotent) + regenerated seed SQL
+
+**Validated:** `npm run check` — 0 errors. DB verify script: Pull A on 2026-09-01, last Rest on 2026-09-28. No browser tools this session — did not click through Today/Calendar UI.
+
+**Open:** push to `main` when Martin wants palette/docs on production (calendar data is already live). Do not resume Phase 3.
+
+**Next:** Train Pull A today.
+
+---
+
+## 2026-09-01 — Looks work + start tomorrow
+
+**Focus:** Add chest/shoulder looks isolation to existing re-entry push days. Move calendar start to tomorrow.
+
+**Locked:** Cycle **Wed 2 Sep → Tue 29 Sep**. Rest is Tuesday. Looks add-ons stay 3–4 RIR, seated/supported.
+
+**Live DB (already applied):**
+- Rebuilt 28 sessions from `reentryPlan.ts`. Nothing had been logged.
+- Tomorrow Wed 2 Sep = Pull A. Today has no current-cycle session.
+- Push A (Thu): DB fly + seated laterals after the press supersets.
+- Push B (Sun): incline DB press + seated laterals after volume work.
+- Antonia 36 / H2 92 untouched.
+
+**Shipped (code, not pushed):**
+- Looks helpers + push titles in `reentryPlan.ts`
+- Plan docs + exercise library
+- `scripts/rebuild-reentry.ts` + regenerated seed SQL
+- ⌘K jump + insights fallback → Sep 2
+
+**Validated:** `npm run check` — 0 errors. Live Push A/B exercise lists confirmed. No browser tools — did not click through UI.
+
+**Open:** push `main` when Martin wants copy on production (calendar data is already live). Do not resume Phase 3.
+
+**Next:** Pull A tomorrow.
+
+---
+
+## 2026-09-01 — Looks overlay option A
+
+**Focus:** Apply the recommended clean-up (Israetel / Schoenfeld / RP-app review). No date shift.
+
+**Live DB:**
+- Rebuilt 28 sessions. Nothing had been logged.
+- Push A order: warmup → vertical → horizontal → **laterals → fly** → antagonist → BSS → mobility
+- Push B: push-ups → incline → laterals → Y-T-W (SA press + tempo dips gone)
+- Laterals 3/4/4/2 sets per push day (weeks 1–4). Isolation 12–15 reps.
+
+**Validated:** `npm run check` 0 errors. Live exercise lists confirmed.
+
+**Open:** push `main` when Martin wants copy on production. Do not resume Phase 3.
+
+**Next:** Pull A tomorrow.
+
+---
+
+## 2026-09-01 — Ad-hoc log (Tue 1 Sep)
+
+**Logged live:** unscheduled Re-entry session on 2026-09-01.
+- Pull-ups 3 × 6 mixed grips (completed), slippery bar, did not grind
+- Easy run 3.5 km in 30 min (8:57/km)
+- Light upper-body stretch
+- H2 “Rest — Phase 3 review” that day stays archived
+
+**Next:** Pull A tomorrow, scaled (2×5 or skip pulls if the joint nags).
+
+---
+
+## 2026-09-04 — Commit + push re-entry app copy
+
+**Focus:** Martin asked whether the app was ready; clarified it was not committed/pushed. Then: log, commit, push. No browser verify (explicit).
+
+**Context:** Wed 2 Sep back adjustment + outdoor climbing; Thu sore; Fri rest; feeling better and starting the re-entry block. Seeded today is Run day; advice was start easy, do not catch up missed Wed/Thu volume.
+
+**Shipped:**
+- Commit + push of looks overlay option A, Wed 2 Sep cycle dates, plan/docs/memory, rebuild/shift/ad-hoc scripts, insights + ⌘K jump
+- Live DB already had Re-entry sessions (confirmed Pull A 2 Sep … Run 4 Sep … Rest 8 Sep)
+
+**Open:** Whether Martin logs today’s Run as seeded or shifts to Pull A as Day 1 in the log. Do not resume Phase 3.
+
+**Next:** Train today. Stop if the joint speaks.

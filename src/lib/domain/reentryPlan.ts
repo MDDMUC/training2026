@@ -1,6 +1,7 @@
 // Conservative 4-week re-entry after the back-joint adjustment.
-// Locked with Martin 2026-08-28. Start Mon 31 Aug. Not a performance block.
-// No hangboard, no climbing, no Abrahangs. Stop if the joint speaks.
+// Locked with Martin 2026-08-28; start shifted to Wed 2 Sep (2026-09-01 +1, then +1).
+// Not a performance block. No hangboard, no climbing, no Abrahangs. Stop if the joint speaks.
+// Push days include extra chest + side-delt looks work at 3–4 RIR.
 
 import { addDays, format } from 'date-fns';
 import type { SessionType, SetKind } from './types';
@@ -9,8 +10,8 @@ import { H2_CYCLE_NAME } from './resetPlan';
 export { H2_CYCLE_NAME };
 
 export const REENTRY_CYCLE_NAME = 'Re-entry';
-export const REENTRY_START = '2026-08-31';
-export const REENTRY_END = '2026-09-27';
+export const REENTRY_START = '2026-09-02';
+export const REENTRY_END = '2026-09-29';
 
 export const REENTRY_CONSTRAINT =
   'Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.';
@@ -208,6 +209,91 @@ function pushWarmup(): SeedExercise {
   };
 }
 
+function looksLaterals(week: Week, rounds: number): SeedExercise {
+  const kg = week === 3 ? 7 : 6;
+  const reps = week === 3 ? 15 : 12;
+  const sets: SeedSet[] = [];
+  for (let i = 0; i < rounds; i++) {
+    sets.push(
+      work(`Lateral raise L · ${kg} kg · set ${i + 1}`, {
+        reps,
+        load_kg: kg,
+        rest_seconds: 30
+      })
+    );
+    sets.push(
+      work(`Lateral raise R · ${kg} kg · set ${i + 1}`, {
+        reps,
+        load_kg: kg,
+        rest_seconds: 45
+      })
+    );
+  }
+  return {
+    name: 'Seated DB lateral raise',
+    notes:
+      'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.',
+    sets
+  };
+}
+
+function looksFly(week: Week): SeedExercise {
+  const kg = 8;
+  const reps = week === 3 ? 15 : 12;
+  const rounds = week === 4 ? 1 : 2;
+  const sets: SeedSet[] = [];
+  for (let i = 0; i < rounds; i++) {
+    sets.push(
+      work(`DB fly L · ${kg} kg · set ${i + 1}`, {
+        reps,
+        load_kg: kg,
+        rest_seconds: 30
+      })
+    );
+    sets.push(
+      work(`DB fly R · ${kg} kg · set ${i + 1}`, {
+        reps,
+        load_kg: kg,
+        rest_seconds: 60
+      })
+    );
+  }
+  return {
+    name: 'DB fly',
+    notes:
+      'Looks work — pec sweep. Flat or slight-incline. Soft elbows, stop when the stretch is honest — do not dump into the anterior shoulder. 10–15 reps, 3–4 RIR. Skip if a pec or the joint nags.',
+    sets
+  };
+}
+
+function looksInclinePress(week: Week): SeedExercise {
+  const kg = week === 3 ? 12 : 10;
+  const rounds = week === 4 ? 1 : 2;
+  const sets: SeedSet[] = [];
+  for (let i = 0; i < rounds; i++) {
+    sets.push(
+      work(`Incline DB press L · ${kg} kg · set ${i + 1}`, {
+        reps: 8,
+        load_kg: kg,
+        rest_seconds: 45
+      })
+    );
+    sets.push(
+      work(`Incline DB press R · ${kg} kg · set ${i + 1}`, {
+        reps: 8,
+        load_kg: kg,
+        rest_seconds: 75
+      })
+    );
+  }
+  return {
+    name: 'Incline DB press',
+    notes:
+      'Looks work — upper chest. Bench ~30°. Back supported. Left first. Lower the DBs deeper than the chest if the shoulder allows. 3–4 RIR. The only hard press on Push B — not stacked on SA press or extra dips.',
+    sets
+  };
+}
+
 function pushA(week: Week): ReentrySessionSpec {
   const rounds = { 1: 3, 2: 3, 3: 3, 4: 2 }[week];
   const dipReps = { 1: 5, 2: 6, 3: 6, 4: 5 }[week];
@@ -250,10 +336,6 @@ function pushA(week: Week): ReentrySessionSpec {
 
   const prehab: SeedSet[] = [];
   for (let i = 0; i < antagonistRounds; i++) {
-    prehab.push(work(`Lateral raise L · 2 kg · set ${i + 1}`, { reps: 14, load_kg: 2, rest_seconds: 30 }));
-    prehab.push(work(`Lateral raise R · 2 kg · set ${i + 1}`, { reps: 14, load_kg: 2, rest_seconds: 45 }));
-  }
-  for (let i = 0; i < antagonistRounds; i++) {
     prehab.push(work(`Face pull · set ${i + 1}`, { reps: 15, rest_seconds: 45 }));
   }
   for (let i = 0; i < antagonistRounds; i++) {
@@ -283,7 +365,7 @@ function pushA(week: Week): ReentrySessionSpec {
 
   return {
     type: 'push',
-    title: 'Push A — dips, press, split squat',
+    title: 'Push A — press, chest, delts, split squat',
     notes: SESSION_NOTES,
     exercises: [
       pushWarmup(),
@@ -298,9 +380,12 @@ function pushA(week: Week): ReentrySessionSpec {
           'Row is chest-supported or DB — more upright than the old 50 kg barbell hinge. Bench well under the old 55 kg.',
         sets: horizontal
       },
+      looksLaterals(week, { 1: 3, 2: 4, 3: 4, 4: 2 }[week]),
+      looksFly(week),
       {
         name: 'Antagonist + prehab',
-        notes: 'Blood-flow / activation work. Stop if the joint or a shoulder nags.',
+        notes:
+          'Rear-delt + elbow insurance. Side-delt looks work is the seated lateral raise above — not a 2 kg activation dose.',
         sets: prehab
       },
       {
@@ -321,38 +406,12 @@ function pushA(week: Week): ReentrySessionSpec {
 function pushB(week: Week): ReentrySessionSpec {
   const puSets = week === 4 ? 2 : 3;
   const puReps = { 1: 8, 2: 10, 3: 10, 4: 8 }[week];
-  const saRounds = week === 4 ? 1 : 2;
-  const dipSets = week === 4 ? 2 : 3;
-  const dipReps = { 1: 4, 2: 5, 3: 5, 4: 4 }[week];
   const bpaSets = week === 4 ? 2 : 3;
   const ytwSets = week === 4 ? 1 : 2;
 
   const pushups: SeedSet[] = [];
   for (let i = 0; i < puSets; i++) {
     pushups.push(work(`Push-up · set ${i + 1}`, { reps: puReps, rest_seconds: 90 }));
-  }
-
-  const press: SeedSet[] = [];
-  for (let i = 0; i < saRounds; i++) {
-    press.push(
-      work(`SA DB press L · 8 kg · round ${i + 1}`, {
-        reps: 8,
-        load_kg: 8,
-        rest_seconds: 60
-      })
-    );
-    press.push(
-      work(`SA DB press R · 8 kg · round ${i + 1}`, {
-        reps: 8,
-        load_kg: 8,
-        rest_seconds: 60
-      })
-    );
-  }
-
-  const dips: SeedSet[] = [];
-  for (let i = 0; i < dipSets; i++) {
-    dips.push(work(`Tempo dip 3-1-1 · set ${i + 1}`, { reps: dipReps, rest_seconds: 90 }));
   }
 
   const bands: SeedSet[] = [];
@@ -365,24 +424,17 @@ function pushB(week: Week): ReentrySessionSpec {
 
   return {
     type: 'push',
-    title: 'Push B — volume',
+    title: 'Push B — push-ups, incline, delts',
     notes: SESSION_NOTES,
     exercises: [
       {
         name: 'Push-ups',
-        notes: '3+ RIR. Knees-down is fine if the joint or a shoulder asks.',
+        notes:
+          'The one leftover volume press. 3+ RIR. Knees-down is fine if the joint or a shoulder asks. Dips stay on Push A — not stacked here.',
         sets: pushups
       },
-      {
-        name: 'Single-arm DB press',
-        notes: 'Left first (weaker side). 8 kg — under the old 12 kg Sunday volume load.',
-        sets: press
-      },
-      {
-        name: 'Tempo dips · 3-1-1',
-        notes: '3 s down, 1 s pause, 1 s up. Bodyweight. Range as comfort allows.',
-        sets: dips
-      },
+      looksInclinePress(week),
+      looksLaterals(week, { 1: 3, 2: 4, 3: 4, 4: 2 }[week]),
       {
         name: 'Shoulder insurance',
         notes: 'Band pull-aparts + prone Y-T-W. No extra run on this day.',

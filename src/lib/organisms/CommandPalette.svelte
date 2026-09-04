@@ -32,7 +32,7 @@
     { label: 'Phase 1 retest (Jul 6)', href: '/log/by-date/2026-07-06', section: 'Quick' },
     { label: 'Phase 2 retest (Aug 3)', href: '/log/by-date/2026-08-03', section: 'Quick' },
     { label: 'Final test (Aug 28)', href: '/log/by-date/2026-08-28', section: 'Quick' },
-    { label: 'Performance day (Aug 31)', href: '/log/by-date/2026-08-31', section: 'Quick' }
+    { label: 'Re-entry start (Sep 2)', href: '/log/by-date/2026-09-02', section: 'Quick' }
   ];
 
   const recentCommands = $derived<Command[]>(

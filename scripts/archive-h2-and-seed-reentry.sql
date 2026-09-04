@@ -1,4 +1,4 @@
--- Archive Martin's current cycle and seed Re-entry (Mon 2026-08-31 → Sun 2026-09-27).
+-- Archive Martin's current cycle and seed Re-entry (Wed 2026-09-02 -> Tue 2026-09-29).
 -- Generated from src/lib/domain/reentryPlan.ts — do not hand-edit.
 -- Paste in the Supabase SQL editor if the Node script cannot reach the pooler.
 -- Idempotent. Martin only. Does not DELETE H2 rows. Does not touch Antonia.
@@ -43,14 +43,14 @@ BEGIN
     user_id, mesocycle_num, name, short_name, start_date, end_date, description, archived, cycle_name
   ) VALUES (
     'martin', 1, 'Re-entry — conservative base', 'REENTRY',
-    '2026-08-31', '2026-09-27', 'Four weeks. Pull → Push → Run twice, then rest. Bodyweight pulls, light push loads, box-pistol skill, easy running. Hangboard and climbing parked. Stop if the joint speaks. Next block is a separate decision after Week 4.', false, 'Re-entry'
+    '2026-09-02', '2026-09-29', 'Four weeks. Pull → Push → Run twice, then rest. Bodyweight pulls, light push loads, box-pistol skill, easy running. Hangboard and climbing parked. Stop if the joint speaks. Next block is a separate decision after Week 4.', false, 'Re-entry'
   ) RETURNING id INTO phase_id;
 
-  -- 2026-08-31 · pull-heavy · Pull A — bodyweight pulls + curls
+  -- 2026-09-02 · pull-heavy · Pull A — bodyweight pulls + curls
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-08-31', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
+    'martin', '2026-09-02', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -148,11 +148,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-01 · push · Push A — dips, press, split squat
+  -- 2026-09-03 · push · Push A — press, chest, delts, split squat
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-01', phase_id, 'push', 'Push A — dips, press, split squat',
+    'martin', '2026-09-03', phase_id, 'push', 'Push A — press, chest, delts, split squat',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -237,60 +237,96 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 6, 'work', 'R3 Bench · 35 kg', 6, 35, NULL, NULL, 180, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Antagonist + prehab', 4, 'Blood-flow / activation work. Stop if the joint or a shoulder nags.')
+  VALUES (sess_id, 'Seated DB lateral raise', 4, 'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'Lateral raise L · 2 kg · set 1', 14, 2, NULL, NULL, 30, 6, NULL
+    ex_id, 1, 'work', 'Lateral raise L · 6 kg · set 1', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'Lateral raise R · 2 kg · set 1', 14, 2, NULL, NULL, 45, 6, NULL
+    ex_id, 2, 'work', 'Lateral raise R · 6 kg · set 1', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'Lateral raise L · 2 kg · set 2', 14, 2, NULL, NULL, 30, 6, NULL
+    ex_id, 3, 'work', 'Lateral raise L · 6 kg · set 2', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 4, 'work', 'Lateral raise R · 2 kg · set 2', 14, 2, NULL, NULL, 45, 6, NULL
+    ex_id, 4, 'work', 'Lateral raise R · 6 kg · set 2', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 5, 'work', 'Face pull · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 5, 'work', 'Lateral raise L · 6 kg · set 3', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 6, 'work', 'Face pull · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
-  );
-  INSERT INTO exercise_sets (
-    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
-  ) VALUES (
-    ex_id, 7, 'work', 'Reverse fly · set 1', 12, NULL, NULL, NULL, 45, 6, NULL
-  );
-  INSERT INTO exercise_sets (
-    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
-  ) VALUES (
-    ex_id, 8, 'work', 'Reverse fly · set 2', 12, NULL, NULL, NULL, 45, 6, NULL
-  );
-  INSERT INTO exercise_sets (
-    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
-  ) VALUES (
-    ex_id, 9, 'work', 'Wrist extensors · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
-  );
-  INSERT INTO exercise_sets (
-    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
-  ) VALUES (
-    ex_id, 10, 'work', 'Wrist extensors · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 6, 'work', 'Lateral raise R · 6 kg · set 3', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Bulgarian split squat', 5, 'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. No step-up — pistol skill lives on the run days. Bodyweight, 3-1-3.')
+  VALUES (sess_id, 'DB fly', 5, 'Looks work — pec sweep. Flat or slight-incline. Soft elbows, stop when the stretch is honest — do not dump into the anterior shoulder. 10–15 reps, 3–4 RIR. Skip if a pec or the joint nags.')
+  RETURNING id INTO ex_id;
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 1, 'work', 'DB fly L · 8 kg · set 1', 12, 8, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 2, 'work', 'DB fly R · 8 kg · set 1', 12, 8, NULL, NULL, 60, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 3, 'work', 'DB fly L · 8 kg · set 2', 12, 8, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'DB fly R · 8 kg · set 2', 12, 8, NULL, NULL, 60, 6, NULL
+  );
+  INSERT INTO exercises (session_id, name, display_order, notes)
+  VALUES (sess_id, 'Antagonist + prehab', 6, 'Rear-delt + elbow insurance. Side-delt looks work is the seated lateral raise above — not a 2 kg activation dose.')
+  RETURNING id INTO ex_id;
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 1, 'work', 'Face pull · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 2, 'work', 'Face pull · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 3, 'work', 'Reverse fly · set 1', 12, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'Reverse fly · set 2', 12, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 5, 'work', 'Wrist extensors · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 6, 'work', 'Wrist extensors · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercises (session_id, name, display_order, notes)
+  VALUES (sess_id, 'Bulgarian split squat', 7, 'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. No step-up — pistol skill lives on the run days. Bodyweight, 3-1-3.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -313,7 +349,7 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 4, 'work', 'R2 Bulgarian L · BW', 6, NULL, NULL, NULL, 90, 6, '3-1-3 tempo'
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Hip + hamstring mobility · 10–15 min', 6, '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow so they do not stack on the split squat.')
+  VALUES (sess_id, 'Hip + hamstring mobility · 10–15 min', 8, '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow so they do not stack on the split squat.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -321,11 +357,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10–15 min · 90/90, hamstring, ankle', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-02 · run · Run — box pistol + easy run
+  -- 2026-09-04 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-02', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-04', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -413,11 +449,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 20 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-03 · pull-light · Pull B — light pulls + bird-dog
+  -- 2026-09-05 · pull-light · Pull B — light pulls + bird-dog
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-03', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
+    'martin', '2026-09-05', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -500,17 +536,17 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-04 · push · Push B — volume
+  -- 2026-09-06 · push · Push B — push-ups, incline, delts
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-04', phase_id, 'push', 'Push B — volume',
+    'martin', '2026-09-06', phase_id, 'push', 'Push B — push-ups, incline, delts',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Push-ups', 1, '3+ RIR. Knees-down is fine if the joint or a shoulder asks.')
+  VALUES (sess_id, 'Push-ups', 1, 'The one leftover volume press. 3+ RIR. Knees-down is fine if the joint or a shoulder asks. Dips stay on Push A — not stacked here.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -528,45 +564,60 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 3, 'work', 'Push-up · set 3', 8, NULL, NULL, NULL, 90, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Single-arm DB press', 2, 'Left first (weaker side). 8 kg — under the old 12 kg Sunday volume load.')
+  VALUES (sess_id, 'Incline DB press', 2, 'Looks work — upper chest. Bench ~30°. Back supported. Left first. Lower the DBs deeper than the chest if the shoulder allows. 3–4 RIR. The only hard press on Push B — not stacked on SA press or extra dips.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'SA DB press L · 8 kg · round 1', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 1, 'work', 'Incline DB press L · 10 kg · set 1', 8, 10, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'SA DB press R · 8 kg · round 1', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 2, 'work', 'Incline DB press R · 10 kg · set 1', 8, 10, NULL, NULL, 75, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'SA DB press L · 8 kg · round 2', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 3, 'work', 'Incline DB press L · 10 kg · set 2', 8, 10, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 4, 'work', 'SA DB press R · 8 kg · round 2', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 4, 'work', 'Incline DB press R · 10 kg · set 2', 8, 10, NULL, NULL, 75, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Tempo dips · 3-1-1', 3, '3 s down, 1 s pause, 1 s up. Bodyweight. Range as comfort allows.')
+  VALUES (sess_id, 'Seated DB lateral raise', 3, 'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'Tempo dip 3-1-1 · set 1', 4, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 1, 'work', 'Lateral raise L · 6 kg · set 1', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'Tempo dip 3-1-1 · set 2', 4, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 2, 'work', 'Lateral raise R · 6 kg · set 1', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'Tempo dip 3-1-1 · set 3', 4, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 3, 'work', 'Lateral raise L · 6 kg · set 2', 12, 6, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'Lateral raise R · 6 kg · set 2', 12, 6, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 5, 'work', 'Lateral raise L · 6 kg · set 3', 12, 6, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 6, 'work', 'Lateral raise R · 6 kg · set 3', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
   VALUES (sess_id, 'Shoulder insurance', 4, 'Band pull-aparts + prone Y-T-W. No extra run on this day.')
@@ -597,11 +648,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 5, 'work', 'Prone Y-T-W · 1 kg · set 2', 8, 1, NULL, NULL, 60, 6, NULL
   );
 
-  -- 2026-09-05 · run · Run — box pistol + easy run
+  -- 2026-09-07 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-05', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-07', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -689,11 +740,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 20 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-06 · rest · Rest
+  -- 2026-09-08 · rest · Rest
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-06', phase_id, 'rest', 'Rest',
+    'martin', '2026-09-08', phase_id, 'rest', 'Rest',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.
@@ -701,11 +752,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
 Optional 20–30 min walk. No “I’ll just do curls.”', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
 
-  -- 2026-09-07 · pull-heavy · Pull A — bodyweight pulls + curls
+  -- 2026-09-09 · pull-heavy · Pull A — bodyweight pulls + curls
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-07', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
+    'martin', '2026-09-09', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -808,11 +859,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-08 · push · Push A — dips, press, split squat
+  -- 2026-09-10 · push · Push A — press, chest, delts, split squat
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-08', phase_id, 'push', 'Push A — dips, press, split squat',
+    'martin', '2026-09-10', phase_id, 'push', 'Push A — press, chest, delts, split squat',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -897,60 +948,106 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 6, 'work', 'R3 Bench · 37.5 kg', 6, 37.5, NULL, NULL, 180, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Antagonist + prehab', 4, 'Blood-flow / activation work. Stop if the joint or a shoulder nags.')
+  VALUES (sess_id, 'Seated DB lateral raise', 4, 'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'Lateral raise L · 2 kg · set 1', 14, 2, NULL, NULL, 30, 6, NULL
+    ex_id, 1, 'work', 'Lateral raise L · 6 kg · set 1', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'Lateral raise R · 2 kg · set 1', 14, 2, NULL, NULL, 45, 6, NULL
+    ex_id, 2, 'work', 'Lateral raise R · 6 kg · set 1', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'Lateral raise L · 2 kg · set 2', 14, 2, NULL, NULL, 30, 6, NULL
+    ex_id, 3, 'work', 'Lateral raise L · 6 kg · set 2', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 4, 'work', 'Lateral raise R · 2 kg · set 2', 14, 2, NULL, NULL, 45, 6, NULL
+    ex_id, 4, 'work', 'Lateral raise R · 6 kg · set 2', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 5, 'work', 'Face pull · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 5, 'work', 'Lateral raise L · 6 kg · set 3', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 6, 'work', 'Face pull · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 6, 'work', 'Lateral raise R · 6 kg · set 3', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 7, 'work', 'Reverse fly · set 1', 12, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 7, 'work', 'Lateral raise L · 6 kg · set 4', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 8, 'work', 'Reverse fly · set 2', 12, NULL, NULL, NULL, 45, 6, NULL
-  );
-  INSERT INTO exercise_sets (
-    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
-  ) VALUES (
-    ex_id, 9, 'work', 'Wrist extensors · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
-  );
-  INSERT INTO exercise_sets (
-    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
-  ) VALUES (
-    ex_id, 10, 'work', 'Wrist extensors · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 8, 'work', 'Lateral raise R · 6 kg · set 4', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Bulgarian split squat', 5, 'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. No step-up — pistol skill lives on the run days. Bodyweight, 3-1-3.')
+  VALUES (sess_id, 'DB fly', 5, 'Looks work — pec sweep. Flat or slight-incline. Soft elbows, stop when the stretch is honest — do not dump into the anterior shoulder. 10–15 reps, 3–4 RIR. Skip if a pec or the joint nags.')
+  RETURNING id INTO ex_id;
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 1, 'work', 'DB fly L · 8 kg · set 1', 12, 8, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 2, 'work', 'DB fly R · 8 kg · set 1', 12, 8, NULL, NULL, 60, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 3, 'work', 'DB fly L · 8 kg · set 2', 12, 8, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'DB fly R · 8 kg · set 2', 12, 8, NULL, NULL, 60, 6, NULL
+  );
+  INSERT INTO exercises (session_id, name, display_order, notes)
+  VALUES (sess_id, 'Antagonist + prehab', 6, 'Rear-delt + elbow insurance. Side-delt looks work is the seated lateral raise above — not a 2 kg activation dose.')
+  RETURNING id INTO ex_id;
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 1, 'work', 'Face pull · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 2, 'work', 'Face pull · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 3, 'work', 'Reverse fly · set 1', 12, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'Reverse fly · set 2', 12, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 5, 'work', 'Wrist extensors · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 6, 'work', 'Wrist extensors · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercises (session_id, name, display_order, notes)
+  VALUES (sess_id, 'Bulgarian split squat', 7, 'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. No step-up — pistol skill lives on the run days. Bodyweight, 3-1-3.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -973,7 +1070,7 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 4, 'work', 'R2 Bulgarian L · BW', 6, NULL, NULL, NULL, 90, 6, '3-1-3 tempo'
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Hip + hamstring mobility · 10–15 min', 6, '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow so they do not stack on the split squat.')
+  VALUES (sess_id, 'Hip + hamstring mobility · 10–15 min', 8, '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow so they do not stack on the split squat.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -981,11 +1078,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10–15 min · 90/90, hamstring, ankle', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-09 · run · Run — box pistol + easy run
+  -- 2026-09-11 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-09', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-11', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1073,11 +1170,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 25 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-10 · pull-light · Pull B — light pulls + bird-dog
+  -- 2026-09-12 · pull-light · Pull B — light pulls + bird-dog
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-10', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
+    'martin', '2026-09-12', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1160,17 +1257,17 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-11 · push · Push B — volume
+  -- 2026-09-13 · push · Push B — push-ups, incline, delts
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-11', phase_id, 'push', 'Push B — volume',
+    'martin', '2026-09-13', phase_id, 'push', 'Push B — push-ups, incline, delts',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Push-ups', 1, '3+ RIR. Knees-down is fine if the joint or a shoulder asks.')
+  VALUES (sess_id, 'Push-ups', 1, 'The one leftover volume press. 3+ RIR. Knees-down is fine if the joint or a shoulder asks. Dips stay on Push A — not stacked here.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -1188,45 +1285,70 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 3, 'work', 'Push-up · set 3', 10, NULL, NULL, NULL, 90, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Single-arm DB press', 2, 'Left first (weaker side). 8 kg — under the old 12 kg Sunday volume load.')
+  VALUES (sess_id, 'Incline DB press', 2, 'Looks work — upper chest. Bench ~30°. Back supported. Left first. Lower the DBs deeper than the chest if the shoulder allows. 3–4 RIR. The only hard press on Push B — not stacked on SA press or extra dips.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'SA DB press L · 8 kg · round 1', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 1, 'work', 'Incline DB press L · 10 kg · set 1', 8, 10, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'SA DB press R · 8 kg · round 1', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 2, 'work', 'Incline DB press R · 10 kg · set 1', 8, 10, NULL, NULL, 75, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'SA DB press L · 8 kg · round 2', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 3, 'work', 'Incline DB press L · 10 kg · set 2', 8, 10, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 4, 'work', 'SA DB press R · 8 kg · round 2', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 4, 'work', 'Incline DB press R · 10 kg · set 2', 8, 10, NULL, NULL, 75, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Tempo dips · 3-1-1', 3, '3 s down, 1 s pause, 1 s up. Bodyweight. Range as comfort allows.')
+  VALUES (sess_id, 'Seated DB lateral raise', 3, 'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'Tempo dip 3-1-1 · set 1', 5, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 1, 'work', 'Lateral raise L · 6 kg · set 1', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'Tempo dip 3-1-1 · set 2', 5, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 2, 'work', 'Lateral raise R · 6 kg · set 1', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'Tempo dip 3-1-1 · set 3', 5, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 3, 'work', 'Lateral raise L · 6 kg · set 2', 12, 6, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'Lateral raise R · 6 kg · set 2', 12, 6, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 5, 'work', 'Lateral raise L · 6 kg · set 3', 12, 6, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 6, 'work', 'Lateral raise R · 6 kg · set 3', 12, 6, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 7, 'work', 'Lateral raise L · 6 kg · set 4', 12, 6, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 8, 'work', 'Lateral raise R · 6 kg · set 4', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
   VALUES (sess_id, 'Shoulder insurance', 4, 'Band pull-aparts + prone Y-T-W. No extra run on this day.')
@@ -1257,11 +1379,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 5, 'work', 'Prone Y-T-W · 1 kg · set 2', 8, 1, NULL, NULL, 60, 6, NULL
   );
 
-  -- 2026-09-12 · run · Run — box pistol + easy run
+  -- 2026-09-14 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-12', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-14', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1349,11 +1471,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 25 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-13 · rest · Rest
+  -- 2026-09-15 · rest · Rest
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-13', phase_id, 'rest', 'Rest',
+    'martin', '2026-09-15', phase_id, 'rest', 'Rest',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.
@@ -1361,11 +1483,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
 Optional 20–30 min walk. No “I’ll just do curls.”', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
 
-  -- 2026-09-14 · pull-heavy · Pull A — bodyweight pulls + curls
+  -- 2026-09-16 · pull-heavy · Pull A — bodyweight pulls + curls
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-14', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
+    'martin', '2026-09-16', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1468,11 +1590,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-15 · push · Push A — dips, press, split squat
+  -- 2026-09-17 · push · Push A — press, chest, delts, split squat
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-15', phase_id, 'push', 'Push A — dips, press, split squat',
+    'martin', '2026-09-17', phase_id, 'push', 'Push A — press, chest, delts, split squat',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1557,60 +1679,106 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 6, 'work', 'R3 Bench · 37.5 kg', 6, 37.5, NULL, NULL, 180, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Antagonist + prehab', 4, 'Blood-flow / activation work. Stop if the joint or a shoulder nags.')
+  VALUES (sess_id, 'Seated DB lateral raise', 4, 'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'Lateral raise L · 2 kg · set 1', 14, 2, NULL, NULL, 30, 6, NULL
+    ex_id, 1, 'work', 'Lateral raise L · 7 kg · set 1', 15, 7, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'Lateral raise R · 2 kg · set 1', 14, 2, NULL, NULL, 45, 6, NULL
+    ex_id, 2, 'work', 'Lateral raise R · 7 kg · set 1', 15, 7, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'Lateral raise L · 2 kg · set 2', 14, 2, NULL, NULL, 30, 6, NULL
+    ex_id, 3, 'work', 'Lateral raise L · 7 kg · set 2', 15, 7, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 4, 'work', 'Lateral raise R · 2 kg · set 2', 14, 2, NULL, NULL, 45, 6, NULL
+    ex_id, 4, 'work', 'Lateral raise R · 7 kg · set 2', 15, 7, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 5, 'work', 'Face pull · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 5, 'work', 'Lateral raise L · 7 kg · set 3', 15, 7, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 6, 'work', 'Face pull · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 6, 'work', 'Lateral raise R · 7 kg · set 3', 15, 7, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 7, 'work', 'Reverse fly · set 1', 12, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 7, 'work', 'Lateral raise L · 7 kg · set 4', 15, 7, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 8, 'work', 'Reverse fly · set 2', 12, NULL, NULL, NULL, 45, 6, NULL
-  );
-  INSERT INTO exercise_sets (
-    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
-  ) VALUES (
-    ex_id, 9, 'work', 'Wrist extensors · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
-  );
-  INSERT INTO exercise_sets (
-    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
-  ) VALUES (
-    ex_id, 10, 'work', 'Wrist extensors · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 8, 'work', 'Lateral raise R · 7 kg · set 4', 15, 7, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Bulgarian split squat', 5, 'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. No step-up — pistol skill lives on the run days. Bodyweight, 3-1-3.')
+  VALUES (sess_id, 'DB fly', 5, 'Looks work — pec sweep. Flat or slight-incline. Soft elbows, stop when the stretch is honest — do not dump into the anterior shoulder. 10–15 reps, 3–4 RIR. Skip if a pec or the joint nags.')
+  RETURNING id INTO ex_id;
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 1, 'work', 'DB fly L · 8 kg · set 1', 15, 8, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 2, 'work', 'DB fly R · 8 kg · set 1', 15, 8, NULL, NULL, 60, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 3, 'work', 'DB fly L · 8 kg · set 2', 15, 8, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'DB fly R · 8 kg · set 2', 15, 8, NULL, NULL, 60, 6, NULL
+  );
+  INSERT INTO exercises (session_id, name, display_order, notes)
+  VALUES (sess_id, 'Antagonist + prehab', 6, 'Rear-delt + elbow insurance. Side-delt looks work is the seated lateral raise above — not a 2 kg activation dose.')
+  RETURNING id INTO ex_id;
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 1, 'work', 'Face pull · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 2, 'work', 'Face pull · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 3, 'work', 'Reverse fly · set 1', 12, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'Reverse fly · set 2', 12, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 5, 'work', 'Wrist extensors · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 6, 'work', 'Wrist extensors · set 2', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercises (session_id, name, display_order, notes)
+  VALUES (sess_id, 'Bulgarian split squat', 7, 'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. No step-up — pistol skill lives on the run days. Bodyweight, 3-1-3.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -1633,7 +1801,7 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 4, 'work', 'R2 Bulgarian L · BW', 8, NULL, NULL, NULL, 90, 6, '3-1-3 tempo'
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Hip + hamstring mobility · 10–15 min', 6, '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow so they do not stack on the split squat.')
+  VALUES (sess_id, 'Hip + hamstring mobility · 10–15 min', 8, '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow so they do not stack on the split squat.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -1641,11 +1809,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10–15 min · 90/90, hamstring, ankle', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-16 · run · Run — box pistol + easy run
+  -- 2026-09-18 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-16', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-18', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1733,11 +1901,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 30 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-17 · pull-light · Pull B — light pulls + bird-dog
+  -- 2026-09-19 · pull-light · Pull B — light pulls + bird-dog
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-17', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
+    'martin', '2026-09-19', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -1825,17 +1993,17 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-18 · push · Push B — volume
+  -- 2026-09-20 · push · Push B — push-ups, incline, delts
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-18', phase_id, 'push', 'Push B — volume',
+    'martin', '2026-09-20', phase_id, 'push', 'Push B — push-ups, incline, delts',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Push-ups', 1, '3+ RIR. Knees-down is fine if the joint or a shoulder asks.')
+  VALUES (sess_id, 'Push-ups', 1, 'The one leftover volume press. 3+ RIR. Knees-down is fine if the joint or a shoulder asks. Dips stay on Push A — not stacked here.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -1853,45 +2021,70 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 3, 'work', 'Push-up · set 3', 10, NULL, NULL, NULL, 90, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Single-arm DB press', 2, 'Left first (weaker side). 8 kg — under the old 12 kg Sunday volume load.')
+  VALUES (sess_id, 'Incline DB press', 2, 'Looks work — upper chest. Bench ~30°. Back supported. Left first. Lower the DBs deeper than the chest if the shoulder allows. 3–4 RIR. The only hard press on Push B — not stacked on SA press or extra dips.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'SA DB press L · 8 kg · round 1', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 1, 'work', 'Incline DB press L · 12 kg · set 1', 8, 12, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'SA DB press R · 8 kg · round 1', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 2, 'work', 'Incline DB press R · 12 kg · set 1', 8, 12, NULL, NULL, 75, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'SA DB press L · 8 kg · round 2', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 3, 'work', 'Incline DB press L · 12 kg · set 2', 8, 12, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 4, 'work', 'SA DB press R · 8 kg · round 2', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 4, 'work', 'Incline DB press R · 12 kg · set 2', 8, 12, NULL, NULL, 75, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Tempo dips · 3-1-1', 3, '3 s down, 1 s pause, 1 s up. Bodyweight. Range as comfort allows.')
+  VALUES (sess_id, 'Seated DB lateral raise', 3, 'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'Tempo dip 3-1-1 · set 1', 5, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 1, 'work', 'Lateral raise L · 7 kg · set 1', 15, 7, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'Tempo dip 3-1-1 · set 2', 5, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 2, 'work', 'Lateral raise R · 7 kg · set 1', 15, 7, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'Tempo dip 3-1-1 · set 3', 5, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 3, 'work', 'Lateral raise L · 7 kg · set 2', 15, 7, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'Lateral raise R · 7 kg · set 2', 15, 7, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 5, 'work', 'Lateral raise L · 7 kg · set 3', 15, 7, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 6, 'work', 'Lateral raise R · 7 kg · set 3', 15, 7, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 7, 'work', 'Lateral raise L · 7 kg · set 4', 15, 7, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 8, 'work', 'Lateral raise R · 7 kg · set 4', 15, 7, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
   VALUES (sess_id, 'Shoulder insurance', 4, 'Band pull-aparts + prone Y-T-W. No extra run on this day.')
@@ -1922,11 +2115,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 5, 'work', 'Prone Y-T-W · 1 kg · set 2', 8, 1, NULL, NULL, 60, 6, NULL
   );
 
-  -- 2026-09-19 · run · Run — box pistol + easy run
+  -- 2026-09-21 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-19', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-21', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2014,11 +2207,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 30 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-20 · rest · Rest
+  -- 2026-09-22 · rest · Rest
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-20', phase_id, 'rest', 'Rest',
+    'martin', '2026-09-22', phase_id, 'rest', 'Rest',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.
@@ -2026,11 +2219,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
 Optional 20–30 min walk. No “I’ll just do curls.”', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
 
-  -- 2026-09-21 · pull-heavy · Pull A — bodyweight pulls + curls
+  -- 2026-09-23 · pull-heavy · Pull A — bodyweight pulls + curls
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-21', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
+    'martin', '2026-09-23', phase_id, 'pull-heavy', 'Pull A — bodyweight pulls + curls',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2103,11 +2296,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-22 · push · Push A — dips, press, split squat
+  -- 2026-09-24 · push · Push A — press, chest, delts, split squat
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-22', phase_id, 'push', 'Push A — dips, press, split squat',
+    'martin', '2026-09-24', phase_id, 'push', 'Push A — press, chest, delts, split squat',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2172,35 +2365,61 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 4, 'work', 'R2 Bench · 35 kg', 6, 35, NULL, NULL, 180, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Antagonist + prehab', 4, 'Blood-flow / activation work. Stop if the joint or a shoulder nags.')
+  VALUES (sess_id, 'Seated DB lateral raise', 4, 'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'Lateral raise L · 2 kg · set 1', 14, 2, NULL, NULL, 30, 6, NULL
+    ex_id, 1, 'work', 'Lateral raise L · 6 kg · set 1', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'Lateral raise R · 2 kg · set 1', 14, 2, NULL, NULL, 45, 6, NULL
+    ex_id, 2, 'work', 'Lateral raise R · 6 kg · set 1', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 3, 'work', 'Face pull · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 3, 'work', 'Lateral raise L · 6 kg · set 2', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 4, 'work', 'Reverse fly · set 1', 12, NULL, NULL, NULL, 45, 6, NULL
-  );
-  INSERT INTO exercise_sets (
-    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
-  ) VALUES (
-    ex_id, 5, 'work', 'Wrist extensors · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+    ex_id, 4, 'work', 'Lateral raise R · 6 kg · set 2', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Bulgarian split squat', 5, 'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. No step-up — pistol skill lives on the run days. Bodyweight, 3-1-3.')
+  VALUES (sess_id, 'DB fly', 5, 'Looks work — pec sweep. Flat or slight-incline. Soft elbows, stop when the stretch is honest — do not dump into the anterior shoulder. 10–15 reps, 3–4 RIR. Skip if a pec or the joint nags.')
+  RETURNING id INTO ex_id;
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 1, 'work', 'DB fly L · 8 kg · set 1', 12, 8, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 2, 'work', 'DB fly R · 8 kg · set 1', 12, 8, NULL, NULL, 60, 6, NULL
+  );
+  INSERT INTO exercises (session_id, name, display_order, notes)
+  VALUES (sess_id, 'Antagonist + prehab', 6, 'Rear-delt + elbow insurance. Side-delt looks work is the seated lateral raise above — not a 2 kg activation dose.')
+  RETURNING id INTO ex_id;
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 1, 'work', 'Face pull · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 2, 'work', 'Reverse fly · set 1', 12, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 3, 'work', 'Wrist extensors · set 1', 15, NULL, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercises (session_id, name, display_order, notes)
+  VALUES (sess_id, 'Bulgarian split squat', 7, 'The strength single-leg for this block. Surgical (R) first. Knee tracks over middle toe. No step-up — pistol skill lives on the run days. Bodyweight, 3-1-3.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -2213,7 +2432,7 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 2, 'work', 'R1 Bulgarian L · BW', 6, NULL, NULL, NULL, 90, 6, '3-1-3 tempo'
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Hip + hamstring mobility · 10–15 min', 6, '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow so they do not stack on the split squat.')
+  VALUES (sess_id, 'Hip + hamstring mobility · 10–15 min', 8, '90/90, hamstring, ankle. Cossack / horse stance wait for the run-day flow so they do not stack on the split squat.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -2221,11 +2440,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10–15 min · 90/90, hamstring, ankle', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-23 · run · Run — box pistol + easy run
+  -- 2026-09-25 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-23', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-25', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2303,11 +2522,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 20 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-24 · pull-light · Pull B — light pulls + bird-dog
+  -- 2026-09-26 · pull-light · Pull B — light pulls + bird-dog
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-24', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
+    'martin', '2026-09-26', phase_id, 'pull-light', 'Pull B — light pulls + bird-dog',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2375,17 +2594,17 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', '10 min · hips / hamstring / ankle / shoulders', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-25 · push · Push B — volume
+  -- 2026-09-27 · push · Push B — push-ups, incline, delts
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-25', phase_id, 'push', 'Push B — volume',
+    'martin', '2026-09-27', phase_id, 'push', 'Push B — push-ups, incline, delts',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
   ) RETURNING id INTO sess_id;
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Push-ups', 1, '3+ RIR. Knees-down is fine if the joint or a shoulder asks.')
+  VALUES (sess_id, 'Push-ups', 1, 'The one leftover volume press. 3+ RIR. Knees-down is fine if the joint or a shoulder asks. Dips stay on Push A — not stacked here.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
@@ -2398,30 +2617,40 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 2, 'work', 'Push-up · set 2', 8, NULL, NULL, NULL, 90, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Single-arm DB press', 2, 'Left first (weaker side). 8 kg — under the old 12 kg Sunday volume load.')
+  VALUES (sess_id, 'Incline DB press', 2, 'Looks work — upper chest. Bench ~30°. Back supported. Left first. Lower the DBs deeper than the chest if the shoulder allows. 3–4 RIR. The only hard press on Push B — not stacked on SA press or extra dips.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'SA DB press L · 8 kg · round 1', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 1, 'work', 'Incline DB press L · 10 kg · set 1', 8, 10, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'SA DB press R · 8 kg · round 1', 8, 8, NULL, NULL, 60, 6, NULL
+    ex_id, 2, 'work', 'Incline DB press R · 10 kg · set 1', 8, 10, NULL, NULL, 75, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
-  VALUES (sess_id, 'Tempo dips · 3-1-1', 3, '3 s down, 1 s pause, 1 s up. Bodyweight. Range as comfort allows.')
+  VALUES (sess_id, 'Seated DB lateral raise', 3, 'Looks work — side delts. Sit so the spine stays quiet. Slight elbow bend, raise to just below shoulder height, no shrug, no swing. Pause a beat at the bottom (stretch). 3–4 RIR. Training load, not the old 2 kg activation dose.')
   RETURNING id INTO ex_id;
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 1, 'work', 'Tempo dip 3-1-1 · set 1', 4, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 1, 'work', 'Lateral raise L · 6 kg · set 1', 12, 6, NULL, NULL, 30, 6, NULL
   );
   INSERT INTO exercise_sets (
     exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
   ) VALUES (
-    ex_id, 2, 'work', 'Tempo dip 3-1-1 · set 2', 4, NULL, NULL, NULL, 90, 6, NULL
+    ex_id, 2, 'work', 'Lateral raise R · 6 kg · set 1', 12, 6, NULL, NULL, 45, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 3, 'work', 'Lateral raise L · 6 kg · set 2', 12, 6, NULL, NULL, 30, 6, NULL
+  );
+  INSERT INTO exercise_sets (
+    exercise_id, set_num, kind, label, reps, load_kg, load_kg_added, hold_seconds, rest_seconds, rpe, notes
+  ) VALUES (
+    ex_id, 4, 'work', 'Lateral raise R · 6 kg · set 2', 12, 6, NULL, NULL, 45, 6, NULL
   );
   INSERT INTO exercises (session_id, name, display_order, notes)
   VALUES (sess_id, 'Shoulder insurance', 4, 'Band pull-aparts + prone Y-T-W. No extra run on this day.')
@@ -2442,11 +2671,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 3, 'work', 'Prone Y-T-W · 1 kg · set 1', 8, 1, NULL, NULL, 60, 6, NULL
   );
 
-  -- 2026-09-26 · run · Run — box pistol + easy run
+  -- 2026-09-28 · run · Run — box pistol + easy run
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-26', phase_id, 'run', 'Run — box pistol + easy run',
+    'martin', '2026-09-28', phase_id, 'run', 'Run — box pistol + easy run',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.', false, 'Re-entry'
@@ -2524,11 +2753,11 @@ H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previou
     ex_id, 1, 'checklist', 'Easy run 20 min · walk breaks OK', NULL, NULL, NULL, NULL, NULL, NULL, NULL
   );
 
-  -- 2026-09-27 · rest · Rest
+  -- 2026-09-29 · rest · Rest
   INSERT INTO sessions (
     user_id, date, phase_id, type, title, scheduled, completed, notes, archived, cycle_name
   ) VALUES (
-    'martin', '2026-09-27', phase_id, 'rest', 'Rest',
+    'martin', '2026-09-29', phase_id, 'rest', 'Rest',
     true, false, '**Re-entry · conservative.** Back joint still being adjusted. Doctor cleared training for blood flow and to keep the joint seated. Light loads, 3–4 RIR. Stop if the joint speaks. No hangboard, no climbing this block.
 
 H2 2026 is archived (Log → Previous plan). Week 2–3 loads assume the previous week was quiet — if the joint spoke, repeat the earlier week instead of progressing.

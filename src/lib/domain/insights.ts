@@ -165,7 +165,7 @@ export function generateInsights(i: InsightInputs): Insight[] {
 
   // 7. Pre-plan window
   if (i.daysSincePlanStart < 0) {
-    const start = i.planStartISO ?? '2026-08-31';
+    const start = i.planStartISO ?? '2026-09-02';
     const days = -i.daysSincePlanStart;
     out.push({
       id: 'pre-plan',

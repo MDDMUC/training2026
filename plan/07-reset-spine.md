@@ -1,6 +1,6 @@
 # Reset — spine (superseded)
 
-> **Superseded 2026-08-28.** Doctor cleared training. Live cycle is [`08-reentry.md`](08-reentry.md) (Mon 31 Aug → Sun 27 Sep). This HOLD/RESTORE walk plan was coded but **never seeded**. Keep the file as history.
+> **Superseded 2026-08-28.** Doctor cleared training. Live cycle is [`08-reentry.md`](08-reentry.md) (Wed 2 Sep → Tue 29 Sep). This HOLD/RESTORE walk plan was coded but **never seeded**. Keep the file as history.
 
 **Trigger (2026-08):** misaligned back joint, being adjusted. Cannot fully train.
 

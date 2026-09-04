@@ -84,7 +84,24 @@ Form notes, prescription defaults, and what each exercise is *actually* for. Ref
 
 ### Lateral Raise (single-arm, 2 kg)
 
-- 14 reps × 2 sets per arm. Slow, controlled, no swing. Lateral deltoid focus.
+- 14 reps × 2 sets per arm. Slow, controlled, no swing. Lateral deltoid focus. Activation dose in H2 — not a hypertrophy stimulus.
+
+### Seated DB lateral raise (re-entry looks)
+
+- Sit. Slight elbow bend. Raise to just below shoulder height. No shrug, no swing. Pause at the bottom.
+- 12–15 reps × 3–4 sets per arm @ 6 kg (7 kg in week 3). 3–4 RIR.
+- Side-delt looks work. Spine stays quiet because it is seated. Comes before the fly on Push A.
+
+### DB fly (re-entry looks)
+
+- Flat or slight-incline. Soft elbows. Stop at an honest pec stretch — do not dump into the anterior shoulder.
+- 12–15 reps × 2 sets per arm @ 8 kg. 3–4 RIR.
+
+### Incline DB press (re-entry looks)
+
+- Bench ~30°. Back supported. Left first. Lower the DBs deeper than the chest if the shoulder allows.
+- 8 reps × 2 sets per arm @ 10 kg (12 kg in week 3). 3–4 RIR.
+- The hard press on Push B. Not stacked with SA press or extra dips.
 
 ### Face Pulls (band or rope cable)
 
