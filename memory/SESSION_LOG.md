@@ -332,3 +332,49 @@ Append-only. Newest entries at the **bottom**.
 **Already on main earlier today:** hypertrophy base ramp, OHP drop, login video fix (`b4fbe95`).
 
 **Next:** Sat 5 Sep Push A at ~50%, no OHP.
+
+---
+
+## 2026-09-07 — Logged Pull B (as done)
+
+**Live DB session 246** (Mon 7 Sep, Hypertrophy Base Week 1 Pull B):
+- Warm-up / intro completed as prescribed
+- Pull-ups **10 / 8 / 7 / 5** (4 sets BW; above prescribed 3x5 light)
+- Curls bilateral: biceps **6.5 kg x 20 / 14 / 16**; hammers **8 kg x 14 / 14 / 12**
+- Shoulder lateral raise **2.5 kg x 20 / 18 / 20** (ad-hoc)
+- Forearms: forearm curls **4 / 5 / 6.5 kg x 20 / 14 / 26**; wrist curls **4 / 5 / 5 kg x 20 / 15 / 13**
+- Bird-dog + mobility left open (not reported)
+- Session marked completed; no BW entered
+- Script: `scripts/log-2026-09-07-pull-b.ts`
+
+**Verified:** production `/log/by-date/2026-09-07` and Today SSR include Pull B + all as-done labels/loads (auth cookie). No interactive browser tools this session.
+
+**Note:** Sat 5 Sep Push A still mostly open (warmup + laterals ticked only). Sun 6 Sep Run unlogged.
+
+**Next:** Tue 8 Sep Push B at ~50%.
+
+---
+
+## 2026-09-07 — Nutrition + burn (Pull B day)
+
+**Burn:** Soul watch **500** on session 246.
+
+**Food (manual estimate, logged):** eggs 145/13 · serrano 100 g 241/31 · 8 WW buns ~50 g 1080/40/192/16 · 2 tuna cans EU ~80 g drained 180/40.
+**Day total ~1646 kcal / 124 g P / 193 C / 41 F.**
+**Targets (BW 81 + 500 burn):** ~3055 kcal / 162 g P. ~1409 kcal and ~38 g P still open. Intentional cut territory on calories; protein still short.
+**Script:** `scripts/log-2026-09-07-nutrition.ts`
+
+---
+
+## 2026-09-08 — Session close (commit + push)
+
+**Focus:** Close Mon 7 Sep Pull B + nutrition session. Commit scripts + memory; push `main`.
+
+**Shipped (repo):**
+- `scripts/log-2026-09-07-pull-b.ts`
+- `scripts/log-2026-09-07-nutrition.ts`
+- Session log + handoff
+
+**Already live in DB (no deploy needed for data):** Pull B sets, burn 500, four food entries (~1646 / 124 P).
+
+**Next:** Tue 8 Sep Push B at ~50%.

@@ -2,23 +2,24 @@
 
 > Rewrite this whole file at session end. Next session reads this first after the protocol.
 
-**Last updated:** 2026-09-04
-**Session:** Closed. Hypertrophy Base live; Pull A + nutrition logged; login video fixed (pushed).
+**Last updated:** 2026-09-08
+**Session:** Closed. Mon 7 Sep Pull B + nutrition logged; scripts committed/pushed.
 
 ---
 
 ## Do this first
 
-**Sat 5 Sep = Push A** at **~50%** Phase 1 loads — **no OHP**.  
+**Tue 8 Sep = Push B** at **~50%** Phase 1 loads.  
 Cycle **Fri 4 Sep → Thu 1 Oct**. Rest is Thursday.
 
-Week 1 Push A prescription: dips BW ×5×3, row **12 kg** + bench **27.5 kg**, laterals **4 kg**, fly **4 kg**, face pull / reverse fly, BSS, mobility. 3–4 RIR; stop if the joint speaks.
+Week 1 Push B prescription: push-ups, incline DB press, seated laterals, Y-T-W / shoulder insurance. 3–4 RIR; stop if the joint speaks. No OHP.
 
 ## Current focus
 
 - **Meso 1 — Hypertrophy Base** on Pull / Push / Run. Loads ~50% → ~90% of H2 Phase 1 normals. Week 4 volume deload.
-- **Fri 4 Sep Pull A logged** (old template kept). Going forward Pull A includes forearms; Pull B has easy curl touch.
-- **Nutrition (Fri 4 Sep):** day food ~**2515 kcal / 156 g protein** (cut day — intentionally under ~3155 goal). Entries: cheesecake+coffee, eggs+bread, mince meal, 3 evening eggs. Burn **600** on Pull A.
+- **Logged:** Fri 4 Sep Pull A; **Mon 7 Sep Pull B** (pulls 10/8/7/5; full arms + laterals + forearms). Burn **500**. Food ~**1646 kcal / 124 g P** (intentional cut; protein ~38 g short of 162).
+- Scripts: `scripts/log-2026-09-07-pull-b.ts`, `scripts/log-2026-09-07-nutrition.ts`.
+- **Still open in calendar:** Sat 5 Sep Push A (warmup + laterals only); Sun 6 Sep Run (untouched).
 - No hangboard, climbing, OHP, weighted pulls. **Antonia** untouched. H2 = Previous.
 
 ## Blockers / watchouts
