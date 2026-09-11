@@ -444,3 +444,11 @@ Append-only. Newest entries at the **bottom**.
 ## 2026-09-11 — Body weight
 
 **BW:** **82.7 kg** on session 250 + daily check-in. Script: `scripts/log-2026-09-11-bw.ts`.
+
+---
+
+## 2026-09-11 — Dinner nutrition
+
+**Meal:** 2 burger patties + normal rice + onion + small tomato + garlic + ½ slice cheddar.
+**Estimate:** **851 kcal / 45 P / 67 C / 44 F** (patties ~2×100 g beef 15–20% fat; rice ~180 g cooked).
+**Day total with lunch:** **1916 / 175 / 162 / 59**. Protein hit (~165 g goal at 82.7 kg). Still ~**663 kcal** under goal (no watch burn). Script: `scripts/log-2026-09-11-dinner.ts`.
