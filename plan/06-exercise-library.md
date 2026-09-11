@@ -90,12 +90,14 @@ Form notes, prescription defaults, and what each exercise is *actually* for. Ref
 
 - Sit. Slight elbow bend. Raise to just below shoulder height. No shrug, no swing. Pause at the bottom.
 - 12–15 reps × 3–4 sets per arm @ 6 kg (7 kg in week 3). 3–4 RIR.
-- Side-delt looks work. Spine stays quiet because it is seated. Comes before the fly on Push A.
+- Side-delt looks work. Spine stays quiet because it is seated. Comes before the bent-arm floor fly on Push A.
 
-### DB fly (re-entry looks)
+### Bent-arm floor fly (re-entry looks)
 
-- Flat or slight-incline. Soft elbows. Stop at an honest pec stretch — do not dump into the anterior shoulder.
-- 12–15 reps × 2 sets per arm @ 8 kg. 3–4 RIR.
+- Replaces long-lever DB fly (therapist: extended-arm flies load the chest knob).
+- Lie on the floor. Elbows locked ~90°, forearms vertical (fists toward ceiling). Keep that elbow angle fixed — only the upper arms move. Bring elbows toward midline until DBs meet over the sternum; open until upper arms meet the floor.
+- 12–15 reps × 2 sets per arm @ 8 kg anchor (ramped). 3–4 RIR.
+- Mid-chest bias on flat floor. For more upper chest, same pattern on a low incline (~20–30°).
 
 ### Incline DB press (re-entry looks)
 

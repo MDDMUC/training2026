@@ -30,6 +30,7 @@ Harvested 2026-08-27 from Claude Code memory at `~/.claude/projects/C--Users-hey
 - date-fns, custom SVG charts
 - No Tailwind, no UI kit
 - Nutrition is **manual entry only** (or agent-logged). Anthropic NL parse retired 2026-09-04; `/api/nutrition/parse` returns 410.
+- Meal template (2026-09-08): lunch + late meal = **rice + kidney beans + avocado** (amounts in `plan/00-overview.md` Nutrition). Target ~2 g/kg protein; deficit OK.
 
 ## Infra
 
@@ -47,6 +48,7 @@ Harvested 2026-08-27 from Claude Code memory at `~/.claude/projects/C--Users-hey
 - Pull-up: +18 kg × 5; estimated 1RM ~+30–35 kg added
 - Knee: ACL reconstruction + meniscus stitch Jan 22 2024 (**right** leg)
 - **Back joint misaligned (2026-08), being adjusted.** Doctor cleared training 2026-08-28 for blood flow / to keep the joint seated. Meso 1 is Hypertrophy Base (load ramp), not a performance block.
+- **Chest knob / sternum pressure:** therapist flagged long-lever flies (arms extended). Prefer elbows ~90° / short lever — **bent-arm floor fly** replaces DB fly on Push A (2026-09-11).
 - Tools: Tindeq Progressor, hangboard, weights
 - Outdoor window: Aug–early Sep 2026 — paused for the joint
 - No FlexBar / Tindeq extensor — bands for extensors

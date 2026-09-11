@@ -14,15 +14,28 @@
   let holdSec = $state<number | null>(set.hold_seconds);
   let rpe = $state<number | null>(set.rpe);
 
-  // Whether to show the load_kg vs load_kg_added column
-  const showLoadAdded = $derived(loadAdded !== null);
-  const showLoadKg = $derived(loadKg !== null && !showLoadAdded);
-  const showHold = $derived(holdSec !== null);
-  const showReps = $derived(reps !== null);
-  const showRpe = $derived(set.kind !== 'checklist');
+  // Last committed values — used to restore if the user clears an input
+  // (mobile number keyboards often fire change with "" before the new digits).
+  let lastReps = $state<number | null>(set.reps);
+  let lastLoadKg = $state<number | null>(set.load_kg);
+  let lastLoadAdded = $state<number | null>(set.load_kg_added);
+  let lastHoldSec = $state<number | null>(set.hold_seconds);
 
   const isChecklist = $derived(set.kind === 'checklist');
   const kindClass = $derived(`kind-${set.kind}`);
+
+  // Column visibility is frozen from the prescribed set shape — NOT from live
+  // bind values. `type=number` binds "" → null while retyping; deriving
+  // `{#if reps !== null}` unmounted the whole field (and a null save kept it
+  // gone after reload). Hold-only sets still omit reps.
+  const showHold = set.hold_seconds !== null;
+  // Prefer the added-load column when the set was seeded with it (incl. 0 kg).
+  // Freeze from the initial prop so clearing the input cannot unmount the field.
+  const showLoadAdded = set.load_kg_added !== null;
+  const showLoadKg = set.load_kg !== null && set.load_kg_added === null;
+  const showReps =
+    set.kind !== 'checklist' && (set.reps !== null || set.hold_seconds === null);
+  const showRpe = set.kind !== 'checklist';
 
   // Optimistic save: flash ✓ on blur. Default enhance behaviour resets the
   // form, which two-way-binds null back into our local $state — so the
@@ -43,6 +56,24 @@
         }
       };
     };
+  }
+
+  /** Submit on change; empty non-RPE fields restore the last committed value instead of wiping. */
+  function submitOrRestore(
+    e: Event,
+    restore: () => void,
+    commit: () => void,
+    allowEmpty = false
+  ) {
+    const input = e.currentTarget as HTMLInputElement;
+    const form = input.form;
+    if (!form) return;
+    if (!allowEmpty && input.value.trim() === '') {
+      restore();
+      return;
+    }
+    commit();
+    form.requestSubmit();
   }
 </script>
 
@@ -94,7 +125,12 @@
               inputmode="numeric"
               min="0"
               bind:value={reps}
-              onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
+              onchange={(e) =>
+                submitOrRestore(
+                  e,
+                  () => (reps = lastReps),
+                  () => (lastReps = reps)
+                )}
             />
             <span class="saved-badge" class:visible={savedField === 'reps'}>✓</span>
           </form>
@@ -113,7 +149,12 @@
               inputmode="numeric"
               min="0"
               bind:value={holdSec}
-              onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
+              onchange={(e) =>
+                submitOrRestore(
+                  e,
+                  () => (holdSec = lastHoldSec),
+                  () => (lastHoldSec = holdSec)
+                )}
             />
             <span class="unit">s</span>
             <span class="saved-badge" class:visible={savedField === 'hold_seconds'}>✓</span>
@@ -133,7 +174,12 @@
               inputmode="decimal"
               step="0.5"
               bind:value={loadAdded}
-              onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
+              onchange={(e) =>
+                submitOrRestore(
+                  e,
+                  () => (loadAdded = lastLoadAdded),
+                  () => (lastLoadAdded = loadAdded)
+                )}
             />
             <span class="unit">kg</span>
             <span class="saved-badge" class:visible={savedField === 'load_kg_added'}>✓</span>
@@ -153,7 +199,12 @@
               inputmode="decimal"
               step="0.5"
               bind:value={loadKg}
-              onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
+              onchange={(e) =>
+                submitOrRestore(
+                  e,
+                  () => (loadKg = lastLoadKg),
+                  () => (lastLoadKg = loadKg)
+                )}
             />
             <span class="unit">kg</span>
             <span class="saved-badge" class:visible={savedField === 'load_kg'}>✓</span>
@@ -175,7 +226,13 @@
               max="10"
               bind:value={rpe}
               placeholder="–"
-              onchange={(e) => (e.currentTarget.form as HTMLFormElement).requestSubmit()}
+              onchange={(e) =>
+                submitOrRestore(
+                  e,
+                  () => {},
+                  () => {},
+                  true
+                )}
             />
             <span class="saved-badge" class:visible={savedField === 'rpe'}>✓</span>
           </form>

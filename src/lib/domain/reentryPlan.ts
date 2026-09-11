@@ -307,20 +307,21 @@ function looksLaterals(week: Week, rounds: number): SeedExercise {
 }
 
 function looksFly(week: Week): SeedExercise {
+  // Bent-arm floor fly replaces long-lever DB fly (therapist: 90° elbows, short lever).
   const kg = kgAt(NORMAL.fly, week);
   const reps = week >= 3 ? 15 : 12;
   const rounds = week === 4 ? 1 : 2;
   const sets: SeedSet[] = [];
   for (let i = 0; i < rounds; i++) {
     sets.push(
-      work(`DB fly L · ${kg} kg · set ${i + 1}`, {
+      work(`Bent-arm floor fly L · ${kg} kg · set ${i + 1}`, {
         reps,
         load_kg: kg,
         rest_seconds: 30
       })
     );
     sets.push(
-      work(`DB fly R · ${kg} kg · set ${i + 1}`, {
+      work(`Bent-arm floor fly R · ${kg} kg · set ${i + 1}`, {
         reps,
         load_kg: kg,
         rest_seconds: 60
@@ -328,9 +329,9 @@ function looksFly(week: Week): SeedExercise {
     );
   }
   return {
-    name: 'DB fly',
+    name: 'Bent-arm floor fly',
     notes:
-      'Pec sweep. Flat or slight-incline. Soft elbows, stop when the stretch is honest — do not dump into the anterior shoulder. 3–4 RIR. Skip if a pec or the joint nags.',
+      'Therapist-friendly pec work. Lie on the floor. Elbows locked ~90°, forearms vertical. Keep elbow angle fixed — only upper arms move. Floor stops the open (no long lever). 3–4 RIR. Skip if the chest knob speaks.',
     sets
   };
 }

@@ -115,3 +115,18 @@ This matches the over-40 envelope: **2 hard sessions per quality per week**, har
 - `06-exercise-library.md` — form notes for every prescribed exercise
 - `07-reset-spine.md` — superseded HOLD/RESTORE walk plan (never seeded)
 - `08-reentry.md` — **active** 4-week conservative Pull / Push / Run (Fri 4 Sep → Thu 1 Oct)
+
+---
+
+## Nutrition
+
+Daily target ~**2 g/kg protein** (~162 g at 81 kg). Calorie deficit is fine; keep protein high.
+
+**Core plate:** rice + kidney beans + avocado (beans + rice = complete protein; avocado = fat).
+
+| Meal | Rice (cooked) | Kidney beans (cooked) | Avocado |
+|------|---------------|------------------------|---------|
+| **Lunch** | 150 g | 300 g | ~½ medium (70–80 g) |
+| **Late / evening** | 100–120 g | 450–500 g | 80–100 g |
+
+Those two meals ≈ **75–80 g protein**. Cover the rest of the day with denser protein (eggs, tuna, etc.). Skew beans up and avocado down on harder deficit days.

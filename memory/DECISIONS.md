@@ -128,6 +128,16 @@ Canonical write-up: `context/synthesis.md`.
 - Antonia and archived H2 untouched.
 - Still no hangboard, no climbing, no added pull-up weight. Stop if the joint speaks.
 
+## 2026-09-11 — Bent-arm floor fly replaces long-lever DB fly
+
+**Decision:** Therapist flagged long-lever chest flies (arms extended) for chest-knob / sternum pressure. Prefer elbows fixed ~90° and a short lever. Replace Push A **DB fly** with **bent-arm floor fly** (floor stops the open). Same load ramp anchor (8 kg). Mid-chest on flat floor; low incline (~20–30°) if upper chest is the priority.
+
+**Implications:**
+- `reentryPlan.ts` `looksFly()` now seeds Bent-arm floor fly.
+- Live future Push A patched via `scripts/replace-db-fly-with-bent-arm-floor-fly.ts`.
+- Fri 11 Sep Pull A got an ad-hoc bent-arm floor fly block (`scripts/add-2026-09-11-bent-arm-fly.ts`).
+- Do not re-add soft-elbow / long-lever flies without therapist clear.
+
 ## 2026-09-04 — Drop OHP from Re-entry Push A
 
 **Decision:** Remove overhead press from Push A for the rest of re-entry. Suspected slip-joint aggravator. Keep bodyweight dips with full rest; laterals/fly stay for side delts.

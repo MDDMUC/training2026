@@ -378,3 +378,36 @@ Append-only. Newest entries at the **bottom**.
 **Already live in DB (no deploy needed for data):** Pull B sets, burn 500, four food entries (~1646 / 124 P).
 
 **Next:** Tue 8 Sep Push B at ~50%.
+
+---
+
+## 2026-09-11 — Bent-arm floor fly (chest knob)
+
+**Focus:** Therapist-friendly chest work for Fri 11 Pull A; retire long-lever DB fly.
+
+**Explained:** Soft-elbow fly = long lever (flagged). Elbows locked ~90° on the floor = short-lever bent-arm fly; floor stops the open. Flat = mid chest; low incline if upper chest is the goal.
+
+**Shipped (live DB):**
+- Session 250 Pull A: added **Bent-arm floor fly** 2×12 L/R @ 5 kg after curls (`scripts/add-2026-09-11-bent-arm-fly.ts`)
+- Future Push A (12 / 19 / 26 Sep): DB fly → Bent-arm floor fly (`scripts/replace-db-fly-with-bent-arm-floor-fly.ts`)
+- `reentryPlan.ts`, `plan/06-exercise-library.md`, `plan/08-reentry.md`, `DECISIONS.md`, handoff, PROJECT_MEMORY
+
+**Next:** Train Pull A; stop the fly if the chest knob speaks. Tomorrow Push A already has the new fly.
+
+---
+
+## 2026-09-11 — SetRow mobile input disappear bug
+
+**Focus:** Fix reps/load/RPE inputs vanishing on phone while logging.
+
+**Root cause:** `SetRow` gated fields with `{#if reps !== null}` (same for load/hold). Clearing a `type=number` input binds `null` → field unmounts. Empty save wrote `null` to DB so reload kept it gone. Prior Jun fix only stopped form-reset clearing; not this gate.
+
+**Fix:** `src/lib/molecules/SetRow.svelte`
+- Freeze column visibility from prescribed set shape (not live bind values)
+- Empty non-RPE change restores last committed value (no null wipe)
+- Recover wiped work-set reps UI when hold is absent
+
+**Verified:** Playwright iPhone viewport on `/log/by-date/2026-09-11` — clear → still visible → restore on blur → retype 9 works. Restored test set reps to 5. Repaired historical wiped Push-up set 3262 (2026-09-08) reps null → 8.
+
+**Shipped:** Commit + push to `main` for Vercel deploy to the phone.
+

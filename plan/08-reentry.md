@@ -24,7 +24,7 @@ Pull → Push → Run, twice, then rest.
 | Day | Session | Copies |
 |-----|---------|--------|
 | Fri | **Pull A** | old heavy pull, bodyweight, no hangboard |
-| Sat | **Push A** | old push + antagonist; split squat; laterals then fly |
+| Sat | **Push A** | old push + antagonist; split squat; laterals then bent-arm floor fly |
 | Sun | **Run** | box-pistol skill first, then mobility, then easy run |
 | Mon | **Pull B** | old light pull; bird-dog instead of hanging core |
 | Tue | **Push B** | push-ups + incline + seated laterals (SA press and extra dips cut) |
@@ -35,7 +35,7 @@ Pull → Push → Run, twice, then rest.
 
 - Stop at **3–4 RIR**. No grinding / no failure weeks.
 - Pull-ups: **bodyweight only** this meso (Phase 1 normal was +18 kg).
-- Anchors = H2 Phase 1 Week-1: bench 55, curl 16 / hammer 9, DB-row proxy 24, laterals 8, fly 8, incline 14.
+- Anchors = H2 Phase 1 Week-1: bench 55, curl 16 / hammer 9, DB-row proxy 24, laterals 8, bent-arm floor fly 8 (was long-lever DB fly), incline 14.
 - No dip belt, no Jefferson curl, no hanging leg raises, no barbell hinge row, **no overhead press** (paused — suspected slip-joint aggravator).
 - Surgical (R) side first on split squats and box pistols.
 
@@ -51,7 +51,7 @@ If the joint spoke, repeat the earlier week in the log instead of progressing.
 Not a 6-day PPL. Same shell; expanded isolation so priority muscles hit ≥2×/week.
 
 - **Pull A:** BW pull-ups, curls + hammers (ramped), forearms (wrist curl + extensor).
-- **Push A:** dips (no OHP), row + bench (ramped), **seated laterals then fly**, face pull + reverse fly, split squat.
+- **Push A:** dips (no OHP), row + bench (ramped), **seated laterals then bent-arm floor fly** (90° elbows; replaces long-lever DB fly), face pull + reverse fly, split squat.
 - **Pull B:** lighter pull-ups, easy curl touch, bird-dog.
 - **Push B:** push-ups, incline DB press (ramped), seated laterals, Y-T-W / pull-aparts.
 - Laterals: 3 / 4 / 4 / 2 rounds per push day across weeks 1–4. Isolation 12–15 reps.
