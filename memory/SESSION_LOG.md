@@ -411,3 +411,20 @@ Append-only. Newest entries at the **bottom**.
 
 **Shipped:** Commit + push to `main` for Vercel deploy to the phone.
 
+
+---
+
+## 2026-09-11 — Logged Pull A (as done)
+
+**Focus:** Write Fri 11 Pull A sets as performed.
+
+**As done (session 250):**
+- Pull-ups BW **8 / 7 / 6 / 6** (4 sets; dropped 5th)
+- Bicep curls bilateral **10 kg x 8 / 8**
+- Hammer curls bilateral **8 kg x 14**, then **10 kg x 12 / 12**
+- Wrist curls **5 kg x 22 x 3**; wrist extensors **5 kg x 14 x 3**
+- Bent-arm floor fly **skipped** (removed from day)
+- Mobility left open
+- Script: `scripts/log-2026-09-11-pull-a.ts`
+
+**Next:** Sat 12 Sep Push A (~65%), including bent-arm floor fly.
