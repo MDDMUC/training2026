@@ -428,3 +428,13 @@ Append-only. Newest entries at the **bottom**.
 - Script: `scripts/log-2026-09-11-pull-a.ts`
 
 **Next:** Sat 12 Sep Push A (~65%), including bent-arm floor fly.
+
+---
+
+## 2026-09-11 — Nutrition (chicken / rice / beans)
+
+**Meal logged:** 500 g chicken breast (raw assumed) + ~250 g cooked rice + ½ small can kidney beans (~110 g drained).
+
+**Estimate:** **1065 kcal / 130 g P / 95 C / 15 F.**
+**Day vs targets (BW 81, no watch burn):** goal ~2555 kcal / 162 P. Still open ~**1490 kcal** and ~**32 g P**.
+**Script:** `scripts/log-2026-09-11-nutrition.ts` (entry id 25).
